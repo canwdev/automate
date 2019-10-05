@@ -7,9 +7,15 @@
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
+  "nodemonConfig": {
+    "ignore": [
+      "projects/*"
+    ]
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "node-ssh": "^6.0.0",
     "open": "^6.4.0",
     "shelljs": "^0.8.3"
   },
