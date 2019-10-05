@@ -1,0 +1,19 @@
+{
+  "name": "automate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "open": "^6.4.0",
+    "shelljs": "^0.8.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.3"
+  }
+}
