@@ -13,50 +13,70 @@ if (!sh.which('git') || !sh.which('7z')) {
   sh.exit(1);
 }
 
-// 获取项目目录
-let dir = sh.pwd().toString()
-// 项目名称
-let projectName = 'node-blog-frontend'
-// 本地项目目录
-const project_dir = path.join(dir, 'projects', projectName)
-// 线上环境目录（请勿填错）
-const prod_dir = '/usr/www/node-blog-frontend'
-// 要发送的文件（线上环境更新将删除这些文件）
-const prod_files = '.nuxt node_modules assets server deploy_prod.sh ecosystem.config.js nuxt.config.js package.json package-lock.json'
-// 线上服务器配置
-const ssh_config = {
-  host: 'sagit.top',
-  username: 'root',
-  privateKey: require('os').homedir() + '/.ssh/id_rsa'
-}
-
-// 记录构建起始时间
-const startTime = +new Date()
-console.log(startTime)
-
-cd(project_dir)
-
-console.log('>>> 拉取代码...')
-exec('git pull')
-
-console.log('>>> 安装依赖...')
-exec('npm install')
-
-console.log('>>> 开始构建...')
-exec('npm run build')
-
-console.log('>>> 打包并进行7z压缩...')
-
-const prod_tar = 'prod.tar'
-const prod_tar_7z = 'prod.tar.7z'
-exec(`tar cf ${prod_tar} ${prod_files}`)
-exec(`7z a ${prod_tar_7z} ${prod_tar}`)
-
-console.log('打包压缩成功！')
-exec(`du -h ${prod_tar_7z}`)
-
-// 部署到线上服务器
 async function deploy() {
+  // ------ 使用步骤 ------
+  // 1. 在本文件同级文件夹新建一个 projects 文件夹
+  // 2. 进入 projects 文件夹，克隆项目
+  // 3. 修改配置文件
+  // 4. 运行 node deploy_nuxt.js
+
+  const configFiles = sh.ls('./config_deploy_nuxt')
+  let configFile = 'default.json'
+  const inquirer = require("inquirer")
+  await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'configFile',
+      message: '请选择一个配置文件',
+      choices: configFiles,
+    }
+  ]).then(answers => {
+    configFile = answers.configFile
+  });
+
+  const config = require("./config_deploy_nuxt/" + configFile)
+  // 项目名称
+  let projectName = config.projectName
+  // 本地项目目录
+  const project_dir = path.join(sh.pwd().toString(), 'projects', projectName)
+  // 线上环境目录（请勿填错）
+  const prod_dir = config.productionDir
+  // 要发送的文件（线上环境更新将删除这些文件）
+  const prod_files = config.productionFiles
+  // 线上服务器配置
+  const ssh_config = {
+    host: config.sshConfig.host,
+    username: config.sshConfig.username,
+    privateKey: config.sshConfig.privateKey || require('os').homedir() + '/.ssh/id_rsa'
+  }
+
+  // 记录构建起始时间
+  const startTime = +new Date()
+  console.log(startTime)
+
+  cd(project_dir)
+
+  console.log('>>> 拉取代码...')
+  exec('git pull')
+
+  console.log('>>> 安装依赖...')
+  exec(config.installCommand || 'npm install')
+
+  console.log('>>> 开始构建...')
+  exec(config.buildCommand || 'npm run build')
+
+  const prod_tar = 'prod.tar'
+  const prod_tar_7z = 'prod.tar.7z'
+
+  console.log('>>> 打包并进行7z压缩...')
+  exec(`tar cf ${prod_tar} ${prod_files}`)
+  exec(`7z a ${prod_tar_7z} ${prod_tar}`)
+
+  console.log('打包压缩成功！')
+  exec(`du -h ${prod_tar_7z}`)
+
+  // 部署到线上服务器
+
   const distFile = path.join(project_dir, prod_tar_7z)
 
   console.log('>>> ssh 远程服务器...')
@@ -100,7 +120,17 @@ async function deploy() {
   const endTime = +new Date()
 
   console.log(endTime)
-  console.log(`>>> 部署成功！耗时 ${(endTime - startTime)/1000} 秒`)
+  console.log(`\n\n>>> 部署成功！耗时 ${(endTime - startTime) / 1000} 秒\n\n`)
+
+  console.log('>>> 归档成品并清理')
+  cd(project_dir)
+  const archives_folder_name = projectName + '@archives'
+  const archive_name = `${endTime}_${prod_tar_7z}`
+  sh.mkdir('-p', '../' + archives_folder_name)
+  sh.mv(prod_tar_7z,  `../${archives_folder_name}/${archive_name}`)
+  sh.rm(prod_tar)
+  console.log(`${path.join(prod_dir, '../', archives_folder_name, archive_name)}`)
+
   process.exit()
 }
 
