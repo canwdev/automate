@@ -130,7 +130,7 @@ async function deploy() {
 
   console.log('>>> 归档成品并清理')
   cd(project_dir)
-  const archives_folder_name = projectName + '@archives'
+  const archives_folder_name = projectName + '@assets'
   const archive_name = `${endTime}_${prod_tar_7z}`
   sh.mkdir('-p', '../' + archives_folder_name)
   sh.mv(prod_tar_7z,  `../${archives_folder_name}/${archive_name}`)
