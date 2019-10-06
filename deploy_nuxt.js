@@ -18,23 +18,29 @@ async function deploy() {
   // 1. 在本文件同级文件夹新建一个 projects 文件夹
   // 2. 进入 projects 文件夹，克隆项目
   // 3. 修改配置文件
-  // 4. 运行 node deploy_nuxt.js
+  // 4. 运行 node deploy_nuxt.js 或者带参数运行 node deploy_nuxt.js default.json
 
   const configFiles = sh.ls('./config_deploy_nuxt')
-  let configFile = 'default.json'
-  const inquirer = require("inquirer")
-  await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'configFile',
-      message: '请选择一个配置文件',
-      choices: configFiles,
-    }
-  ]).then(answers => {
-    configFile = answers.configFile
-  });
+  let configFile = process.argv.slice(2) || null
 
+  if (!configFile) {
+    const inquirer = require("inquirer")
+    await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'configFile',
+        message: '请选择一个配置文件',
+        choices: configFiles,
+      }
+    ]).then(answers => {
+      configFile = answers.configFile
+    })
+  }
+  
   const config = require("./config_deploy_nuxt/" + configFile)
+
+  console.log('>>> 使用配置文件 ' + configFile)
+
   // 项目名称
   let projectName = config.projectName
   // 本地项目目录
