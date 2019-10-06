@@ -28,4 +28,8 @@ node deploy_nuxt.js
 
 后续可能开放支持 WebHooks 的 POST 方法 
 
-## 具体使用方式阅请读源码😂
+## deploy_nuxt.js 备注
+
+- 目前不支持自动创建项目，请手动克隆项目至 `./projects/<your_project_name>` 下，并在 `config_deploy_nuxt` 目录中编写配置文件
+- 服务器需要安装node、npm、pm2、7z(p7zip-full)
+- 具体使用方式请阅读源码 😂
