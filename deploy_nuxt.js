@@ -135,8 +135,9 @@ async function deploy() {
   sh.mkdir('-p', '../' + archives_folder_name)
   sh.mv(prod_tar_7z,  `../${archives_folder_name}/${archive_name}`)
   sh.rm(prod_tar)
-  console.log(`${path.join(prod_dir, '../', archives_folder_name, archive_name)}`)
+  console.log(`${path.join(project_dir, '../', archives_folder_name, archive_name)}`)
 
+  console.log('>>> 执行结束！')
   process.exit()
 }
 
