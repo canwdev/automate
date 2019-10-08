@@ -6,10 +6,15 @@ const sh = require('shelljs')
 const fs = require('fs')
 
 const utils = require('./utils.js')
-const timeStr = utils.getDateTimeString
+const getTimeStr = utils.getDateTimeString
 
 // 解决 req.body undefined
-app.use(bodyParser())
+
+// parse application/x-www-form-urlencoded
+// app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
 
 // 设置模板引擎ejs
 app.set("view engine", "ejs")
@@ -28,7 +33,7 @@ app.get('/build/:command/:param', (req, res) => {
     return res.send('必须指定command')
   }
 
-  const logName = 'build_' + timeStr() + '.log'
+  const logName = 'build_' + getTimeStr() + '.log'
 
   // 2>&1 | tee 的意思是在控制台输出日志的同时保存到文件
   sh.exec(`node ${command} ${param} 2>&1 | tee logs/${logName}`, { async: true })
@@ -57,18 +62,40 @@ app.get('/logs/:file', (req, res) => {
   })
 })
 
+// git WebHook 请求自动部署
 app.post('/build/:command/:param', (req, res) => {
   console.log(req.params)
+  console.log(req.query)
+  
+  const body = req.body
   const command = req.params.command // 'deploy_nuxt.js'
-  const param = req.params.param // 'default.json'
+  let param = req.params.param // 'default.json'
   if (!command) {
     return res.status(400).send('必须指定command')
   }
 
-  const timestamp = timeStr()
+  // 切换到指定相同分支
+  const branch = body.ref.split('/').pop()
+  console.log('分支：', branch)
+  // 检测是否在需要构建的分支列表中，如果不在就忽略这次构建
+  if (req.query.branches) {
+    const branches = req.query.branches.split(',')
+    if (branches.find(v => v === branch)) {
+      param = param.replace('branch.json', `${branch}.json`)
+      console.log(param)
+    } else {
+      let text = `没有构建，分支：${branch}`
+      console.log(text)
+      return res.send(text)
+    }
+  }
 
-  const postLogName = 'logs/' + 'post_' + timestamp + '.log'
-  const content = JSON.stringify(req.body)
+
+  const timestamp = getTimeStr()
+
+  const postLogName = 'logs/' + 'post_' + timestamp + '.json'
+  
+  const content = JSON.stringify(body)
   fs.writeFile(postLogName, content, err => {
     if (err) console.log(err)
   })

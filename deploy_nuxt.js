@@ -5,6 +5,7 @@ const path = require('path')
 const utils = require('./utils.js')
 const cd = utils.cd
 const exec = utils.exec
+const getTimeStr = utils.getDateTimeString
 
 // 检测必要命令
 if (!sh.which('git') || !sh.which('7z')) {
@@ -43,6 +44,8 @@ async function deploy() {
 
   // 项目名称
   let projectName = config.projectName
+  // 分支
+  const branch = config.branch || 'master'
   // 本地项目目录
   const project_dir = path.join(__dirname, 'projects', projectName)
   // 线上环境目录（请勿填错）
@@ -62,8 +65,8 @@ async function deploy() {
 
   cd(project_dir)
 
-  console.log('>>> 拉取代码...')
-  exec('git pull')
+  console.log(`>>> 拉取 ${branch} 代码...`)
+  exec(`git checkout ${branch} && git pull`)
 
   console.log('>>> 安装依赖...')
   exec(config.installCommand || 'npm install')
@@ -131,7 +134,7 @@ async function deploy() {
   console.log('>>> 归档成品并清理')
   cd(project_dir)
   const archives_folder_name = projectName + '@assets'
-  const archive_name = `${endTime}_${prod_tar_7z}`
+  const archive_name = `${branch}-${getTimeStr()}-${endTime}-${prod_tar_7z}`
   sh.mkdir('-p', '../' + archives_folder_name)
   sh.mv(prod_tar_7z,  `../${archives_folder_name}/${archive_name}`)
   sh.rm(prod_tar)
