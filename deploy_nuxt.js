@@ -2,9 +2,9 @@ const sh = require('shelljs')
 const NodeSSH = require('node-ssh')
 const ssh = new NodeSSH()
 const path = require('path')
-const util = require('./utils.js')
-const cd = util.cd
-const exec = util.exec
+const utils = require('./utils.js')
+const cd = utils.cd
+const exec = utils.exec
 
 // 检测必要命令
 if (!sh.which('git') || !sh.which('7z')) {

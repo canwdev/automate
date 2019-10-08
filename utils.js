@@ -1,5 +1,9 @@
 const sh = require('shelljs')
 
+function padNum(num, len = 2) {
+  return num.toString().padStart(len, '0')
+}
+
 module.exports = {
   cd(dir, tip) {
     const result = sh.cd(dir)
@@ -12,5 +16,10 @@ module.exports = {
     if (result.code === 1) sh.exit(1)
 
     return result
+  },
+  getDateTimeString() {
+    const d = new Date()
+
+    return `${d.getFullYear()}${padNum(d.getMonth()+1)}${padNum(d.getDate())}_${padNum(d.getHours())}${padNum(d.getMinutes())}${padNum(d.getSeconds())}`
   }
 }
