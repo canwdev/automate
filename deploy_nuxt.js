@@ -44,7 +44,7 @@ async function deploy() {
   // 项目名称
   let projectName = config.projectName
   // 本地项目目录
-  const project_dir = path.join(sh.pwd().toString(), 'projects', projectName)
+  const project_dir = path.join(__dirname, 'projects', projectName)
   // 线上环境目录（请勿填错）
   const prod_dir = config.productionDir
   // 要发送的文件（线上环境更新将删除这些文件）

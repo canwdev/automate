@@ -24,8 +24,8 @@ app.get('/build/:command/:param', (req, res) => {
   const command = req.params.command // 'deploy_nuxt.js'
   const param = req.params.param // 'default.json'
 
-  if (!command || !param) {
-    return res.send('必须指定command和param')
+  if (!command) {
+    return res.send('必须指定command')
   }
 
   const logName = 'build_' + timeStr() + '.log'
@@ -61,8 +61,8 @@ app.post('/build/:command/:param', (req, res) => {
   console.log(req.params)
   const command = req.params.command // 'deploy_nuxt.js'
   const param = req.params.param // 'default.json'
-  if (!command || !param) {
-    return res.status(400).send('必须指定command和param')
+  if (!command) {
+    return res.status(400).send('必须指定command')
   }
 
   const timestamp = timeStr()
@@ -73,7 +73,7 @@ app.post('/build/:command/:param', (req, res) => {
     if (err) console.log(err)
   })
 
-  const buildLogName = 'post_build_' + timestamp + '.log'
+  const buildLogName = 'post_' + timestamp + '_build.log'
   // 2>&1 | tee 的意思是在控制台输出日志的同时保存到文件
   sh.exec(`node ${command} ${param} 2>&1 | tee logs/${buildLogName}`, { async: true })
 
