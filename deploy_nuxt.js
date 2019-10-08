@@ -16,10 +16,9 @@ if (!sh.which('git') || !sh.which('7z')) {
 
 async function deploy() {
   // ------ 使用步骤 ------
-  // 1. 在本文件同级文件夹新建一个 projects 文件夹
-  // 2. 进入 projects 文件夹，克隆项目，并切换到要发布的分支
-  // 3. 修改配置文件（config_deploy_nuxt）
-  // 4. 直接运行 node deploy_nuxt.js 或者带参数运行 node deploy_nuxt.js default.json
+  // 1. 进入 projects 文件夹，克隆项目，并切换到要发布的分支
+  // 2. 修改json配置文件（config_deploy_nuxt/???.json）
+  // 3. 直接运行 node deploy_nuxt.js 或者带参数运行 node deploy_nuxt.js ???.json
 
   const configFiles = sh.ls('./config_deploy_nuxt')
   let configFile = process.argv.slice(2) || null

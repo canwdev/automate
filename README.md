@@ -16,10 +16,18 @@ pm2 start ecosystem.config.js
 node deploy_nuxt.js
 ```
 
-## 目前支持的项目类型：
+## 目前实现的功能
 
-- [VuePress(不支持配置文件)](./deploy_vuepress.js)
-- [Nuxt.js(支持配置文件)](./deploy_nuxt.js)
+- 支持 GET 方法触发部署（网页）
+- 支持 POST 方法触发部署（WebHook）
+
+### 支持的项目
+
+- [VuePress](./deploy_vuepress.js)
+  - 暂不支持配置，通过修改源码的方式自定义
+- [Nuxt.js](./deploy_nuxt.js)
+  - 支持配置文件，参考 [default.json](config_deploy_nuxt/default.json)
+  - 使用7z打包完整包（包括`node_modules`约20MB+）并自动ssh发送服务器解压，几乎不占用线上服务器资源，避免死机！
 - 可以通过编写相应js文件进行扩展
 
 > 警告：暂不支持任务队列，请勿同时编译相同项目！
