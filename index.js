@@ -3,6 +3,10 @@ const app = express()
 const path = require('path')
 const sh = require('shelljs')
 
+app.get('/', (req, res) => {
+  res.send('Automate working!')
+})
+
 app.get('/build/:command/:param', (req, res) => {
   console.log(req.params)
 
@@ -44,8 +48,27 @@ app.get('/logs/:file', function (req, res) {
   })
 });
 
-const port = 8100
+const port = normalizePort(process.env.PORT || '8200')
 app.listen(port, () => {
   console.log(`Automate build API listening on port ${port}`);
 });
 
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}

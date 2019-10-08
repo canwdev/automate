@@ -4,7 +4,7 @@
   "productionDir": "/root/remo_website_ssr",
   "productionFiles": ".nuxt node_modules assets server deploy_prod.sh ecosystem.config.js nuxt.config.js package.json package-lock.json",
   "sshConfig": {
-    "host": "sagit.top",
+    "host": "zencode.top",
     "username": "root",
     "privateKey": null
   }

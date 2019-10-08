@@ -21,7 +21,7 @@ node deploy_nuxt.js
 
 ## 支持使用 GET 方法触发部署
 
-首先运行 `npm start` 启动服务，然后访问`http://localhost:8100/build/deploy_nuxt/default.json`
+首先运行 `npm start` 启动服务，然后访问`http://xxx.top:8100/build/deploy_nuxt.js/remo-website-stage.json`
 
 警告：请勿同时编译相同项目！
 

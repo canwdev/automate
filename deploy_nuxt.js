@@ -23,7 +23,7 @@ async function deploy() {
   const configFiles = sh.ls('./config_deploy_nuxt')
   let configFile = process.argv.slice(2) || null
 
-  if (!configFile) {
+  if (configFile.length === 0) {
     const inquirer = require("inquirer")
     await inquirer.prompt([
       {
