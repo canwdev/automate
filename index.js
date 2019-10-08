@@ -3,6 +3,9 @@ const app = express()
 const path = require('path')
 const sh = require('shelljs')
 
+// 设置模板引擎ejs
+app.set("view engine", "ejs")
+
 app.get('/', (req, res) => {
   res.send('Automate working!')
 })
@@ -22,33 +25,31 @@ app.get('/build/:command/:param', (req, res) => {
   // 2>&1 | tee 的意思是在控制台输出日志的同时保存到文件
   sh.exec(`node ${command} ${param} 2>&1 | tee logs/${logName}`, { async: true })
 
-  res.send(`<h1>正在执行，执行结束前请勿刷新此页面！！</h1>
-  <p>查看编译状态日志：<a href="/logs/${logName}" target="_blank">${logName}</a></p>
-  <iframe id="iframe" src="/logs/${logName}" width="100%" height="400"></iframe>
-  <script>
-  window.onload = function() {
-    window.setInterval(reloadIFrame, 8000)
-
-    var iframe = document.getElementById('iframe')
-    function reloadIFrame() {
-      iframe.contentWindow.location.reload()
-    }
-    iframe.addEventListener('load', function() {
-      this.contentWindow.scrollTo( 0, Number.MAX_SAFE_INTEGER  )
-    })
-    reloadIFrame()
-  }
-  </script> 
-  `)
+  res.render("build", {
+    logName
+   })
 })
 
 app.get('/logs/:file', function (req, res) {
-  res.sendFile(req.params.file, {
-    root: path.join(__dirname, 'logs')
-  })
-});
+  // res.sendFile(req.params.file, {
+  //   root: path.join(__dirname, 'logs')
+  // })
 
-const port = normalizePort(process.env.PORT || '8200')
+  const result = sh.exec(`tail -25 ${path.join(__dirname, 'logs', req.params.file)}`)
+
+  if (result.code !== 0) {
+    return res.send('日志文件读取失败！')
+  }
+
+  const logTail = result.toString()
+  // res.send(logTail)
+  res.render("logs", {
+    title: req.params.file,
+    content: logTail
+   })
+})
+
+const port = normalizePort(process.env.PORT || '8100')
 app.listen(port, () => {
   console.log(`Automate build API listening on port ${port}`);
 });

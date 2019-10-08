@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ejs": "^2.7.1",
     "express": "^4.17.1",
     "inquirer": "^7.0.0",
     "node-ssh": "^6.0.0",
