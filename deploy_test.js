@@ -1,7 +1,8 @@
 const sh = require('shelljs')
 
-var instance = sh.exec('ls', {async: true})
-instance.stdout.on('data', function(data) {
-  console.log(data)
-});
-// console.log(instance)
+var child = sh.exec('echo test', {async:true});
+
+child.kill()
+child.stdout.on('data', function(data) {
+  console.log(data);
+})
