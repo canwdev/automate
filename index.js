@@ -20,7 +20,10 @@ app.use(bodyParser.json())
 app.set("view engine", "ejs")
 
 app.get('/', (req, res) => {
-  return res.send('Automate working!')
+  return res.render("index", {
+    
+  })
+  // return res.send('Automate working!')
 })
 
 app.get('/build/:command/:param', (req, res) => {
@@ -44,21 +47,33 @@ app.get('/build/:command/:param', (req, res) => {
 })
 
 app.get('/logs/:file', (req, res) => {
-  // res.sendFile(req.params.file, {
-  //   root: path.join(__dirname, 'logs')
-  // })
-
   const result = sh.exec(`tail -25 ${path.join(__dirname, 'logs', req.params.file)}`)
+  const logTail = result.toString()
 
   if (result.code !== 0) {
     return res.send('日志文件读取失败！')
   }
 
-  const logTail = result.toString()
+  if (req.query.raw) {
+    if (req.query.tail) {
+      return res.send(logTail)
+    }
+    return res.sendFile(req.params.file, {
+      root: path.join(__dirname, 'logs')
+    })
+  }
+
   // res.send(logTail)
-  return res.render("logs", {
-    title: req.params.file,
+  return res.render("logs-detail", {
+    fileName: req.params.file,
     content: logTail
+  })
+})
+
+app.get('/logs', (req, res) => {
+  const list = sh.ls('logs')
+  return res.render("logs-list", {
+    list
   })
 })
 
@@ -66,7 +81,7 @@ app.get('/logs/:file', (req, res) => {
 app.post('/build/:command/:param', (req, res) => {
   console.log(req.params)
   console.log(req.query)
-  
+
   const body = req.body
   const command = req.params.command // 'deploy_nuxt.js'
   let param = req.params.param // 'default.json'
@@ -94,7 +109,7 @@ app.post('/build/:command/:param', (req, res) => {
   const timestamp = getTimeStr()
 
   const postLogName = 'logs/' + 'post_' + timestamp + '.json'
-  
+
   const content = JSON.stringify(body)
   fs.writeFile(postLogName, content, err => {
     if (err) console.log(err)
