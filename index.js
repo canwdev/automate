@@ -46,6 +46,7 @@ app.get('/build/:command/:param', (req, res) => {
   })
 })
 
+// 查看日志
 app.get('/logs/:file', (req, res) => {
   const result = sh.exec(`tail -25 ${path.join(__dirname, 'logs', req.params.file)}`)
   const logTail = result.toString()
@@ -70,8 +71,11 @@ app.get('/logs/:file', (req, res) => {
   })
 })
 
+// 列出所有日志
 app.get('/logs', (req, res) => {
-  const list = sh.ls('logs')
+  let list = sh.exec('ls -t logs', {silent: true})
+  list = list.split('\n')
+  list.pop() // 去除最后一项空项
   return res.render("logs-list", {
     list
   })
