@@ -51,7 +51,7 @@ app.get('/build/:command/:param', (req, res) => {
 
 // 查看日志
 app.get('/logs/:file', (req, res) => {
-  const result = sh.exec(`tail -25 ${path.join(__dirname, 'logs', req.params.file)}`)
+  const result = sh.exec(`tail -25 ${path.join(__dirname, 'logs', req.params.file)}`, {silent: true})
   const logTail = result.toString()
 
   if (result.code !== 0) {
