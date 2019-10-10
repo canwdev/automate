@@ -64,6 +64,8 @@ async function deploy() {
 
   cd(project_dir)
 
+  console.log(`>>> 重置分支...`)
+  exec('git reset --hard HEAD && git clean -f -d')
   console.log(`>>> 拉取 ${branch} 代码...`)
   exec(`git checkout ${branch} && git pull`)
 

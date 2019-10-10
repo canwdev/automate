@@ -19,6 +19,9 @@ app.use(bodyParser.json())
 // 设置模板引擎ejs
 app.set("view engine", "ejs")
 
+// 设置静态目录
+app.use("/", express.static('static')); 
+
 app.get('/', (req, res) => {
   return res.render("index", {
     
