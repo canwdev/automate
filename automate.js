@@ -58,6 +58,15 @@ module.exports = {
     exec(`git checkout ${branch} && git pull`, `GIT 拉取 ${branch} 代码...`)
     console.log('>>> 拉取结束')
   },
+
+  // 创建新 git 项目并强制推送到 pages（危险）
+  gitForcePush(projectName, distFolder, productionGit) {
+    this.cdProjectDir(projectName)
+    cd(distFolder)
+    exec('git init && git add -A && git commit -m "deploy"')
+    exec(`git push -f ${productionGit} master`)
+  },
+
   // 打包成品，files为要打包的文件（夹）用空格隔开，outputName为输出的压缩文件名，不要包含后缀
   // 返回一个对象，包含：完整的压缩包名称、带完整路径的名称
   compressTarGz(files = 'dist', outputName = 'dist') {

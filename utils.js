@@ -12,7 +12,7 @@ module.exports = {
     return result
   },
   exec(command, description) {
-    if (description) console.log('>>> '+ description)
+    console.log('>>> '+ (description || command))
     const result = sh.exec(command)
     if (result.code === 1) sh.exit(1)
 
