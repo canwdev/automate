@@ -54,7 +54,7 @@ app.get('/build/:command/:param', (req, res) => {
   const logName = 'build_' + getTimeStr() + '.log'
 
   // 2>&1 | tee 的意思是在控制台输出日志的同时保存到文件
-  // sh.exec(`node ${command} ${param} 2>&1 | tee logs/${logName}`, { async: true })
+  sh.exec(`node ${command} ${param} 2>&1 | tee logs/${logName}`, { async: true })
 
   return res.render("build", {
     logName
