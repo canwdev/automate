@@ -119,7 +119,9 @@ module.exports = {
     return ret
   },
   // 连接SSH并执行部署命令，具体配置请查看 node-ssh 文档与示例文件
-  async sendFileExecuteCommands(sshConfig, fileConfig, actions = []) {
+  async sendFileExecuteCommands(sshConfig, fileConfig, actions = [], {
+    stopWhenStderr = true,
+  }) {
     const NodeSSH = require('node-ssh')
 
     console.log(`>>> SSH 连接 ${sshConfig.host} ...`)
@@ -140,7 +142,10 @@ module.exports = {
       await ssh.putFile(local, remote).then(function () {
         console.log(">>> SSH 文件发送成功")
       }, function (error) {
-        console.error('SSH 文件发送失败', error)
+        console.error('SSH 文件发送失败(1)', error)
+        process.exit(1)
+      }).catch(e => {
+        console.error('SSH 文件发送失败(2)', e)
         process.exit(1)
       })
     }
@@ -158,9 +163,15 @@ module.exports = {
       await ssh.execCommand(action.command, { cwd: action.dir }).then((result) => {
         console.log(result.stdout)
         if (result.stderr) {
-          console.error('卧槽：', result.stderr)
-          process.exit(1)
+          // 有时会输出警告
+          console.error('>>> 卧槽：', result.stderr)
+          if(stopWhenStderr) {
+            process.exit(1)
+          }
         }
+      }).catch(e => {
+        console.error('SSH 命令执行失败', e)
+        process.exit(1)
       })
 
     }

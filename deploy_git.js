@@ -23,7 +23,9 @@ async function run() {
   const startTime = +new Date()
   console.log(`>>> ${startTime}, ${projectName} 开始部署 git 项目`)
 
-  await automate.sendFileExecuteCommands(sshConfig, null, sshCommands)
+  await automate.sendFileExecuteCommands(sshConfig, null, sshCommands, {
+    stopWhenStderr: false
+  })
 
   const endTime = +new Date()
   console.log(`>>> ${endTime}, 部署成功，耗时 ${(endTime - startTime) / 1000} 秒`)
