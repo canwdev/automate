@@ -28,7 +28,7 @@ module.exports = {
   async loadConfigFile(configFolder) {
     const configFiles = sh.ls(configFolder)
     let configFile = process.argv.slice(2) || null
-  
+
     if (configFile.length === 0) {
       const inquirer = require("inquirer")
       await inquirer.prompt([
@@ -42,8 +42,8 @@ module.exports = {
         configFile = answers.configFile
       })
     }
-  
-    const config = require("./config_deploy_nuxt/" + configFile)
+
+    const config = require(configFolder + '/' + configFile)
     console.log('>>> 配置文件 ' + configFile)
     return config
   },
@@ -88,7 +88,7 @@ module.exports = {
   compressTarGz(outputName = 'dist', files = 'dist') {
     const filename = outputName + '.tgz'
     exec(`tar czf ${filename} ${files}`, `${filename} 打包中...`)
-    
+
     let size = sh.exec(`du -h ${filename}`, { silent: true }).toString().split('\t')[0]
     let pwd = sh.exec('pwd', { silent: true }).toString().split('\n')[0]
     let ret = {
@@ -111,7 +111,7 @@ module.exports = {
     let size = sh.exec(`du -h ${_7zName}`, { silent: true }).toString().split('\t')[0]
     let pwd = sh.exec('pwd', { silent: true }).toString().split('\n')[0]
     let ret = {
-      filename: _7zName, 
+      filename: _7zName,
       fullPath: path.join(pwd, _7zName),
       size
     }
@@ -133,24 +133,26 @@ module.exports = {
       process.exit(1)
     })
 
-    const local = fileConfig.localFilePath
-    const remote = fileConfig.prodFullDir + '/' + fileConfig.prodFileName
-    console.log(`>>> 文件发送中：${local} -> ${remote}`)
-    await ssh.putFile(local, remote).then(function () {
-      console.log(">>> 文件发送成功")
-    }, function (error) {
-      console.error('文件发送失败', error)
-      process.exit(1)
-    })
+    if (fileConfig) {
+      const local = fileConfig.localFilePath
+      const remote = fileConfig.prodFullDir + '/' + fileConfig.prodFileName
+      console.log(`>>> 文件发送中：${local} -> ${remote}`)
+      await ssh.putFile(local, remote).then(function () {
+        console.log(">>> 文件发送成功")
+      }, function (error) {
+        console.error('文件发送失败', error)
+        process.exit(1)
+      })
+    }
 
     // 执行远程命令
     for (let i = 0; i < actions.length; i++) {
       const action = actions[i]
-      console.log('>>> SSH 执行命令：'+ (action.tip || action.command))
+      console.log('>>> SSH 执行命令：' + (action.tip || action.command))
 
       if (!action.dir) {
         console.log('错误：必须指定远程目录')
-        continue        
+        continue
       }
 
       await ssh.execCommand(action.command, { cwd: action.dir }).then((result) => {
@@ -172,7 +174,7 @@ module.exports = {
     const archives_folder_name = projectName + '@archive'
     const archive_name = `${outputAffix}-${getTimeStr()}-${distFileName}`
     sh.mkdir('-p', '../' + archives_folder_name)
-    sh.mv(distFileName,  `../${archives_folder_name}/${archive_name}`)
+    sh.mv(distFileName, `../${archives_folder_name}/${archive_name}`)
 
     console.log('>>> 归档成品', `${path.join(projectName, '../', archives_folder_name, archive_name)}`)
   }

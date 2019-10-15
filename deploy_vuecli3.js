@@ -20,11 +20,11 @@ async function run() {
 
   automate.cdProjectDir(projectName)
 
-  // automate.gitForcePull()
+  automate.gitForcePull()
 
-  // automate.exec('yarn install', '安装依赖...')
+  automate.exec('yarn install', '安装依赖...')
 
-  // automate.exec('npm run build', '构建中...')
+  automate.exec('npm run build', '构建中...')
 
   // 只打包dist文件夹内部的文件，不包括dist文件夹本身
   const distFile = automate.compressTarGz('dist', '-C dist .')
