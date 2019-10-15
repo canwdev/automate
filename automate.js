@@ -1,5 +1,5 @@
 const sh = require('shelljs')
-const NodeSSH = require('node-ssh')
+const fs = require('fs')
 const path = require('path')
 const utils = require('./utils.js')
 const cd = utils.cd
@@ -47,6 +47,21 @@ module.exports = {
     console.log('>>> 配置文件 ' + configFile)
     return config
   },
+  // 检测项目文件夹是否存在
+  isProjectDirExist(projectName) {
+    if (!fs.existsSync(path.join(__dirname, 'projects', projectName))) {
+      console.log('>>> 项目不存在')
+      return false
+    }
+    return true
+  },
+  // 项目文件夹如果不存在则克隆项目
+  initProjectIfNotExist(projectName, projectGit) {
+    if (!this.isProjectDirExist(projectName)) {
+      const projectDir = path.join(__dirname, 'projects', projectName)
+      exec(`git clone ${projectGit} ${projectDir}`)
+    }
+  },
 
   // 跳转到项目目录
   cdProjectDir(projectName) {
@@ -55,6 +70,7 @@ module.exports = {
   // 强制拉取最新代码
   gitForcePull(branch = 'master') {
     exec('git reset --hard HEAD && git clean -f -d', 'GIT 重置分支...')
+    // TODO: 这里如果分支不存在可能会报错
     exec(`git checkout ${branch} && git pull`, `GIT 拉取 ${branch} 代码...`)
     console.log('>>> 拉取结束')
   },
@@ -67,23 +83,24 @@ module.exports = {
     exec(`git push -f ${productionGit} master`)
   },
 
-  // 打包成品，files为要打包的文件（夹）用空格隔开，outputName为输出的压缩文件名，不要包含后缀
+  // 打包成品：outputName为输出的压缩文件名，不要包含后缀; files为要打包的文件（夹）用空格隔开;
   // 返回一个对象，包含：完整的压缩包名称、带完整路径的名称
-  compressTarGz(files = 'dist', outputName = 'dist') {
+  compressTarGz(outputName = 'dist', files = 'dist') {
     const filename = outputName + '.tgz'
     exec(`tar czf ${filename} ${files}`, `${filename} 打包中...`)
+    
     let size = sh.exec(`du -h ${filename}`, { silent: true }).toString().split('\t')[0]
-
+    let pwd = sh.exec('pwd', { silent: true }).toString().split('\n')[0]
     let ret = {
       filename,
-      fullPath: path.join(__dirname, filename),
+      fullPath: path.join(pwd, filename),
       size
     }
     console.log('>>> 打包结束 ' + JSON.stringify(ret))
     return ret
   },
   // 打包成品（7z），压缩率更高，但也更耗时（吃内存），用法与 compressTarGz 相同
-  compressTar7z(files = 'dist', outputName = 'dist') {
+  compressTar7z(outputName = 'dist', files = 'dist') {
     const tarName = outputName + '.tar'
     const _7zName = tarName + '.7z'
 
@@ -103,6 +120,8 @@ module.exports = {
   },
   // 连接SSH并执行部署命令，具体配置请查看 node-ssh 文档与示例文件
   async sendFileExecuteCommands(sshConfig, fileConfig, actions = []) {
+    const NodeSSH = require('node-ssh')
+
     console.log(`>>> SSH 连接 ${sshConfig.host} ...`)
 
     const ssh = new NodeSSH()

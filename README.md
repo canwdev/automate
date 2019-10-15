@@ -24,10 +24,7 @@ node deploy_nuxt.js
 ### 支持的项目
 
 - [VuePress](./deploy_vuepress.js)
-  - 暂不支持配置，通过修改源码的方式自定义
-- [Nuxt.js](./deploy_nuxt.js)
-  - 支持配置文件，参考 [default.json](config_deploy_nuxt/default.json)
-  - 使用7z打包完整包（包括`node_modules`约20MB+）并自动ssh发送服务器解压，几乎不占用线上服务器资源，避免死机！
+- [Nuxt.js](./deploy_nuxt.md)
   
 - 可以通过编写相应js文件进行扩展
 - 警告：暂不支持任务队列，请勿同时编译相同项目！
@@ -55,10 +52,3 @@ node deploy_nuxt.js
 
   - `remo-website-branch.json` 中的 `branch` 将被替换成WebHook中的分支名，例如当推送`stage`分支时，POST的body中含有`"ref":"refs/heads/stage"`，最后的结果为：`remo-website-stage.json`
   - `branches` 包含了你想构建哪几个分支，用半角逗号隔开。这些分支必须有对应的json配置文件，如果推送的分支不在这里面，则不执行构建
-
-
-## deploy_nuxt.js 备注
-
-- 目前不支持自动创建项目，请手动克隆项目至 `./projects/<your_project_name>` 下，并在 `config_deploy_nuxt` 目录中编写配置文件
-- 服务器需要安装node、npm、pm2、7z(p7zip-full)
-- 具体使用方式请阅读源码 😂

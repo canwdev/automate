@@ -1,11 +1,6 @@
 const automate = require('./automate')
 
 async function run() {
-
-  // ------ 使用步骤 ------
-  // 1. 进入 projects 文件夹，克隆项目，并切换到要发布的分支
-  // 2. 修改json配置文件（config_deploy_nuxt/???.json）
-  // 3. 直接运行 node deploy_nuxt.js 或者带参数运行 node deploy_nuxt.js ???.json
   const config = await automate.loadConfigFile('./config_deploy_nuxt')
 
   const projectDir = config.projectName
@@ -31,7 +26,7 @@ async function run() {
 
   automate.exec((config.buildCommand || 'npm run build'), '构建中...')
 
-   const distFile = automate.compressTar7z(productionFiles, 'dist')
+  const distFile = automate.compressTar7z('dist', productionFiles)
 
   await automate.sendFileExecuteCommands(sshConfig, {
     localFilePath: distFile.fullPath,
@@ -51,7 +46,7 @@ async function run() {
   const endTime = +new Date()
   console.log(`>>> ${endTime}, 部署成功，耗时 ${(endTime - startTime) / 1000} 秒`)
 
-  automate.archiveProductClean(projectDir, 'dist.tar.7z', branch+'-'+endTime)
+  automate.archiveProductClean(projectDir, 'dist.tar.7z', branch + '-' + endTime)
 
   console.log('>>> 执行结束！')
 }
