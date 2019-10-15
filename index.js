@@ -8,6 +8,9 @@ const fs = require('fs')
 const utils = require('./utils.js')
 const getTimeStr = utils.getDateTimeString
 
+// 接口请求密码验证
+const password = require('./password.json').password
+
 // 解决 req.body undefined
 
 // parse application/x-www-form-urlencoded
@@ -20,7 +23,7 @@ app.use(bodyParser.json())
 app.set("view engine", "ejs")
 
 // 设置静态目录
-app.use("/", express.static('static')); 
+app.use("/", express.static('public')); 
 
 app.get('/', (req, res) => {
   return res.render("index", {
@@ -29,8 +32,17 @@ app.get('/', (req, res) => {
   // return res.send('Automate working!')
 })
 
+// 使用 GET 方法触发部署
 app.get('/build/:command/:param', (req, res) => {
   console.log(req.params)
+
+  const pwd = req.query.pwd
+  if (!pwd) {
+    return res.status(403).send('缺少验证参数')
+  }
+  if (pwd !== password) {
+    return res.status(403).send('身份验证失败')
+  }
 
   const command = req.params.command // 'deploy_nuxt.js'
   const param = req.params.param // 'default.json'
@@ -42,7 +54,7 @@ app.get('/build/:command/:param', (req, res) => {
   const logName = 'build_' + getTimeStr() + '.log'
 
   // 2>&1 | tee 的意思是在控制台输出日志的同时保存到文件
-  sh.exec(`node ${command} ${param} 2>&1 | tee logs/${logName}`, { async: true })
+  // sh.exec(`node ${command} ${param} 2>&1 | tee logs/${logName}`, { async: true })
 
   return res.render("build", {
     logName
@@ -84,10 +96,18 @@ app.get('/logs', (req, res) => {
   })
 })
 
-// git WebHook 请求自动部署
+// 使用 POST 方法触发部署（WebHook）
 app.post('/build/:command/:param', (req, res) => {
   console.log(req.params)
   console.log(req.query)
+
+  const pwd = req.query.pwd
+  if (!pwd) {
+    return res.status(403).send('缺少验证参数')
+  }
+  if (pwd !== password) {
+    return res.status(403).send('身份验证失败')
+  }
 
   const body = req.body
   const command = req.params.command // 'deploy_nuxt.js'

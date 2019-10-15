@@ -10,7 +10,8 @@
   "nodemonConfig": {
     "ignore": [
       "projects/*",
-      "logs/*"
+      "logs/*",
+      "public/*"
     ]
   },
   "author": "",
