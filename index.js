@@ -129,7 +129,7 @@ app.post('/build/:command/:param', (req, res) => {
     } else {
       let text = `不存在分支 ${branch}，停止构建`
       console.log(text)
-      return res.code(400).send(text)
+      return res.status(400).send(text)
     }
   }
 
