@@ -145,7 +145,7 @@ module.exports = {
     const archive_name = `${outputAffix}-${getTimeStr()}-${distFileName}`
     sh.mkdir('-p', '../' + archives_folder_name)
     sh.mv(distFileName,  `../${archives_folder_name}/${archive_name}`)
-    sh.rm(distFileName)
+
     console.log('>>> 归档成品', `${path.join(projectName, '../', archives_folder_name, archive_name)}`)
   }
 }
