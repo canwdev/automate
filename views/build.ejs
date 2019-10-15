@@ -12,10 +12,19 @@
     }
 
     .build-title h3 {
-      background: #F44336;
+      background: #2196F3;
       color: #fff;
       padding: 10px;
+      font-size: 20px;
     }
+
+    .build-title h3 img {
+      width: 22px;
+      height: auto;
+      display: inline-block;
+      transform: translateY(3px);
+    }
+
     #iframe {
       border: 1px solid #9E9E9E;
     }
@@ -24,8 +33,8 @@
 
 <body>
   <div class="build-title">
-    <h3>正在执行，执行结束前请勿刷新此页面!!</h3>
-    <p>查看编译状态日志：<a href="/logs/<%= logName %>" target="_blank"><%= logName %></a></p>
+    <h3> <img src="/loadimg.gif"> 正在执行，执行结束前<strong>请勿</strong>刷新此页面!!</h3>
+    <p>观察状态日志【<a href="/logs/<%= logName %>" target="_blank"><%= logName %></a>】</p>
   </div>
   <iframe id="iframe" src="/logs/<%= logName %>" width="100%" height="500"></iframe>
   <script>

@@ -32,6 +32,12 @@ app.get('/', (req, res) => {
   // return res.send('Automate working!')
 })
 
+app.get('/build', (req, res) => {
+  return res.render("build", {
+    logName: 'test.log'
+  })
+})
+
 // 使用 GET 方法触发部署
 app.get('/build/:command/:param', (req, res) => {
   console.log(req.params)
