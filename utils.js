@@ -11,7 +11,8 @@ module.exports = {
     tip && console.log(tip, sh.pwd().toString())
     return result
   },
-  exec(command) {
+  exec(command, description) {
+    if (description) console.log('>>> '+ description)
     const result = sh.exec(command)
     if (result.code === 1) sh.exit(1)
 
