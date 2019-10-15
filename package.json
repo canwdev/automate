@@ -1,7 +1,8 @@
 {
   "name": "automate",
   "version": "1.0.0",
-  "description": "",
+  "description": "自动化部署工具（开发中）",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "start": "PORT=8100 node index.js",

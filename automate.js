@@ -158,7 +158,7 @@ module.exports = {
       await ssh.execCommand(action.command, { cwd: action.dir }).then((result) => {
         console.log(result.stdout)
         if (result.stderr) {
-          console.error(result.stderr)
+          console.error('卧槽：', result.stderr)
           process.exit(1)
         }
       })

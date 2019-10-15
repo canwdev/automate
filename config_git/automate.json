@@ -1,0 +1,14 @@
+{
+  "projectName": "automate",
+  "installCommand": "npm install",
+  "productionDir": "/usr/www/automate",
+  "sshConfig": {
+    "host": "zencode.top",
+    "port": "8085",
+    "username": "mint"
+  },
+  "sshCommands": [
+    "git pull && npm install",
+    "pm2 restart ecosystem.config.js"
+  ]
+}
