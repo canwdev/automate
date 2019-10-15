@@ -26,6 +26,7 @@ node deploy_nuxt.js
 - [Nuxt.js](./deploy_nuxt.md)
 - [VueCLI3](./deploy_vuecli3.js)
 - [VuePress](./deploy_vuepress.js)
+- [基于 git 部署的项目](./deploy_git.js)
 - 可以通过编写相应js文件进行扩展
 - 警告：暂不支持任务队列，请勿同时编译相同项目！
 - 警告：请勿修改 projects 中的项目文件，若在未提交修改前执行部署，修改的内容将会丢失！

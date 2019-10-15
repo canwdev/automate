@@ -1,6 +1,5 @@
 {
   "projectName": "automate",
-  "installCommand": "npm install",
   "productionDir": "/usr/www/automate",
   "sshConfig": {
     "host": "zencode.top",

@@ -8,6 +8,7 @@ async function run() {
   const productionFiles = config.productionFiles
   const sshConfig = {
     host: config.sshConfig.host,
+    port: config.sshConfig.port || 22,
     username: config.sshConfig.username,
     privateKey: config.sshConfig.privateKey || require('os').homedir() + '/.ssh/id_rsa'
   }

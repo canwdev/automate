@@ -1,7 +1,7 @@
 const automate = require('./automate')
 
+// 部署任何用git部署的项目
 async function run() {
-
   const config = await automate.loadConfigFile('./config_git')
 
   const projectName = config.projectName
@@ -23,6 +23,7 @@ async function run() {
   const startTime = +new Date()
   console.log(`>>> ${startTime}, ${projectName} 开始部署 git 项目`)
 
+  // 连接远程服务器并执行代码
   await automate.sendFileExecuteCommands(sshConfig, null, sshCommands, {
     stopWhenStderr: false
   })
