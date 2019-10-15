@@ -2,13 +2,15 @@ const automate = require('./automate')
 
 async function run() {
 
-  const projectName = 'tank-cms-admin-ui'
-  const projectGit = 'git@gitee.com:canwdev/tank-cms-admin-ui.git'
-  const productionDir = '/usr/www/node-blog-management-ui'
+  const config = await automate.loadConfigFile('./config_vuecli3')
+
+  const projectName = config.projectName
+  const projectGit = config.projectGit
+  const productionDir = config.productionDir
   const sshConfig = {
-    host: 'zencode.top',
-    username: 'root',
-    privateKey: require('os').homedir() + '/.ssh/id_rsa'
+    host: config.sshConfig.host,
+    username: config.sshConfig.username,
+    privateKey: config.sshConfig.privateKey || require('os').homedir() + '/.ssh/id_rsa'
   }
   
   const startTime = +new Date()
@@ -22,9 +24,9 @@ async function run() {
 
   automate.gitForcePull()
 
-  automate.exec('yarn install', '安装依赖...')
+  automate.exec((config.installCommand || 'npm install'), '安装依赖...')
 
-  automate.exec('npm run build', '构建中...')
+  automate.exec((config.buildCommand || 'npm run build'), '构建中...')
 
   // 只打包dist文件夹内部的文件，不包括dist文件夹本身
   const distFile = automate.compressTarGz('dist', '-C dist .')

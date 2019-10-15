@@ -136,11 +136,11 @@ module.exports = {
     if (fileConfig) {
       const local = fileConfig.localFilePath
       const remote = fileConfig.prodFullDir + '/' + fileConfig.prodFileName
-      console.log(`>>> 文件发送中：${local} -> ${remote}`)
+      console.log(`>>> SSH 文件发送中：${local} -> ${remote}`)
       await ssh.putFile(local, remote).then(function () {
-        console.log(">>> 文件发送成功")
+        console.log(">>> SSH 文件发送成功")
       }, function (error) {
-        console.error('文件发送失败', error)
+        console.error('SSH 文件发送失败', error)
         process.exit(1)
       })
     }
@@ -151,7 +151,7 @@ module.exports = {
       console.log('>>> SSH 执行命令：' + (action.tip || action.command))
 
       if (!action.dir) {
-        console.log('错误：必须指定远程目录')
+        console.log('SSH 错误：必须指定远程目录')
         continue
       }
 

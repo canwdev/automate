@@ -23,8 +23,9 @@ node deploy_nuxt.js
 
 ### 支持的项目
 
-- [VuePress](./deploy_vuepress.js)
 - [Nuxt.js](./deploy_nuxt.md)
+- [VueCLI3](./deploy_vuecli3.js)
+- [VuePress](./deploy_vuepress.js)
   
 - 可以通过编写相应js文件进行扩展
 - 警告：暂不支持任务队列，请勿同时编译相同项目！
