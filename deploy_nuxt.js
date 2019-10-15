@@ -31,7 +31,7 @@ async function run() {
 
   automate.exec((config.buildCommand || 'npm run build'), '构建中...')
 
-   const distFile = automate.compressTar7z(productionFiles, 'prod')
+   const distFile = automate.compressTar7z(productionFiles, 'dist')
 
   await automate.sendFileExecuteCommands(sshConfig, {
     localFilePath: distFile.fullPath,
@@ -44,14 +44,14 @@ async function run() {
     },
     {
       dir: productionDir,
-      command: `7z x prod.tar.7z -y && tar xf prod.tar && rm prod.tar prod.tar.7z && pm2 restart ecosystem.config.js`
+      command: `7z x dist.tar.7z -y && tar xf dist.tar && rm dist.tar dist.tar.7z && pm2 restart ecosystem.config.js`
     }
   ])
 
   const endTime = +new Date()
   console.log(`>>> ${endTime}, 部署成功，耗时 ${(endTime - startTime) / 1000} 秒`)
 
-  automate.archiveProductClean(projectDir, 'prod.tar.7z', branch+'-'+endTime)
+  automate.archiveProductClean(projectDir, 'dist.tar.7z', branch+'-'+endTime)
 
   console.log('>>> 执行结束！')
 }
