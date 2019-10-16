@@ -119,9 +119,7 @@ module.exports = {
     return ret
   },
   // 连接SSH并执行部署命令，具体配置请查看 node-ssh 文档与示例文件
-  async sendFileExecuteCommands(sshConfig, fileConfig, actions = [], {
-    stopWhenStderr = true,
-  }) {
+  async sendFileExecuteCommands(sshConfig, fileConfig, actions = [], stopWhenStderr=true) {
     const NodeSSH = require('node-ssh')
 
     console.log(`>>> SSH 连接 ${sshConfig.host} ...`)
