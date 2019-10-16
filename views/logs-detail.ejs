@@ -20,13 +20,25 @@
       padding: 10px;
       background: #ccc;
       overflow-x: auto;
+      position: relative;
+    }
+    .log-content .loading {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      width: 32px;
+      height: auto;
     }
   </style>
 </head>
 
 <body>
-  <p class="tip">日志输出 <span id='sec'>5</span>s 更新一次【<a href="/logs/<%= fileName %>?raw=true" target="_blank">查看原文件</a> | <a href="/logs" target="_blank">列表</a>】</p>
-  <pre id="log" class="log-content"><%= content %></pre>
+  <p class="tip">日志输出 <span id='sec'>5</span>s 更新一次【<a href="/logs/<%= fileName %>?raw=true" target="_blank">查看原文件</a> |
+    <a href="/logs" target="_blank">列表</a>】</p>
+  <div class="log-content">
+    <img class="loading" src="/loadimg.gif">
+    <pre id="log"><%= content %></pre>
+  </div>
   <script>
     window.onload = function () {
       requestLog()
