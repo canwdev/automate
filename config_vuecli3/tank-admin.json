@@ -2,7 +2,7 @@
   "projectName": "tank-cms-admin-ui",
   "projectGit": "git@gitee.com:canwdev/tank-cms-admin-ui.git",
   "installCommand": "yarn install",
-  "productionDir": "/usr/www/node-blog-management-ui",
+  "productionDir": "/usr/www/tank-cms/public/admin",
   "sshConfig": {
     "host": "zencode.top",
     "username": "root",

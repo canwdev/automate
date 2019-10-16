@@ -1,6 +1,6 @@
 {
   "projectName": "tank-cms",
-  "productionDir": "/usr/www/node-blog",
+  "productionDir": "/usr/www/tank-cms",
   "sshConfig": {
     "host": "zencode.top",
     "username": "root"
