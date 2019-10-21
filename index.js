@@ -23,11 +23,11 @@ app.use(bodyParser.json())
 app.set("view engine", "ejs")
 
 // 设置静态目录
-app.use("/", express.static('public')); 
+app.use("/", express.static('public'));
 
 app.get('/', (req, res) => {
   return res.render("index", {
-    
+
   })
   // return res.send('Automate working!')
 })
@@ -39,16 +39,16 @@ app.get('/build', (req, res) => {
 })
 
 // 使用 GET 方法触发部署
-app.get('/build/:command/:param', (req, res) => {
+app.get('/build/:command/:param',basicAuth, (req, res) => {
   console.log(req.params)
 
-  const pwd = req.query.pwd
-  if (!pwd) {
-    return res.status(403).send('缺少验证参数')
-  }
-  if (pwd !== password) {
-    return res.status(403).send('身份验证失败')
-  }
+  // const pwd = req.query.pwd
+  // if (!pwd) {
+  //   return res.status(403).send('缺少验证参数')
+  // }
+  // if (pwd !== password) {
+  //   return res.status(403).send('身份验证失败')
+  // }
 
   const command = req.params.command // 'deploy_nuxt.js'
   const param = req.params.param // 'default.json'
@@ -69,7 +69,7 @@ app.get('/build/:command/:param', (req, res) => {
 
 // 查看日志
 app.get('/logs/:file', (req, res) => {
-  const result = sh.exec(`tail -25 ${path.join(__dirname, 'logs', req.params.file)}`, {silent: true})
+  const result = sh.exec(`tail -25 ${path.join(__dirname, 'logs', req.params.file)}`, { silent: true })
   const logTail = result.toString()
 
   if (result.code !== 0) {
@@ -93,8 +93,8 @@ app.get('/logs/:file', (req, res) => {
 })
 
 // 列出所有日志
-app.get('/logs', (req, res) => {
-  let list = sh.exec('ls -t logs', {silent: true})
+app.get('/logs', basicAuth, (req, res) => {
+  let list = sh.exec('ls -t logs', { silent: true })
   list = list.split('\n')
   list.pop() // 去除最后一项空项
   return res.render("logs-list", {
@@ -178,4 +178,25 @@ function normalizePort(val) {
   }
 
   return false;
+}
+
+/**
+ * basicAuth 中间件
+ */
+function basicAuth(req, res, next) {
+  const auth = { login: 'admin', password: require('./password.json').password } // change this
+
+  // parse login and password from headers
+  const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
+  const [login, password] = new Buffer(b64auth, 'base64').toString().split(':')
+
+  // Verify login and password are set and correct
+  if (login && password && login === auth.login && password === auth.password) {
+    // Access granted...
+    return next()
+  }
+
+  // Access denied...
+  res.set('WWW-Authenticate', 'Basic realm="401"') // change this
+  res.status(401).send('Authentication required.') // custom message
 }
