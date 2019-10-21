@@ -1,0 +1,58 @@
+abbr, .cur-help {cursor: help;}
+
+body {
+  margin: 0;
+}
+
+.tip {
+  text-align: center;
+}
+
+.list-ul {
+  font-family: monospace;
+  font-size: 1.5rem;
+  width: 500px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  padding: 20px 40px;
+}
+
+.list-ul li {
+  line-height: 2;
+}
+
+.list-ul li:nth-child(2n) {
+  background: #f6f6f6;
+}
+
+.list-ul li a {
+  padding-left: 15px;
+  display: block;
+  text-decoration: none;
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+.list-ul li a:visited {
+  color: #9E9E9E;
+}
+
+.list-ul li a:hover {
+  outline: 2px solid;
+}
+
+
+.log-content {
+  margin: 0;
+  padding: 10px;
+  background: #ccc;
+  overflow-x: auto;
+  position: relative;
+}
+.log-content .loading {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 32px;
+  height: auto;
+}

@@ -5,45 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Log list</title>
-  <style>
-    .logs-wrap {
-      font-family: monospace;
-      font-size: 1.5rem;
-      width: 500px;
-      margin: 0 auto;
-      border: 1px solid #ccc;
-      padding: 20px 40px;
-    }
-
-    .logs-wrap li {
-      line-height: 2;
-    }
-
-    .logs-wrap li:nth-child(2n) {
-      background: #f6f6f6;
-    }
-
-    .logs-wrap li a {
-      padding-left: 15px;
-      display: block;
-      text-decoration: none;
-      color: #4CAF50;
-      font-weight: bold;
-    }
-
-    .logs-wrap li a:visited {
-      color: #9E9E9E;
-    }
-
-    .logs-wrap li a:hover {
-      outline: 2px solid;
-    }
-  </style>
+  <title>日志列表</title>
+  <link rel="stylesheet" href="/base.css">
 </head>
 
 <body>
-  <ul class="logs-wrap">
+  <ul class="list-ul">
     <% list.forEach(function(item){%>
     <li><a href="/logs/<%= item %>"><%= item %></a></li>
     <% }) %>

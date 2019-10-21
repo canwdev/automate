@@ -19,7 +19,8 @@
     }
 
     .main .links {
-      margin-top: 50px;
+      text-align: center;
+      margin: 50px auto;
     }
 
     .skewed {
@@ -36,22 +37,56 @@
       color: #fff;
       text-decoration: none;
     }
+
     .skewed:hover {
       background: #F44336;
       box-shadow: 0 0 0px 10px #F44336;
     }
+
+    .build-list p {
+      text-align: center;
+    }
   </style>
+  <link rel="stylesheet" href="/base.css">
+  <script src="/lib/vue.js"></script>
+  <script src="/lib/axios.min.js"></script>
 </head>
 
 <body>
   <div class="main">
     <h1>Automate.js</h1>
     <p>\ Node.js 自动化编译部署工具 /</p>
-
     <div class="links">
       <a class="skewed" href="/logs/">Logs</a>
     </div>
+
   </div>
+
+  <div id="vm" class="build-list">
+
+    <p>\ 点击一项立即开始<abbr title="点击立即开始构建该项。警告：启动后不支持停止，请勿重复点击！">构建</abbr> /</p>
+    <ul class="list-ul">
+      <li v-for="(v,i) in list" :key="i">
+        <a :href="v" target="_blank">{{v}}</a>
+      </li>
+    </ul>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#vm',
+      data: {
+        list: []
+      },
+      mounted: function () {
+        axios.get('/projects.json').then(res => {
+          res.data.forEach(v => {
+            this.list.push('/build/' + v.cmd + '/' + v.config)
+          })
+        })
+      }
+    })
+  </script>
 </body>
 
 </html>
