@@ -19,7 +19,7 @@ async function run() {
 
   automate.exec('npm run build', '构建中...')
 
-  automate.gitForcePush(projectName, distDir, productionGit)
+//  automate.gitForcePush(projectName, distDir, productionGit)
 
   const endTime = +new Date()
   console.log(`>>> ${endTime}, 部署成功，耗时 ${(endTime - startTime) / 1000} 秒`)
