@@ -4,7 +4,7 @@ async function run() {
 
   const projectName = 'notes-vuepress'
   const distDir = 'docs/.vuepress/dist'
-  const productionGit = 'https://github.com/canwdev/notes-vuepress-dist.git' // 将被覆盖，请勿填错！
+  const productionGit = 'https://github.com/canwdev/canwdev.github.io.git' // 将被覆盖，请勿填错！
   
   const startTime = +new Date()
   console.log(`>>> ${startTime}, ${projectName} 开始部署 VuePress`)
