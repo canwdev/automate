@@ -4,7 +4,7 @@ async function run() {
 
   const projectName = 'notes-vuepress'
   const distDir = 'docs/.vuepress/dist'
-  const productionGit = 'git@gitee.com:canwdev/canwdev.git' // 将被覆盖，请勿填错！
+  const productionGit = 'https://github.com/canwdev/notes-vuepress-dist.git' // 将被覆盖，请勿填错！
   
   const startTime = +new Date()
   console.log(`>>> ${startTime}, ${projectName} 开始部署 VuePress`)
@@ -19,7 +19,7 @@ async function run() {
 
   automate.exec('npm run build', '构建中...')
 
-//  automate.gitForcePush(projectName, distDir, productionGit)
+ automate.gitForcePush(projectName, distDir, productionGit)
 
   const endTime = +new Date()
   console.log(`>>> ${endTime}, 部署成功，耗时 ${(endTime - startTime) / 1000} 秒`)
