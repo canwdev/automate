@@ -7,13 +7,22 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>日志列表</title>
   <link rel="stylesheet" href="/base.css">
+  <style>
+    .task-tip{
+    }
+  </style>
 </head>
 
 <body>
+
+  <div class="list-ul">
+      <div class="task-tip">任务队列中的任务个数：<%= tasks.length %><span class="mini-font">（不会自动刷新）</span></div>
+  </div>
+
   <ul class="list-ul">
-    <% list.forEach(function(item){%>
-    <li><a href="/logs/<%= item %>"><%= item %></a></li>
-    <% }) %>
+      <% list.forEach(function(item){%>
+      <li><a href="/logs/<%= item %>"><%= item %></a></li>
+      <% }) %>
   </ul>
 </body>
 

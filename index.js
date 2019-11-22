@@ -6,24 +6,33 @@ const sh = require('shelljs')
 const fs = require('fs')
 
 const utils = require('./utils.js')
-const getTimeStr = utils.getDateTimeString
+const { SimpleTask, asyncExec, getDateTimeString: getTimeStr, genRandomString, normalizePort } = utils
+
+// 构建任务队列（自动执行）
+const tasks = new SimpleTask()
+
+/**
+ * 开始执行构建，如果有多个任务会自动排队
+ */
+function triggerDeploy(fullCommand, buildLogName) {
+  tasks.add(async function () {
+    // 2>&1 | tee 的意思是在控制台输出日志的同时保存到文件
+    await asyncExec(`node ${fullCommand} 2>&1 | tee logs/${buildLogName}`)
+  })
+}
 
 // 接口请求密码验证
 const password = require('./password.json').password
 
 // 解决 req.body undefined
-
 // parse application/x-www-form-urlencoded
 // app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
 app.use(bodyParser.json())
 
-// 设置模板引擎ejs
-app.set("view engine", "ejs")
-
-// 设置静态目录
-app.use("/", express.static('public'));
+app.set("view engine", "ejs")              // 设置模板引擎ejs
+app.use("/", express.static('public'));    // 设置静态目录
 
 app.get('/', (req, res) => {
   return res.render("index", {
@@ -38,17 +47,11 @@ app.get('/build', (req, res) => {
   })
 })
 
-// 使用 GET 方法触发部署
-app.get('/build/:command/:param',basicAuth, (req, res) => {
+/**
+ * 使用 GET 方法触发部署
+ */
+app.get('/build/:command/:param', basicAuth, (req, res) => {
   console.log(req.params)
-
-  // const pwd = req.query.pwd
-  // if (!pwd) {
-  //   return res.status(403).send('缺少验证参数')
-  // }
-  // if (pwd !== password) {
-  //   return res.status(403).send('身份验证失败')
-  // }
 
   const command = req.params.command // 'deploy_nuxt.js'
   const param = req.params.param // 'default.json'
@@ -57,23 +60,25 @@ app.get('/build/:command/:param',basicAuth, (req, res) => {
     return res.send('必须指定command')
   }
 
-  const logName = 'build_' + getTimeStr() + '.log'
+  const buildLogName = 'build_' + getTimeStr() + '_' + genRandomString() + '.log'
 
-  // 2>&1 | tee 的意思是在控制台输出日志的同时保存到文件
-  sh.exec(`node ${command} ${param} 2>&1 | tee logs/${logName}`, { async: true })
+  // 开始构建
+  triggerDeploy(`${command} ${param}`, buildLogName)
 
   return res.render("build", {
-    logName
+    buildLogName
   })
 })
 
-// 查看日志
+/**
+ * 查看日志
+ */
 app.get('/logs/:file', (req, res) => {
   const result = sh.exec(`tail -25 ${path.join(__dirname, 'logs', req.params.file)}`, { silent: true })
   const logTail = result.toString()
 
   if (result.code !== 0) {
-    return res.send('日志文件读取失败！')
+    return res.send(req.params.file + '\n日志文件读取失败！可能是任务还没有开始执行')
   }
 
   if (req.query.raw) {
@@ -92,17 +97,22 @@ app.get('/logs/:file', (req, res) => {
   })
 })
 
-// 列出所有日志
+/**
+ * 列出所有日志
+ */
 app.get('/logs', basicAuth, (req, res) => {
   let list = sh.exec('ls -t logs', { silent: true })
   list = list.split('\n')
   list.pop() // 去除最后一项空项
   return res.render("logs-list", {
+    tasks: tasks.getList(),
     list
   })
 })
 
-// 使用 POST 方法触发部署（WebHook）
+/**
+ * 使用 POST 方法触发部署（WebHook）
+ */
 app.post('/build/:command/:param', (req, res) => {
   console.log(req.params)
   console.log(req.query)
@@ -125,6 +135,7 @@ app.post('/build/:command/:param', (req, res) => {
   // 切换到指定相同分支
   const branch = body.ref.split('/').pop()
   console.log('分支：', branch)
+
   // 检测是否在需要构建的分支列表中，如果不在就忽略这次构建
   // POST http://xxx.top:8100/build/deploy_nuxt.js/remo-website-branch.json?branches=prod,stage
   if (req.query.branches) {
@@ -141,19 +152,22 @@ app.post('/build/:command/:param', (req, res) => {
 
 
   const timestamp = getTimeStr()
+  const unique = genRandomString()
 
-  const postLogName = 'logs/' + 'post_' + timestamp + '.json'
+  const postLogName = 'logs/' + 'post_' + timestamp + '_' + unique + '.json'
 
+  // 保存触发 POST 的信息日志
   const content = JSON.stringify(body)
   fs.writeFile(postLogName, content, err => {
     if (err) console.log(err)
   })
 
-  const buildLogName = 'post_' + timestamp + '_build.log'
-  // 2>&1 | tee 的意思是在控制台输出日志的同时保存到文件
-  sh.exec(`node ${command} ${param} 2>&1 | tee logs/${buildLogName}`, { async: true })
+  const buildLogName = 'post_' + timestamp + '_' + unique + '_build.log'
 
-  return res.send(`OK, /logs/${buildLogName}`)
+  // 开始构建
+  triggerDeploy(`${command} ${param}`, buildLogName)
+
+  return res.send(`OK, 任务创建成功。开始执行时将生成日志文件：/logs/${buildLogName}`)
 })
 
 const port = normalizePort(process.env.PORT || '8100')
@@ -161,24 +175,7 @@ app.listen(port, () => {
   console.log(`Automate build API listening on port ${port}`);
 });
 
-/**
- * Normalize a port into a number, string, or false.
- */
-function normalizePort(val) {
-  var port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-}
+/* -------------------------------------- */
 
 /**
  * basicAuth 中间件

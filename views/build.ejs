@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>正在执行... - <%= logName %> </title>
+  <title>正在执行... - <%= buildLogName %> </title>
   <style>
     .build-title {
       text-align: center;
@@ -34,9 +34,9 @@
 <body>
   <div class="build-title">
     <h3> <img src="/loadimg.gif"> 正在执行，执行结束前<strong>请勿</strong>刷新此页面!!</h3>
-    <p>你可以直接关闭本页面，或观察【<a href="/logs/<%= logName %>" target="_blank" title="<%= logName %>">日志输出</a>】</p>
+    <p>你可以直接关闭本页面，或观察【<a href="/logs/<%= buildLogName %>" target="_blank" title="<%= buildLogName %>">日志输出</a>】</p>
   </div>
-  <iframe id="iframe" src="/logs/<%= logName %>" width="100%" height="500"></iframe>
+  <iframe id="iframe" src="/logs/<%= buildLogName %>" width="100%" height="500"></iframe>
   <script>
   // window.onload = function() {
   //   window.setInterval(reloadIFrame, 5000)

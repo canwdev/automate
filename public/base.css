@@ -4,6 +4,10 @@ body {
   margin: 0;
 }
 
+.mini-font {
+  font-size: 12px;
+}
+
 .tip {
   text-align: center;
 }
@@ -12,7 +16,7 @@ body {
   font-family: monospace;
   font-size: 1.5rem;
   width: 500px;
-  margin: 0 auto;
+  margin: 10px auto;
   border: 1px solid #ccc;
   padding: 20px 40px;
 }
