@@ -1,6 +1,7 @@
 {
   "projectName": "remo_website_ssr",
   "branch": "stage",
+  "installCommand": "yarn install",
   "buildCommand": "npm run build:stage",
   "productionDir": "/usr/www/remo_website_ssr",
   "productionFiles": ".nuxt node_modules assets server deploy_prod.sh ecosystem.config.js nuxt.config.js package.json package-lock.json",
