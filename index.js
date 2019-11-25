@@ -32,8 +32,8 @@ function triggerDeploy(command, buildLogName, {
     time: nowDate.getTime(),
     command: command,
     logFile: buildLogName,
-    postMessageFile: null,
-    branch: null
+    postMessageFile: postMessageFile || null,
+    branch: branch || null
   })
 
   tasks.add(async function () {
