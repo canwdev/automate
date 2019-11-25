@@ -1,6 +1,5 @@
 [
   { "cmd": "deploy_null.js", "config": "0" },
-  { "cmd": "pm2_restart.js", "config": "0" },
   { "cmd": "deploy_vuepress.js", "config": "0" },
   { "cmd": "deploy_nuxt.js", "config": "node-blog-frontend.json" },
   { "cmd": "deploy_nuxt.js", "config": "remo-website-prod.json" },

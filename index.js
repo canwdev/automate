@@ -11,6 +11,9 @@ const { SimpleTask, asyncExec, getDateTimeString: getTimeStr, genRandomString, n
 // 构建任务队列（自动执行）
 const tasks = new SimpleTask()
 
+// 服务启动时刻
+const serviceInitTime = new Date().getTime()
+
 /**
  * 开始执行构建，如果有多个任务会自动排队
  */
@@ -36,9 +39,20 @@ app.use("/", express.static('public'));    // 设置静态目录
 
 app.get('/', (req, res) => {
   return res.render("index", {
-
+    serviceInitTime
   })
   // return res.send('Automate working!')
+})
+
+app.get('/restart', basicAuth, (req, res) =>{
+  
+  sh.exec('node ./pm2_restart.js', {async: true})
+  
+  return res.render("alert", {
+    message: "Automate 服务可能已经重启，点击确定后跳转到首页...",
+    url: '/'
+  })
+  
 })
 
 app.get('/build', (req, res) => {

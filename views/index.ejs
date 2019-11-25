@@ -3,19 +3,20 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Automate</title>
   <style>
-    .main {
-      text-align: center;
-    }
-
     .main h1 {
       font-family: Montserrat, Open Sans, PingFang SC, Arial, Microsoft YaHei, Helvetica Neue, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
       font-size: 5rem;
       color: #F44336;
       text-shadow: 4px 4px 0 #FFEB3B;
+      margin-bottom: 0;
+    }
+
+    .hero {
+      text-align: center;
     }
 
     .main .links {
@@ -26,13 +27,13 @@
     .skewed {
       display: inline-block;
       font-family: fantasy;
-      font-size: 6rem;
+      font-size: 40px;
       text-transform: uppercase;
       padding: 0 25px;
       margin: 10px 15px;
       background: #FFEB3B;
-      box-shadow: 0 0 0px 10px #FFEB3B;
-      border: 10px solid #fff;
+      box-shadow: 0 0 0px 5px #FFEB3B;
+      border: 5px solid #fff;
       transform: rotate(0deg) skew(-22.5deg);
       color: #fff;
       text-decoration: none;
@@ -53,30 +54,47 @@
 </head>
 
 <body>
-  <div class="main">
-    <h1>Automate.js</h1>
-    <p>\ Node.js 自动化编译部署工具 /</p>
-    <div class="links">
-      <a class="skewed" href="/logs/">Logs</a>
+  <div id="vm" class="main">
+    <div class="hero">
+      <h1>Automate.js</h1>
+      <p>🔮 Node.js 自动化编译部署工具</p>
+      <div class="links">
+        <a class="skewed" href="/logs/">日志列表 · Logs</a>
+      </div>
     </div>
 
+    <div class="build-list">
+
+      <p>↓ 点击一项立即开始<abbr title="点击立即开始构建该项。警告：启动后不支持停止，请勿重复点击！">构建</abbr> ↓</p>
+      <ul class="list-ul">
+        <li v-for="(v,i) in list" :key="i">
+          <a :href="v" target="_blank">{{v}}</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="build-list">
+      <p>↓ Automate 管理 ↓</p>
+      <ul class="list-ul">
+        <li>服务已经运行了：{{runningTime}}</li>
+        <li><a href="/restart" title="点击后立即重启服务！用于解决一些构建执行时卡住的问题">立即重启服务</a></li>
+      </ul>
+
+    </div>
   </div>
 
-  <div id="vm" class="build-list">
-
-    <p>\ 点击一项立即开始<abbr title="点击立即开始构建该项。警告：启动后不支持停止，请勿重复点击！">构建</abbr> /</p>
-    <ul class="list-ul">
-      <li v-for="(v,i) in list" :key="i">
-        <a :href="v" target="_blank">{{v}}</a>
-      </li>
-    </ul>
-  </div>
 
   <script>
+    var serviceInitTime = '<%= serviceInitTime %>'
+    function getRunningSeconds(initTime) {
+      return (new Date(Date.now() - initTime) / 1000).toFixed(0) + 's'
+    }
+
     new Vue({
       el: '#vm',
       data: {
-        list: []
+        list: [],
+        runningTime: getRunningSeconds(serviceInitTime)
       },
       mounted: function () {
         axios.get('/projects.json').then(res => {
@@ -84,7 +102,12 @@
             this.list.push('/build/' + v.cmd + '/' + v.config)
           })
         })
-      }
+
+        setInterval(() => {
+          this.runningTime = getRunningSeconds(serviceInitTime)
+        }, 1000);
+      },
+
     })
   </script>
 </body>
