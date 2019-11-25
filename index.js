@@ -5,8 +5,8 @@ const path = require('path')
 const sh = require('shelljs')
 const fs = require('fs')
 
-const utils = require('./utils')
-const { SimpleTask, asyncExec, getDateTimeString: getTimeStr, genRandomString, normalizePort } = utils
+const { SimpleTask, asyncExec, getDateTimeString: getTimeStr, genRandomString, normalizePort, readJsonAsObjectSync } = require('./utils')
+const logStorage = require('./utils/log-storage')
 
 // 构建任务队列（自动执行）
 const tasks = new SimpleTask()
@@ -14,18 +14,34 @@ const tasks = new SimpleTask()
 // 服务启动时刻
 const serviceInitTime = new Date().getTime()
 
+// 接口请求密码
+let passwordConfig = readJsonAsObjectSync('./configs/password.json')
+const password = passwordConfig ? passwordConfig.password : 'Abcd.1234'
+
 /**
  * 开始执行构建，如果有多个任务会自动排队
  */
-function triggerDeploy(fullCommand, buildLogName) {
+function triggerDeploy(command, buildLogName, {
+  nowDate,
+  postMessageFile,
+  branch,
+}) {
+
+  // 保存日志索引
+  logStorage.addLog({
+    time: nowDate.getTime(),
+    command: command,
+    logFile: buildLogName,
+    postMessageFile: null,
+    branch: null
+  })
+
   tasks.add(async function () {
     // 2>&1 | tee 的意思是在控制台输出日志的同时保存到文件
-    await asyncExec(`node ${fullCommand} 2>&1 | tee logs/${buildLogName}`)
+    await asyncExec(`node ${command} 2>&1 | tee logs/${buildLogName}`)
   })
 }
 
-// 接口请求密码验证
-const password = require('./password.json').password
 
 // 解决 req.body undefined
 // parse application/x-www-form-urlencoded
@@ -44,15 +60,15 @@ app.get('/', (req, res) => {
   // return res.send('Automate working!')
 })
 
-app.get('/restart', basicAuth, (req, res) =>{
-  
-  sh.exec('node ./pm2_restart.js', {async: true})
-  
+app.get('/restart', basicAuth, (req, res) => {
+
+  sh.exec('node ./pm2_restart.js', { async: true })
+
   return res.render("alert", {
     message: "Automate 服务可能已经重启，点击确定后跳转到首页...",
     url: '/'
   })
-  
+
 })
 
 app.get('/build', (req, res) => {
@@ -61,28 +77,6 @@ app.get('/build', (req, res) => {
   })
 })
 
-/**
- * 使用 GET 方法触发部署
- */
-app.get('/build/:command/:param', basicAuth, (req, res) => {
-  console.log(req.params)
-
-  const command = req.params.command // 'deploy_nuxt.js'
-  const param = req.params.param // 'default.json'
-
-  if (!command) {
-    return res.send('必须指定command')
-  }
-
-  const buildLogName = 'build_' + getTimeStr() + '_' + genRandomString() + '.log'
-
-  // 开始构建
-  triggerDeploy(`${command} ${param}`, buildLogName)
-
-  return res.render("build", {
-    buildLogName
-  })
-})
 
 /**
  * 查看日志
@@ -115,12 +109,36 @@ app.get('/logs/:file', (req, res) => {
  * 列出所有日志
  */
 app.get('/logs', basicAuth, (req, res) => {
-  let list = sh.exec('ls -t logs', { silent: true })
-  list = list.split('\n')
-  list.pop() // 去除最后一项空项
+  let list = logStorage.getLog()
   return res.render("logs-list", {
     tasks: tasks.getList(),
     list
+  })
+})
+
+/**
+ * 使用 GET 方法触发部署
+ */
+app.get('/build/:command/:param', basicAuth, (req, res) => {
+  console.log(req.params)
+
+  const command = req.params.command // 'deploy_nuxt.js'
+  const param = req.params.param // 'default.json'
+
+  if (!command) {
+    return res.send('必须指定command')
+  }
+
+  const now = new Date()
+  const buildLogName = 'build_' + getTimeStr(now) + '_' + genRandomString() + '.log'
+
+  // 开始构建
+  triggerDeploy(`${command} ${param}`, buildLogName, {
+    nowDate: now
+  })
+
+  return res.render("build", {
+    buildLogName
   })
 })
 
@@ -164,22 +182,27 @@ app.post('/build/:command/:param', (req, res) => {
     }
   }
 
-
-  const timestamp = getTimeStr()
+  const now = new Date()
+  const timestamp = getTimeStr(now)
   const unique = genRandomString()
 
-  const postLogName = 'logs/' + 'post_' + timestamp + '_' + unique + '.json'
+  const postLogName = 'post_' + timestamp + '_' + unique + '.json'
 
   // 保存触发 POST 的信息日志
   const content = JSON.stringify(body)
-  fs.writeFile(postLogName, content, err => {
+  fs.writeFile('logs/' + postLogName, content, err => {
     if (err) console.log(err)
   })
+
 
   const buildLogName = 'post_' + timestamp + '_' + unique + '_build.log'
 
   // 开始构建
-  triggerDeploy(`${command} ${param}`, buildLogName)
+  triggerDeploy(`${command} ${param}`, buildLogName, {
+    nowDate: now,
+    postMessageFile: postLogName,
+    branch: branch
+  })
 
   return res.send(`OK, 任务创建成功。开始执行时将生成日志文件：/logs/${buildLogName}`)
 })
@@ -195,14 +218,15 @@ app.listen(port, () => {
  * basicAuth 中间件
  */
 function basicAuth(req, res, next) {
-  const auth = { login: 'admin', password: require('./password.json').password } // change this
+
+  const auth = { login: 'admin', password: password } // change this
 
   // parse login and password from headers
   const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
-  const [login, password] = new Buffer(b64auth, 'base64').toString().split(':')
+  const [login, pwd] = new Buffer(b64auth, 'base64').toString().split(':')
 
   // Verify login and password are set and correct
-  if (login && password && login === auth.login && password === auth.password) {
+  if (login && pwd && login === auth.login && pwd === auth.password) {
     // Access granted...
     return next()
   }

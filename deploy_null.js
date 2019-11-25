@@ -6,16 +6,16 @@ let i = 0
 let it = setInterval(() => {
   i += 1
   console.log(`Current percent: ${i}%`)
-  if (i >= 100) {
+  if (i >= 10) {
     clearInterval(it)
 
     let success = Math.random() > 0.5
     if (!success) {
-      console.log('>>> Error! Deploy failed', timeFlag)
+      console.log('>>> 随机结果：Error! Deploy failed', timeFlag)
       process.exit(1)
     }
 
 
-    console.log('>>> Success! Deploy complete', timeFlag)
+    console.log('>>> 随机结果：Success! Deploy complete', timeFlag)
   }
 }, 1000);

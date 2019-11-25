@@ -1,10 +1,10 @@
 const sh = require('shelljs')
 const SimpleTask = require('./simple-task')
+const {readJsonAsObjectSync} = require('./local-storage')
 
 function padNum(num, len = 2) {
   return num.toString().padStart(len, '0')
 }
-
 
 /**
  * Normalize a port into a number, string, or false.
@@ -25,7 +25,12 @@ function normalizePort(val) {
   return false;
 }
 
+
+
 module.exports = {
+  readJsonAsObjectSync,
+  SimpleTask,
+  normalizePort,
   cd(dir, tip) {
     const result = sh.cd(dir)
     if (result.code === 1) sh.exit(1)
@@ -33,7 +38,7 @@ module.exports = {
     return result
   },
   exec(command, description) {
-    console.log('>>> '+ (description || command))
+    console.log('>>> ' + (description || command))
     const result = sh.exec(command)
     if (result.code === 1) sh.exit(1)
 
@@ -42,10 +47,8 @@ module.exports = {
   /**
    * 获取日期和时间（用于文件名）
    */
-  getDateTimeString() {
-    const d = new Date()
-
-    return `${d.getFullYear()}${padNum(d.getMonth()+1)}${padNum(d.getDate())}_${padNum(d.getHours())}${padNum(d.getMinutes())}${padNum(d.getSeconds())}${padNum(d.getMilliseconds())}`
+  getDateTimeString(d = new Date()) {
+    return `${d.getFullYear()}${padNum(d.getMonth() + 1)}${padNum(d.getDate())}_${padNum(d.getHours())}${padNum(d.getMinutes())}${padNum(d.getSeconds())}${padNum(d.getMilliseconds())}`
   },
   /**
    * 生成随机字符串
@@ -69,7 +72,5 @@ module.exports = {
         reject(e)
       }
     })
-  },
-  SimpleTask,
-  normalizePort
+  }
 }

@@ -22,6 +22,7 @@
     "ejs": "^2.7.1",
     "express": "^4.17.1",
     "inquirer": "^7.0.0",
+    "node-localstorage": "^2.1.4",
     "node-ssh": "^6.0.0",
     "open": "^6.4.0",
     "shelljs": "^0.8.3"

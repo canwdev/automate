@@ -7,10 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>日志列表</title>
   <link rel="stylesheet" href="/base.css">
-  <style>
-    .task-tip{
-    }
-  </style>
+
 </head>
 
 <body>
@@ -21,7 +18,7 @@
 
   <ul class="list-ul">
       <% list.forEach(function(item){%>
-      <li><a href="/logs/<%= item %>"><%= item %></a></li>
+      <li><a href="/logs/<%= item %>"><%= item.time %></a></li>
       <% }) %>
   </ul>
 </body>
