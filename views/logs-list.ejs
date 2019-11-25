@@ -2,25 +2,52 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <%- include('_head'); -%>
   <title>日志列表</title>
-  <link rel="stylesheet" href="/base.css">
-
 </head>
 
 <body>
+  <%- include('_nav'); -%>
+  <div id="root" class="container">
 
-  <div class="list-ul">
-      <div class="task-tip">任务队列中的任务个数：<%= tasks.length %><span class="mini-font">（不会自动刷新）</span></div>
+    <h2>状态</h2>
+    <p class="task-tip">任务队列中的任务个数：<%= tasks.length %><span class="mini-font">（不会自动刷新）</span></p>
+
+    <h2>日志列表</h2>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>创建时间</th>
+          <th>Node 命令</th>
+          <th>日志文件</th>
+          <th>PostMessage</th>
+          <th>部署分支</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(log, index) in logs" :key="log.time">
+          <th scope="row">{{ index+1 }}</th>
+          <td>{{ log.time }}</td>
+          <td>{{ log.command }}</td>
+          <td><a :href="`/logs/${log.logFile}`">{{ log.logFile }}</a></td>
+          <td><a v-if="log.postMessageFile" :href="`/logs/${log.postMessageFile}`">点击查看</a><span v-else>-</span></td>
+          <td>{{ log.branch || '-' }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
-  <ul class="list-ul">
-      <% list.forEach(function(item){%>
-      <li><a href="/logs/<%= item %>"><%= item.time %></a></li>
-      <% }) %>
-  </ul>
+  <%- include('_ssr'); -%>
+  <script>
+    var vm = new Vue({
+      el: '#root',
+      data: {
+        logs: SSR_DATA
+      }
+    })
+  </script>
+
 </body>
 
 </html>

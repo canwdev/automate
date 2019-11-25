@@ -109,10 +109,10 @@ app.get('/logs/:file', (req, res) => {
  * 列出所有日志
  */
 app.get('/logs', basicAuth, (req, res) => {
-  let list = logStorage.getLog()
+  let logs = logStorage.getLog()
   return res.render("logs-list", {
     tasks: tasks.getList(),
-    list
+    SSR_DATA: logs.reverse()
   })
 })
 
