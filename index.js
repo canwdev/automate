@@ -5,7 +5,7 @@ const path = require('path')
 const sh = require('shelljs')
 const fs = require('fs')
 
-const utils = require('./utils.js')
+const utils = require('./utils')
 const { SimpleTask, asyncExec, getDateTimeString: getTimeStr, genRandomString, normalizePort } = utils
 
 // 构建任务队列（自动执行）
