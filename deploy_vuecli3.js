@@ -2,7 +2,7 @@ const automate = require('./automate')
 
 async function run() {
 
-  const config = await automate.loadConfigFile('./config_vuecli3')
+  const config = await automate.loadConfigFile('./configs/vuecli3')
 
   const projectName = config.projectName
   const projectGit = config.projectGit
