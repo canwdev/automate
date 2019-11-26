@@ -19,9 +19,9 @@
     <div class="">
       <h2>管理</h2>
       <ul>
-        <li>服务已经运行了：{{runningTime}}</li>
+        <li>服务已经运行了：<span class="badge">{{runningTime}}</span></li>
         <li><a class="btn btn-primary" href="/logs/">日志列表 · Logs</a></li>
-        <li><a class="btn btn-danger" href="/restart" title="点击后立即重启服务！用于解决一些构建执行时卡住的问题">立即重启服务</a></li>
+        <li><a class="btn btn-danger" href="/restart" @click.prevent="handleRestart()" title="重启 Automate 服务！用于解决一些构建执行时卡住的问题">重启服务</a></li>
       </ul>
     </div>
 
@@ -30,7 +30,7 @@
 
       <ul>
         <li v-for="(v,i) in list" :key="i">
-          <a class="btn btn-warning" :href="v" target="_blank">{{v}}</a>
+          <a class="btn btn-default" :href="v" @click.prevent="handleBuild(v)">{{v}}</a>
         </li>
       </ul>
     </div>
@@ -60,7 +60,23 @@
           this.runningTime = getRunningSeconds(serviceInitTime)
         }, 1000);
       },
-
+      methods: {
+        handleRestart() {
+          if (confirm('确定要重启 Automate 服务吗？')) {
+            location.href = '/restart'
+          }
+        },
+        handleBuild(url) {
+          if (confirm('确定要开始构建 ' + url + ' ?')) {
+            axios.get(url).then(res => {
+              console.log(res.data)
+              location.href = '/logs/' + res.data.buildLogName
+            }).catch(e => {
+              console.error(e)
+            })
+          }
+        }
+      }
     })
   </script>
 </body>

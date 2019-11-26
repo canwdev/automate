@@ -1,32 +1,18 @@
 abbr, .cur-help {cursor: help;}
 
+abbr {
+  text-decoration: none;
+  color: royalblue;
+}
+
 .site-title {
+  display: block;
   font-family: Montserrat, Open Sans, PingFang SC, Arial, Microsoft YaHei, Helvetica Neue, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
   font-size: 5rem;
-  color: #F44336;
+  color: #F44336 !important;
   text-shadow: 4px 4px 0 #FFEB3B;
   margin-bottom: 0;
 }
-
-.mini-font {
-  font-size: 12px;
-}
-
-.tip {
-  text-align: center;
-}
-
-.log-content {
-  margin: 0;
-  padding: 10px;
-  background: #ccc;
-  overflow-x: auto;
-  position: relative;
-}
-.log-content .loading {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  width: 32px;
-  height: auto;
+.site-title:hover {
+  text-decoration: none;
 }

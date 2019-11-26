@@ -137,7 +137,7 @@ app.get('/build/:command/:param', basicAuth, (req, res) => {
     nowDate: now
   })
 
-  return res.render("build", {
+  return res.json({
     buildLogName
   })
 })

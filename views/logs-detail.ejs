@@ -7,13 +7,24 @@
 </head>
 
 <body>
-  <p class="tip">日志输出 <span id='sec'>5</span>s 刷新一次【<a href="/logs/<%= fileName %>?raw=true" class="cur-help"
-      title="日志源文件不会自动刷新">日志源文件</a> |
-    <a href="/logs">日志列表</a>】</p>
-  <div class="log-content">
-    <img class="loading" src="/loadimg.gif">
-    <pre id="log"><%= content %></pre>
+  <%- include('_nav'); -%>
+
+  <div class="container">
+    <h2>日志详情</h2>
+    <p><a href="/logs">返回日志列表</a></p>
+    <p>源文件：<a href="/logs/<%= fileName %>?raw=true" class="cur-help" title="日志源文件不会自动刷新">/logs/<%= fileName %></a></p>
+
+    <div class="log-content">
+      <pre id="log"><%= content %></pre>
+    </div>
+
+    <div class="progress">
+      <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuemax="100" style="width: 100%">
+        <p>日志输出 <span id='sec'>5</span>s 刷新一次</p>
+      </div>
+    </div>
   </div>
+
   <script>
     window.onload = function () {
       requestLog()
