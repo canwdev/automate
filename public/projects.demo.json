@@ -1,0 +1,8 @@
+[
+  { "cmd": "deploy_null.js", "config": "0" },
+  { "cmd": "deploy_vuepress.js", "config": "0" },
+  { "cmd": "deploy_nuxt.js", "config": "example.json" },
+  { "cmd": "deploy_nuxt.js", "config": "example-prod.json" },
+  { "cmd": "deploy_vuecli3.js", "config": "example.json" },
+  { "cmd": "deploy_git.js", "config": "example.json" }
+]

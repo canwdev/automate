@@ -1,11 +1,14 @@
 const automate = require('./automate')
 
 async function run() {
+  const config = await automate.loadConfigFile('./configs/vuepress')
 
-  const projectName = 'notes-vuepress'
-  const distDir = 'docs/.vuepress/dist'
-  const productionGit = 'https://github.com/canwdev/canwdev.github.io.git' // 将被覆盖，请勿填错！
-  
+  const {
+    projectName,
+    distDir,
+    productionGit // 这个是要发布的 git 地址，将强制推送，请勿填错！
+  } = config
+
   const startTime = +new Date()
   console.log(`>>> ${startTime}, ${projectName} 开始部署 VuePress`)
 

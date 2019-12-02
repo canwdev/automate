@@ -1,0 +1,11 @@
+{
+  "projectName": "example-vue-project",
+  "projectGit": "git@github.com:example/example-vue-project.git",
+  "installCommand": "yarn install",
+  "productionDir": "/usr/www/example-vue-project",
+  "sshConfig": {
+    "host": "example.com",
+    "username": "root",
+    "privateKey": null
+  }
+}

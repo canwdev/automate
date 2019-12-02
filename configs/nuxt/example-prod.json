@@ -1,12 +1,12 @@
 {
-  "projectName": "remo_website_ssr",
+  "projectName": "example-nuxt-project",
   "branch": "prod",
   "installCommand": "yarn install",
   "buildCommand": "npm run build:prod",
-  "productionDir": "/usr/local/remo.com",
+  "productionDir": "/usr/www2/example-nuxt-project",
   "productionFiles": ".nuxt node_modules assets server deploy_prod.sh ecosystem.config.js nuxt.config.js package.json package-lock.json",
   "sshConfig": {
-    "host": "remo-ai.com",
+    "host": "example2.com",
     "username": "root",
     "privateKey": null
   }

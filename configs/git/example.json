@@ -1,0 +1,13 @@
+{
+  "projectName": "example-git-project",
+  "productionDir": "/usr/www/example-git-project",
+  "sshConfig": {
+    "host": "example.com",
+    "port": "8022",
+    "username": "admin"
+  },
+  "sshCommands": [
+    "git pull && npm install",
+    "pm2 restart ecosystem.config.js" 
+  ]
+}

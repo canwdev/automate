@@ -1,10 +1,10 @@
 {
-  "projectName": "node-blog-frontend",
-  "productionDir": "/usr/www/node-blog-frontend",
+  "projectName": "example-nuxt-project",
+  "productionDir": "/usr/www/example-nuxt-project",
   "installCommand": "yarn install",
   "productionFiles": ".nuxt node_modules assets server deploy_prod.sh ecosystem.config.js nuxt.config.js package.json package-lock.json",
   "sshConfig": {
-    "host": "zencode.top",
+    "host": "example.com",
     "username": "root"
   }
 }

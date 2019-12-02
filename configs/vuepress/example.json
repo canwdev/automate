@@ -1,0 +1,5 @@
+{
+  "projectName": "notes-vuepress",
+  "productionGit": "https://github.com/canwdev/canwdev.github.io.git",
+  "distDir": "docs/.vuepress/dist"
+}
