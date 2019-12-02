@@ -30,12 +30,12 @@
 
       <ul>
         <li v-for="(v,i) in list" :key="i">
-          <a class="btn btn-default" :href="v" @click.prevent="handleBuild(v)">{{v}}</a>
+          <a class="btn btn-default" :class="{'btn-info': v.title}" :href="v.url" :title="v.url" @click.prevent="handleBuild(v.url)">{{v.title || v.url}}</a>
         </li>
       </ul>
 
       <ul v-if="list.length===0">
-        <li>暂无配置，可以将 <a href="/projects.demo.json">/projects.demo.json</a> 重命名为 project.json 以查看效果。</li>
+        <li>暂无配置，可以将 <a href="/projects.demo.json">/projects.demo.json</a> 重命名为 projects.json 以查看效果。</li>
         <li>注意：示例文件都是无效的，即使尝试运行也会报错，具体请参考文档。</li>
       </ul>
     </div>
@@ -57,7 +57,10 @@
       mounted: function () {
         axios.get('/projects.json').then(res => {
           res.data.forEach(v => {
-            this.list.push('/build/' + v.cmd + '/' + v.config)
+            this.list.push({
+              title: v.title,
+              url: '/build/' + v.cmd + '/' + v.config
+            })
           })
         })
 
