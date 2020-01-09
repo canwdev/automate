@@ -6,7 +6,8 @@ async function run() {
   const {
     projectName,
     distDir,
-    productionGit // 这个是要发布的 git 地址，将强制推送，请勿填错！
+    productionGit, // 这个是要发布的 git 地址，将强制推送，请勿填错！
+    productionGits // 支持多个发布地址（数组），将忽略 productionGit
   } = config
 
   const startTime = +new Date()
@@ -22,7 +23,13 @@ async function run() {
 
   automate.exec('npm run build', '构建中...')
 
- automate.gitForcePush(projectName, distDir, productionGit)
+  if (productionGits) {
+    productionGits.forEach(productionGit => {
+      automate.gitForcePush(projectName, distDir, productionGit, true)
+    })
+  } else {
+    automate.gitForcePush(projectName, distDir, productionGit)
+  }
 
   const endTime = +new Date()
   console.log(`>>> ${endTime}, 部署成功，耗时 ${(endTime - startTime) / 1000} 秒`)

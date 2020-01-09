@@ -189,7 +189,7 @@ app.post('/build/:command/:param', (req, res) => {
   const postLogName = 'post_' + timestamp + '_' + unique + '.json'
 
   // 保存触发 POST 的信息日志
-  const content = JSON.stringify(body)
+  const content = JSON.stringify(body, null, 2)
   fs.writeFile('logs/' + postLogName, content, err => {
     if (err) console.log(err)
   })

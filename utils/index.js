@@ -25,8 +25,6 @@ function normalizePort(val) {
   return false;
 }
 
-
-
 module.exports = {
   readJsonAsObjectSync,
   SimpleTask,
@@ -54,7 +52,7 @@ module.exports = {
    * 生成随机字符串
    */
   genRandomString() {
-    return (Math.random()).toString(36).split('.')[1]
+    return Math.random().toString(36).substr(2)
   },
   /** 
    * 异步执行命令，使用 Promise 封装

@@ -75,10 +75,19 @@ module.exports = {
     console.log('>>> 拉取结束')
   },
 
-  // 创建新 git 项目并强制推送到 pages（危险）
-  gitForcePush(projectName, distFolder, productionGit) {
+  /**
+   * 创建新 git 项目并强制推送 (-f 危险），一般用于 pages
+   * @param {string} projectName 项目目录
+   * @param {string} distFolder 发布目录
+   * @param {string} productionGit 要发布的远程 git 仓库
+   * @param {boolean} clean 是否清除原来的仓库（危险）
+   */
+  gitForcePush(projectName, distFolder, productionGit, clean=false) {
     this.cdProjectDir(projectName)
     cd(distFolder)
+    if (clean) {
+      exec('rm -rf .git')
+    }
     exec('git init && git add -A && git commit -m "deploy"')
     exec(`git push -f ${productionGit} master`)
   },
