@@ -9,6 +9,7 @@
       margin-bottom: 5px;
     }
   </style>
+  <script src="/lib/moment.min.js"></script>
   <script src="/lib/axios.min.js"></script>
 </head>
 
@@ -17,9 +18,9 @@
   <div id="vm" class="container">
 
     <div class="">
-      <h2>管理</h2>
+      <h2>管理服务</h2>
       <ul>
-        <li>服务已经运行了：<span class="badge">{{runningTime}}</span></li>
+        <li><abbr :title="'启动时刻：' +initTimeFormated">服务运行了</abbr>：<span class="badge">{{runningTime}}</span></li>
         <li><a class="btn btn-primary" href="/logs/">日志列表 · Logs</a></li>
         <li><a class="btn btn-danger" href="/restart" @click.prevent="handleRestart()" title="重启 Automate 服务！用于解决一些构建执行时卡住的问题">重启服务</a></li>
       </ul>
@@ -44,15 +45,30 @@
 
   <script>
     var serviceInitTime = '<%= serviceInitTime %>'
-    function getRunningSeconds(initTime) {
-      return (new Date(Date.now() - initTime) / 1000).toFixed(0) + 's'
+    serviceInitTime = new Date(parseInt(serviceInitTime))
+    function formatRunningTime(initTime) {
+      var diff = new Date(Date.now() - initTime.getTime()).getTime()
+      // return (diff / 1000).toFixed(0) + 's'
+
+      var duration = moment.duration(diff)
+
+      var days = duration.days()
+      var hours = duration.hours()
+      var minutes = duration.minutes()
+      var seconds = duration.seconds()
+
+      return (days > 0 ? (days + ' 天 ') : '') +
+        (hours > 0 ? (hours + ' 小时 ') : '') +
+        (minutes > 0 ? (minutes + ' 分 ') : '') +
+        seconds + ' 秒'
     }
 
     new Vue({
       el: '#vm',
       data: {
         list: [],
-        runningTime: getRunningSeconds(serviceInitTime)
+        initTimeFormated: moment(serviceInitTime).format('YYYY-MM-DD HH:mm:ss A'),
+        runningTime: formatRunningTime(serviceInitTime)
       },
       mounted: function () {
         axios.get('/projects.json').then(res => {
@@ -65,7 +81,7 @@
         })
 
         setInterval(() => {
-          this.runningTime = getRunningSeconds(serviceInitTime)
+          this.runningTime = formatRunningTime(serviceInitTime)
         }, 1000);
       },
       methods: {

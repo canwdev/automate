@@ -24,14 +24,18 @@ async function run() {
   automate.exec('npm run build', '构建中...')
 
   if (productionGits) {
-    productionGits.forEach(productionGit => {
-      automate.gitForcePush(projectName, distDir, productionGit, true)
+    productionGits.forEach(item => {
+      const {url, desc} = item
+
+      automate.gitForcePush(projectName, distDir, url, true)
+      
+      desc && console.log(`>>> ❇️ ` + desc)
     })
   } else {
     automate.gitForcePush(projectName, distDir, productionGit)
   }
 
   const endTime = +new Date()
-  console.log(`>>> ${endTime}, 部署成功，耗时 ${(endTime - startTime) / 1000} 秒`)
+  console.log(`>>> ✅ ${endTime}, 部署成功，耗时 ${(endTime - startTime) / 1000} 秒`)
 }
 run()

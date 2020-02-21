@@ -36,7 +36,7 @@ module.exports = {
     return result
   },
   exec(command, description) {
-    console.log('>>> ' + (description || command))
+    console.log(`>>> ${description ? '✴️' : '🚀' } ${description || command}`)
     const result = sh.exec(command)
     if (result.code === 1) sh.exit(1)
 

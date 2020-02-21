@@ -4,6 +4,7 @@
 <head>
   <%- include('_head'); -%>
   <title>日志列表</title>
+  <script src="/lib/moment.min.js"></script>
 </head>
 
 <body>
@@ -19,7 +20,7 @@
         <tr>
           <th>#</th>
           <th>创建时间</th>
-          <th>Node 命令</th>
+          <th>命令</th>
           <th>日志文件</th>
           <th>PostMessage</th>
           <th>部署分支</th>
@@ -28,7 +29,7 @@
       <tbody>
         <tr v-for="(log, index) in logs" :key="log.time">
           <th scope="row">{{ index+1 }}</th>
-          <td>{{ log.time }}</td>
+          <td :title="log.time">{{ formatTime(log.time) }}</td>
           <td>{{ log.command }}</td>
           <td><a :href="`/logs/${log.logFile}`">{{ log.logFile }}</a></td>
           <td><a v-if="log.postMessageFile" :href="`/logs/${log.postMessageFile}`">点击查看</a><span v-else>-</span></td>
@@ -44,6 +45,11 @@
       el: '#root',
       data: {
         logs: SSR_DATA
+      },
+      methods: {
+        formatTime(time) {
+          return moment(time).format('YYYY-MM-DD HH:mm:ss A')
+        }
       }
     })
   </script>
