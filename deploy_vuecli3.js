@@ -1,4 +1,5 @@
 const automate = require('./automate')
+const {parseSSHConfig} = require('./utils')
 
 async function run() {
 
@@ -7,13 +8,8 @@ async function run() {
   const projectName = config.projectName
   const projectGit = config.projectGit
   const productionDir = config.productionDir
-  const sshConfig = {
-    host: config.sshConfig.host,
-    port: config.sshConfig.port || 22,
-    username: config.sshConfig.username,
-    privateKey: config.sshConfig.privateKey || require('os').homedir() + '/.ssh/id_rsa'
-  }
-  
+  const sshConfig = parseSSHConfig(config.sshConfig)
+
   const startTime = +new Date()
   console.log(`>>> ${startTime}, ${projectName} 开始部署 VueCLI3`)
 
@@ -41,7 +37,7 @@ async function run() {
       dir: productionDir,
       // 删除除了'*.tgz'的所有文件
       command: `find . -type f -not -name '*.tgz' -print0 | xargs -0 -r rm --`
-    },{
+    }, {
       dir: productionDir,
       command: `tar xf dist.tgz && rm dist.tgz`
     }

@@ -82,7 +82,7 @@ module.exports = {
    * @param {string} productionGit 要发布的远程 git 仓库
    * @param {boolean} clean 是否清除原来的仓库（危险）
    */
-  gitForcePush(projectName, distFolder, productionGit, clean=false) {
+  gitForcePush(projectName, distFolder, productionGit, clean = false) {
     this.cdProjectDir(projectName)
     cd(distFolder)
     if (clean) {
@@ -128,7 +128,7 @@ module.exports = {
     return ret
   },
   // 连接SSH并执行部署命令，具体配置请查看 node-ssh 文档与示例文件
-  async sendFileExecuteCommands(sshConfig, fileConfig, actions = [], stopWhenStderr=true) {
+  async sendFileExecuteCommands(sshConfig, fileConfig, actions = [], stopWhenStderr = true) {
     const NodeSSH = require('node-ssh')
 
     console.log(`>>> SSH 连接 ${sshConfig.host} ...`)
@@ -172,7 +172,7 @@ module.exports = {
         if (result.stderr) {
           // 有时会输出警告
           console.error('>>> 卧槽：', result.stderr)
-          if(stopWhenStderr) {
+          if (stopWhenStderr) {
             process.exit(1)
           }
         }

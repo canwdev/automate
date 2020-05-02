@@ -70,5 +70,15 @@ module.exports = {
         reject(e)
       }
     })
+  },
+  parseSSHConfig(sshConfig) {
+    return {
+      host: sshConfig.host,
+      port: sshConfig.port || 22,
+      username: sshConfig.username,
+      password: sshConfig.password,
+      privateKey: sshConfig.password ? undefined :
+        (sshConfig.privateKey || require('os').homedir() + '/.ssh/id_rsa')
+    }
   }
 }
