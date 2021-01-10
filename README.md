@@ -6,8 +6,8 @@
 
 ```sh
 # 一般配置
-npm install
-npm start
+yarn install
+yarn start
 
 # 作为后台服务
 pm2 start ecosystem.config.js
@@ -15,6 +15,11 @@ pm2 start ecosystem.config.js
 # 基于命令行的手动部署
 node deploy_nuxt.js
 ```
+
+## 初始配置
+
+- 将 `./configs/password.demo.json` 重命名为 `password.json`，包含登录密码，默认用户和密码都是 `admin`
+- 将 `./public/projects.demo.json` 重命名为 `projects.json`，包含几个项目示例配置文件
 
 ## ✨ 目前实现的功能
 
@@ -31,10 +36,6 @@ node deploy_nuxt.js
 - 💎 可以通过编写相应js文件进行扩展
 - 有些项目需要手动 clone 至 `./projects`。
 - ⚠ 警告：`./projects` 中是项目的原始文件，不建议改动！若在未提交修改前执行部署，修改的内容将会丢失！
-
-## 使用说明
-
-> TODO: 完善该文档
 
 ### 🕹 直接执行文件
 
