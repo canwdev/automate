@@ -26,6 +26,9 @@ module.exports = {
       branch: null,
     }, log))
 
+    // Only save 20 records
+    logs = logs.slice(-20)
+
     return storage.setItem(KEY, JSON.stringify(logs))
   }
 }
