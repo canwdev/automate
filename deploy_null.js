@@ -1,6 +1,5 @@
 // 本文件仅用于测试构建，并无实际效果
-const timeFlag = Date.now()
-console.log('>>> Start deploy no code...', timeFlag)
+console.log('>>> Start deploy no code...')
 
 let i = 0
 let it = setInterval(() => {
@@ -11,11 +10,11 @@ let it = setInterval(() => {
 
     let success = Math.random() > 0.5
     if (!success) {
-      console.log('>>> 随机结果：Error! Deploy failed', timeFlag)
+      console.log('>>> Error! Deploy failed')
       process.exit(1)
     }
 
 
-    console.log('>>> 随机结果：Success! Deploy complete', timeFlag)
+    console.log('>>> Success! Deploy complete')
   }
 }, 1000);
