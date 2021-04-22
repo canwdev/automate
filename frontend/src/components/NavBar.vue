@@ -14,6 +14,13 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
+.nav-bar {
+
+  padding-bottom: 9px;
+  margin: 40px 0 20px;
+  border-bottom: 1px solid #eee;
+}
+
 .site-title {
   display: block;
   color: #F44336;
