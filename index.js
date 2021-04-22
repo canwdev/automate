@@ -5,7 +5,14 @@ const path = require('path')
 const sh = require('shelljs')
 const fs = require('fs')
 
-const { SimpleTask, asyncExec, getDateTimeString: getTimeStr, genRandomString, normalizePort, readJsonAsObjectSync } = require('./utils')
+const {
+  SimpleTask,
+  asyncExec,
+  getDateTimeString: getTimeStr,
+  genRandomString,
+  normalizePort,
+  readJsonAsObjectSync
+} = require('./utils')
 const logStorage = require('./utils/log-storage')
 
 // 构建任务队列（自动执行）
@@ -16,7 +23,7 @@ const serviceInitTime = new Date().getTime()
 
 // 接口请求密码
 let passwordConfig = readJsonAsObjectSync('./configs/password.json')
-const password = passwordConfig ? passwordConfig.password : 'Abcd.1234'
+const password = passwordConfig ? passwordConfig.password : 'admin'
 
 /**
  * 开始执行构建，如果有多个任务会自动排队
@@ -50,8 +57,8 @@ function triggerDeploy(command, buildLogName, {
 // parse application/json
 app.use(bodyParser.json())
 
-app.set("view engine", "ejs")              // 设置模板引擎ejs
-app.use("/", express.static('public'));    // 设置静态目录
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/', express.static(path.join(__dirname, 'app_dist')));
 
 app.get('/', (req, res) => {
   return res.render("index", {
@@ -60,7 +67,13 @@ app.get('/', (req, res) => {
   // return res.send('Automate working!')
 })
 
-app.get('/restart', basicAuth, (req, res) => {
+app.get('/api/info', (req, res) => {
+  return res.json({
+    serviceInitTime
+  })
+})
+
+app.post('/restart', basicAuth, (req, res) => {
 
   sh.exec('node ./pm2_restart.js', { async: true })
 

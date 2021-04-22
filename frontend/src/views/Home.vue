@@ -29,6 +29,7 @@
 <script>
 import axios from 'axios'
 import moment from 'moment'
+import {getServiceInfo} from '@/api/server'
 
 let serviceInitTime = '2021-4-22'
 serviceInitTime = new Date(parseInt(serviceInitTime))
@@ -61,7 +62,7 @@ export default {
     }
   },
   mounted: function () {
-    axios.get('/projects.json').then(res => {
+    /*axios.get('/projects.json').then(res => {
       res.data.forEach(v => {
         this.list.push({
           title: v.title,
@@ -72,9 +73,15 @@ export default {
 
     setInterval(() => {
       this.runningTime = formatRunningTime(serviceInitTime)
-    }, 1000);
+    }, 1000);*/
+
+    this.getInfo()
   },
   methods: {
+    async getInfo() {
+      const res = await getServiceInfo()
+      console.log(res)
+    },
     handleRestart() {
       if (confirm('确定要重启 Automate 服务吗？')) {
         location.href = '/restart'

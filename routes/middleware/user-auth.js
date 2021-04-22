@@ -1,0 +1,58 @@
+const jwt = require('jsonwebtoken')
+const {
+  JWT_TOKEN,
+  CODE_TOKEN_EXPIRE,
+  CODE_CLIENT_FORBIDDEN
+} = require('../../enum')
+const Users = require('../../db/components/user/model')
+const {enableAuth} = require('../../config')
+
+/**
+ * 验证登录中间件
+ * 需要验证的路由，需要在请求头加入 authorization 字段，值为登录成功获取的token
+ * 会向下级传递 __userid 作为登录用户的id
+ */
+module.exports = async function authLogin(req, res, next) {
+  // 必须先登录
+  try {
+    if (!enableAuth) {
+      req.__userid = null
+      return next()
+    }
+
+    let token = req.headers.authorization
+    if (token) {
+      const raw = String(token)
+      const {id} = jwt.verify(raw, JWT_TOKEN)
+
+      const user = await Users.findOne({
+        where: {id}
+      })
+
+      if (!user) return res.status(CODE_CLIENT_FORBIDDEN).send({
+        message: 'Token expired'
+      })
+
+      // 向下一级传值
+      req.__userid = id
+      next()
+    } else {
+      return res.status(CODE_CLIENT_FORBIDDEN).send({
+        message: 'This action needs login'
+      })
+    }
+  } catch (e) {
+    console.log(e)
+
+    if (e.message === 'jwt expired') {
+      return res.json({
+        code: CODE_TOKEN_EXPIRE,
+        message: 'Token expired'
+      })
+    }
+
+    return res.status(500).send({
+      message: e.message
+    })
+  }
+}

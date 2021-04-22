@@ -19,9 +19,9 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "ejs": "^2.7.1",
     "express": "^4.17.1",
     "inquirer": "^7.0.0",
+    "jsonwebtoken": "^8.5.1",
     "node-localstorage": "^2.1.4",
     "node-ssh": "^6.0.0",
     "shelljs": "^0.8.3"
