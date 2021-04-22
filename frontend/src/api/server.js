@@ -6,7 +6,7 @@ const service = new Service({
 })
 
 export function getServiceInfo() {
-  return service.get('/info')
+  return service.get('/')
 }
 
 export function restartService() {

@@ -1,6 +1,5 @@
 const sh = require('shelljs')
 const SimpleTask = require('./simple-task')
-const {readJsonAsObjectSync} = require('./local-storage')
 
 function padNum(num, len = 2) {
   return num.toString().padStart(len, '0')
@@ -26,7 +25,6 @@ function normalizePort(val) {
 }
 
 module.exports = {
-  readJsonAsObjectSync,
   SimpleTask,
   normalizePort,
   cd(dir, tip) {
@@ -54,7 +52,7 @@ module.exports = {
   genRandomString() {
     return Math.random().toString(36).substr(2)
   },
-  /** 
+  /**
    * 异步执行命令，使用 Promise 封装
    */
   asyncExec(command) {
