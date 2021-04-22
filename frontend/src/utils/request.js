@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {getToken} from './auth'
-
+import main from '../main'
 function Service(config = {}) {
   const {
     baseURL,
@@ -41,6 +41,10 @@ function Service(config = {}) {
           message = msg
         }
       }
+      main.$bvToast.toast(message, {
+        variant: 'danger',
+        title: 'Request Error'
+      })
       console.log(message)
       return Promise.reject(error)
     }

@@ -4,8 +4,7 @@ const {
   CODE_TOKEN_EXPIRE,
   CODE_CLIENT_FORBIDDEN
 } = require('../../enum')
-const Users = require('../../db/components/user/model')
-const {enableAuth} = require('../../config')
+const {enableAuth, authUsers} = require('../../configs')
 
 /**
  * 验证登录中间件
@@ -25,11 +24,10 @@ module.exports = async function authLogin(req, res, next) {
       const raw = String(token)
       const {id} = jwt.verify(raw, JWT_TOKEN)
 
-      const user = await Users.findOne({
-        where: {id}
-      })
+      console.log('userid', id)
+      const hasUser = authUsers[id]
 
-      if (!user) return res.status(CODE_CLIENT_FORBIDDEN).send({
+      if (!hasUser) return res.status(CODE_CLIENT_FORBIDDEN).send({
         message: 'Token expired'
       })
 

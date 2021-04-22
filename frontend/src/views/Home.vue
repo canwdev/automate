@@ -3,9 +3,9 @@
     <div class="management">
       <h2>管理服务</h2>
       <ul>
-        <li><abbr :title="'启动时刻：' +initTimeFormated">服务运行了</abbr>：<span class="badge">{{runningTime}}</span></li>
+        <li><abbr :title="'启动时刻：' +initTimeFormatted">服务运行了</abbr>：<span class="badge">{{runningTime}}</span></li>
         <li><a class="btn btn-primary" href="/logs/">日志列表 · Logs</a></li>
-        <li><a class="btn btn-danger" href="/restart" @click.prevent="handleRestart()" title="重启 Automate 服务！用于解决一些构建执行时卡住的问题">重启服务</a></li>
+        <li><button class="btn btn-danger" @click="handleRestart()" title="重启 Automate 服务！用于解决一些构建执行时卡住的问题">重启服务</button></li>
       </ul>
     </div>
 
@@ -29,20 +29,21 @@
 <script>
 import axios from 'axios'
 import moment from 'moment'
-import {getServiceInfo} from '@/api/server'
+import {
+  getServiceInfo,
+  restartService
+} from '@/api/server'
 
-let serviceInitTime = '2021-4-22'
-serviceInitTime = new Date(parseInt(serviceInitTime))
 function formatRunningTime(initTime) {
-  var diff = new Date(Date.now() - initTime.getTime()).getTime()
+  const diff = new Date(Date.now() - initTime.getTime()).getTime()
   // return (diff / 1000).toFixed(0) + 's'
 
-  var duration = moment.duration(diff)
+  const duration = moment.duration(diff)
 
-  var days = duration.days()
-  var hours = duration.hours()
-  var minutes = duration.minutes()
-  var seconds = duration.seconds()
+  const days = duration.days()
+  const hours = duration.hours()
+  const minutes = duration.minutes()
+  const seconds = duration.seconds()
 
   return (days > 0 ? (days + ' 天 ') : '') +
       (hours > 0 ? (hours + ' 小时 ') : '') +
@@ -57,11 +58,16 @@ export default {
   data() {
     return {
       list: [],
-      initTimeFormated: moment(serviceInitTime).format('YYYY-MM-DD HH:mm:ss A'),
-      runningTime: formatRunningTime(serviceInitTime)
+      initTime: null,
+      runningTime: '-'
     }
   },
-  mounted: function () {
+  computed: {
+    initTimeFormatted() {
+      return moment(this.initTime).format('YYYY-MM-DD HH:mm:ss A')
+    }
+  },
+  mounted() {
     /*axios.get('/projects.json').then(res => {
       res.data.forEach(v => {
         this.list.push({
@@ -77,15 +83,41 @@ export default {
 
     this.getInfo()
   },
+  beforeDestroy() {
+    clearInterval(this.timeTick)
+  },
   methods: {
     async getInfo() {
-      const res = await getServiceInfo()
-      console.log(res)
+      const {initTime} = await getServiceInfo()
+      this.initTime = new Date(initTime)
+      this.startTimeTick()
+    },
+    startTimeTick() {
+      clearInterval(this.timeTick)
+      this.timeTick = setInterval(() => {
+        this.runningTime = formatRunningTime(this.initTime)
+      }, 1000)
     },
     handleRestart() {
-      if (confirm('确定要重启 Automate 服务吗？')) {
-        location.href = '/restart'
-      }
+      this.$bvModal.msgBoxConfirm('确定要重启服务吗？', {
+        title: 'Please Confirm',
+      })
+          .then(async value => {
+            if (!value) {
+              return
+            }
+
+            const {message} = await restartService()
+
+            this.$bvToast.toast(message, {
+              variant: 'info',
+              title: 'Service Restart'
+            })
+            console.log('value', value)
+          })
+          .catch(err => {
+            // An error occurred
+          })
     },
     handleBuild(url) {
       if (confirm('确定要开始构建 ' + url + ' ?')) {
