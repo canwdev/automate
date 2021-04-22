@@ -1,5 +1,6 @@
 <template>
-  <div class="home container">
+  <b-container>
+
     <div class="management">
       <h2>管理服务</h2>
       <ul>
@@ -23,7 +24,7 @@
         <li>注意：示例文件都是无效的，即使尝试运行也会报错，具体请参考 README.md。</li>
       </ul>
     </div>
-  </div>
+  </b-container>
 </template>
 
 <script>
