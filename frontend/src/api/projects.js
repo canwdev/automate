@@ -8,3 +8,7 @@ const service = new Service({
 export function getBuildList() {
   return service.get('/build-list')
 }
+
+export function buildProject(item) {
+  return service.get(`/build/${item.cmd}/${item.config}`)
+}

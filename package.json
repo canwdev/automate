@@ -23,6 +23,7 @@
     "inquirer": "^7.0.0",
     "js-yaml": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
+    "lowdb": "^1.0.0",
     "node-localstorage": "^2.1.4",
     "node-ssh": "^6.0.0",
     "shelljs": "^0.8.3"

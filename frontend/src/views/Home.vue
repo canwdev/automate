@@ -4,9 +4,11 @@
     <div class="management">
       <h2>管理服务</h2>
       <ul>
-        <li><abbr :title="'启动时刻：' +initTimeFormatted">服务运行了</abbr>：<span class="badge">{{runningTime}}</span></li>
+        <li><abbr :title="'启动时刻：' +initTimeFormatted">服务运行了</abbr>：<span class="badge">{{ runningTime }}</span></li>
         <li><a class="btn btn-primary" href="/logs/">日志列表 · Logs</a></li>
-        <li><button class="btn btn-danger" @click="handleRestart()" title="重启 Automate 服务！用于解决一些构建执行时卡住的问题">重启服务</button></li>
+        <li>
+          <button class="btn btn-danger" @click="handleRestart()" title="重启 Automate 服务！用于解决一些构建执行时卡住的问题">重启服务</button>
+        </li>
       </ul>
     </div>
 
@@ -14,8 +16,9 @@
       <h2>构建</h2>
 
       <ul v-if="buildList.length">
-        <li v-for="(v,i) in buildList" :key="i">
-          <a class="btn btn-default" :class="{'btn-info': v.title}" :href="v.url" :title="v.url" @click.prevent="handleBuild(v.url)">{{v.title || v.url}}</a>
+        <li v-for="(item,index) in buildList" :key="index">
+          <a class="btn btn-info"
+             @click.prevent="handleBuild(item)">{{ item.title }}</a>
         </li>
       </ul>
 
@@ -35,7 +38,8 @@ import {
   restartService
 } from '@/api/server'
 import {
-  getBuildList
+  getBuildList,
+  buildProject
 } from '@/api/projects'
 
 function formatRunningTime(initTime) {
@@ -57,8 +61,7 @@ function formatRunningTime(initTime) {
 
 export default {
   name: 'Home',
-  components: {
-  },
+  components: {},
   data() {
     return {
       buildList: [],
@@ -97,33 +100,42 @@ export default {
     handleRestart() {
       this.$bvModal.msgBoxConfirm('确定要重启服务吗？', {
         title: 'Please Confirm',
-      })
-          .then(async value => {
-            if (!value) {
-              return
-            }
+      }).then(async value => {
+        if (!value) {
+          return
+        }
 
-            const {message} = await restartService()
+        const {message} = await restartService()
 
-            this.$bvToast.toast(message, {
-              variant: 'info',
-              title: 'Service Restart'
-            })
-            console.log('value', value)
-          })
-          .catch(err => {
-            // An error occurred
-          })
-    },
-    handleBuild(url) {
-      if (confirm('确定要开始构建 ' + url + ' ?')) {
-        axios.get(url).then(res => {
-          console.log(res.data)
-          location.href = '/logs/' + res.data.buildLogName
-        }).catch(e => {
-          console.error(e)
+        this.$bvToast.toast(message, {
+          variant: 'info',
+          title: 'Service Restart'
         })
-      }
+        console.log('value', value)
+      }).catch(err => {
+        // An error occurred
+      })
+    },
+    handleBuild(item) {
+      const url = `${item.cmd}/${item.config}`
+
+      this.$bvModal.msgBoxConfirm(url, {
+        title: `确定要开始构建: ${item.title}`,
+      }).then(async value => {
+        if (!value) {
+          return
+        }
+
+        const res = await buildProject(item)
+        console.log('res',res)
+        // axios.get(url).then(res => {
+        //   console.log(res.data)
+        //   location.href = '/logs/' + res.data.buildLogName
+        // }).catch(e => {
+        //   console.error(e)
+        // })
+      }).catch(() => {
+      })
     }
   }
 }
