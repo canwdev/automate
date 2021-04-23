@@ -11,16 +11,16 @@
     </div>
 
     <div class="builder">
-      <h2>点击一项立即开始<abbr title="点击立即开始构建该项。警告：启动后不支持停止，请勿重复点击！">构建</abbr></h2>
+      <h2>构建</h2>
 
-      <ul>
-        <li v-for="(v,i) in list" :key="i">
+      <ul v-if="buildList.length">
+        <li v-for="(v,i) in buildList" :key="i">
           <a class="btn btn-default" :class="{'btn-info': v.title}" :href="v.url" :title="v.url" @click.prevent="handleBuild(v.url)">{{v.title || v.url}}</a>
         </li>
       </ul>
 
-      <ul v-if="list.length===0">
-        <li>暂无配置，可以将 <a href="/projects.demo.json">/projects.demo.json</a> 重命名为 projects.json 以查看效果。</li>
+      <ul v-else>
+        <li>暂无配置</li>
         <li>注意：示例文件都是无效的，即使尝试运行也会报错，具体请参考 README.md。</li>
       </ul>
     </div>
@@ -34,6 +34,9 @@ import {
   getServiceInfo,
   restartService
 } from '@/api/server'
+import {
+  getBuildList
+} from '@/api/projects'
 
 function formatRunningTime(initTime) {
   const diff = new Date(Date.now() - initTime.getTime()).getTime()
@@ -58,7 +61,7 @@ export default {
   },
   data() {
     return {
-      list: [],
+      buildList: [],
       initTime: null,
       runningTime: '-'
     }
@@ -69,20 +72,8 @@ export default {
     }
   },
   mounted() {
-    /*axios.get('/projects.json').then(res => {
-      res.data.forEach(v => {
-        this.list.push({
-          title: v.title,
-          url: '/build/' + v.cmd + '/' + v.config
-        })
-      })
-    })
-
-    setInterval(() => {
-      this.runningTime = formatRunningTime(serviceInitTime)
-    }, 1000);*/
-
     this.getInfo()
+    this.getList()
   },
   beforeDestroy() {
     clearInterval(this.timeTick)
@@ -92,6 +83,10 @@ export default {
       const {initTime} = await getServiceInfo()
       this.initTime = new Date(initTime)
       this.startTimeTick()
+    },
+    async getList() {
+      const {list} = await getBuildList()
+      this.buildList = list
     },
     startTimeTick() {
       clearInterval(this.timeTick)
