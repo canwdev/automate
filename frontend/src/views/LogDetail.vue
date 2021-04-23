@@ -82,7 +82,10 @@ export default {
     }
   },
   mounted() {
-    this.getLogDetail()
+    this.isLoading = true
+    setTimeout(() => {
+      this.getLogDetail()
+    }, 200)
   },
   beforeDestroy() {
     this.stopAutoRefresh()
