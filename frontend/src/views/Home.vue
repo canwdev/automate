@@ -133,6 +133,13 @@ export default {
         // }).catch(e => {
         //   console.error(e)
         // })
+
+        this.$router.push({
+          name: 'LogDetail',
+          params: {
+            logName: res.logName
+          }
+        })
       }).catch(() => {
       })
     }

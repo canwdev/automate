@@ -10,4 +10,5 @@ router.post('/auth', user.getAuthorization)
 router.get('/build-list', userAuth, projects.getBuildList)
 router.get('/build/:command/:param', userAuth, projects.buildByGET)
 router.get('/logs', userAuth, projects.listLogs)
+router.get('/log/:logName', userAuth, projects.getLogDetail)
 module.exports = router

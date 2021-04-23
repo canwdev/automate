@@ -143,6 +143,6 @@ export default {
 
 .site-title:hover {
   text-decoration: none;
-  text-shadow: -4px -4px 0 #FFEB3B;
+  text-shadow: -4px 4px 0 #FFEB3B;
 }
 </style>

@@ -9,6 +9,8 @@ const logDB = require('../../utils/log-db')
 const {
   startBuild
 } = require('../../utils/build')
+const {LOG_PATH} = require('../../configs')
+const sh = require('shelljs')
 
 module.exports = {
   async getBuildList(req, res, next) {
@@ -56,7 +58,7 @@ module.exports = {
   async listLogs(req, res, next) {
     try {
       const logs = logDB.get('logs')
-        .sortBy('timestamp')
+        .orderBy('timestamp', ['desc'])
         .take(20)
         .value()
 
@@ -65,5 +67,27 @@ module.exports = {
       next(e)
     }
   },
+  async getLogDetail(req, res, next) {
+    try {
+      const logName = req.params.logName
 
+      if (!logName) {
+        return res.sendError({message: 'logName can not be empty'})
+      }
+
+      const result = sh.exec(`tail -25 ${path.join(LOG_PATH, logName)}`,
+        {silent: true})
+      const logTail = result.toString()
+
+      if (result.code !== 0) {
+        return res.sendError({
+          message: logName + '\n日志文件读取失败！可能是任务还没有开始执行'
+        })
+      }
+
+      res.sendData(logTail)
+    } catch (e) {
+      next(e)
+    }
+  }
 }

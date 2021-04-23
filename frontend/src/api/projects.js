@@ -12,3 +12,11 @@ export function getBuildList() {
 export function buildProject(item) {
   return service.get(`/build/${item.cmd}/${item.config}`)
 }
+
+export function listLogs() {
+  return service.get('/logs')
+}
+
+export function logDetail(logName) {
+  return service.get(`/log/${logName}`)
+}
