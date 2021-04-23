@@ -21,9 +21,11 @@
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown right>
             <template v-slot:button-content>
-              {{ username || 'User' }}
+              <b-icon v-if="token" icon="check-circle-fill"></b-icon>
+              <b-icon v-else icon="circle"></b-icon>
+
             </template>
-            <b-dropdown-item v-if="!username" @click="isShowLogin = true">Login</b-dropdown-item>
+            <b-dropdown-item v-if="!token" @click="isShowLogin = true">Login</b-dropdown-item>
             <b-dropdown-item v-else @click="clearAuth">Sign Out</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
@@ -72,7 +74,7 @@
 </template>
 
 <script>
-import {setToken, removeToken} from '@/utils/auth'
+import {getToken, removeToken} from '@/utils/auth'
 import {getAuth} from '@/api/user'
 
 export default {
@@ -82,13 +84,21 @@ export default {
       form: {
         username: '',
         password: ''
-      }
+      },
     }
   },
   computed: {
-    username() {
-      return this.$store.state.username
+    token: {
+      get() {
+        return this.$store.state.token
+      },
+      set(val) {
+        this.$store.commit('setToken', val)
+      }
     }
+  },
+  mounted() {
+    this.token = getToken()
   },
   methods: {
     handleOk(bvModalEvt) {
@@ -105,15 +115,12 @@ export default {
         username: this.form.username,
         password: this.form.password
       })
-      setToken(token)
-      this.$store.commit('setUsername', username)
-
-      this.isShowLogin = false
-      // location.reload()
+      this.token = token
+      // this.isShowLogin = false
+      location.reload()
     },
     clearAuth() {
       removeToken()
-      this.$store.commit('setUsername', null)
       location.reload()
     }
   }
