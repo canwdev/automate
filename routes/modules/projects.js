@@ -16,7 +16,7 @@ const sh = require('shelljs')
 module.exports = {
   async getBuildList(req, res, next) {
     try {
-      const docPath = path.join(__dirname, '../../configs/build-list-demo.yml')
+      const docPath = path.join(__dirname, '../../configs/build-list.yml')
 
       let doc = {}
       if (fs.existsSync(docPath)) {
