@@ -62,7 +62,9 @@
               required
           ></b-form-input>
         </b-form-group>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="row no-gutters">
+          <button type="submit" class="btn btn-primary ml-auto">Submit</button>
+        </div>
       </form>
     </b-modal>
 
@@ -70,7 +72,7 @@
 </template>
 
 <script>
-import {setToken ,removeToken} from '@/utils/auth'
+import {setToken, removeToken} from '@/utils/auth'
 import {getAuth} from '@/api/user'
 
 export default {

@@ -24,7 +24,6 @@ module.exports = async function authLogin(req, res, next) {
       const raw = String(token)
       const {id} = jwt.verify(raw, JWT_TOKEN)
 
-      console.log('userid', id)
       const hasUser = authUsers[id]
 
       if (!hasUser) return res.status(CODE_CLIENT_FORBIDDEN).send({

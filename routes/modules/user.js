@@ -27,7 +27,7 @@ module.exports = {
 
       // Generate token
       // jwt.sign() 接受两个参数，一个是传入的对象，一个是自定义的密钥
-      const token = jwt.sign({id: String(user.id)}, JWT_TOKEN, {
+      const token = jwt.sign({id: String(user)}, JWT_TOKEN, {
         expiresIn: JWT_TOKEN_EXPIRE
       })
 
