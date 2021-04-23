@@ -20,6 +20,8 @@ module.exports = async function authLogin(req, res, next) {
     }
 
     let token = req.headers.authorization
+    console.log('token', typeof  token)
+
     if (token) {
       const raw = String(token)
       const {id} = jwt.verify(raw, JWT_TOKEN)

@@ -5,6 +5,7 @@ const {
   getDateTimeString,
   genRandomString
 } = require('../../utils')
+const logDB = require('../../utils/log-db')
 const {
   startBuild
 } = require('../../utils/build')
@@ -52,4 +53,17 @@ module.exports = {
       next(e)
     }
   },
+  async listLogs(req, res, next) {
+    try {
+      const logs = logDB.get('logs')
+        .sortBy('timestamp')
+        .take(20)
+        .value()
+
+      res.sendData(logs)
+    } catch (e) {
+      next(e)
+    }
+  },
+
 }

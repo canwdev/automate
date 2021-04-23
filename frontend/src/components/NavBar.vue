@@ -1,5 +1,5 @@
 <template>
-  <b-navbar type="light" variant="light">
+  <b-navbar class="site-navbar" type="light" variant="light">
     <b-container>
 
       <b-navbar-brand id="tooltip-target-1">
@@ -128,9 +128,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.nav-bar {
-  padding-bottom: 9px;
-  margin: 40px 0 20px;
+.site-navbar {
+  margin: 0 0 20px;
   border-bottom: 1px solid #eee;
 }
 
@@ -139,9 +138,11 @@ export default {
   color: #F44336;
   text-shadow: 4px 4px 0 #FFEB3B;
   font-weight: bold;
+  transition: all .3s;
 }
 
 .site-title:hover {
   text-decoration: none;
+  text-shadow: -4px -4px 0 #FFEB3B;
 }
 </style>

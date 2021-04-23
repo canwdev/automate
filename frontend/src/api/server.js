@@ -12,3 +12,7 @@ export function getServiceInfo() {
 export function restartService() {
   return service.post('/restart')
 }
+
+export function listLogs() {
+  return service.get('/logs')
+}

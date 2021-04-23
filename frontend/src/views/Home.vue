@@ -5,7 +5,7 @@
       <h2>管理服务</h2>
       <ul>
         <li><abbr :title="'启动时刻：' +initTimeFormatted">服务运行了</abbr>：<span class="badge">{{ runningTime }}</span></li>
-        <li><a class="btn btn-primary" href="/logs/">日志列表 · Logs</a></li>
+        <li><router-link class="btn btn-primary" to="/logs">日志列表 · Logs</router-link></li>
         <li>
           <button class="btn btn-danger" @click="handleRestart()" title="重启 Automate 服务！用于解决一些构建执行时卡住的问题">重启服务</button>
         </li>
@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import moment from 'moment'
 import {
   getServiceInfo,
@@ -74,7 +73,7 @@ export default {
       return moment(this.initTime).format('YYYY-MM-DD HH:mm:ss A')
     }
   },
-  mounted() {
+  created() {
     this.getInfo()
     this.getList()
   },

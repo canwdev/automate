@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {setToken} from '@/utils/auth'
+import {setToken,removeToken} from '@/utils/auth'
 
 Vue.use(Vuex)
 
@@ -10,7 +10,11 @@ export default new Vuex.Store({
   },
   mutations: {
     setToken(state, val) {
-      setToken(val)
+      if (val) {
+        setToken(val)
+      } else {
+        removeToken()
+      }
       state.token = val
     }
   },
