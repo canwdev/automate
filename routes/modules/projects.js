@@ -7,7 +7,8 @@ const {
 } = require('../../utils')
 const logDB = require('../../utils/log-db')
 const {
-  startBuild
+  startBuild,
+  tasks
 } = require('../../utils/build')
 const {LOG_PATH} = require('../../configs')
 const sh = require('shelljs')
@@ -43,7 +44,7 @@ module.exports = {
 
       // 开始构建
       startBuild({
-        command,
+        command: `${command} ${param}`,
         logName,
         timestamp: now.getTime(),
       })
@@ -57,12 +58,15 @@ module.exports = {
   },
   async listLogs(req, res, next) {
     try {
-      const logs = logDB.get('logs')
+      const list = logDB.get('logs')
         .orderBy('timestamp', ['desc'])
         .take(20)
         .value()
 
-      res.sendData(logs)
+      res.sendData({
+        list,
+        tasks: tasks.getList()
+      })
     } catch (e) {
       next(e)
     }
@@ -73,6 +77,12 @@ module.exports = {
 
       if (!logName) {
         return res.sendError({message: 'logName can not be empty'})
+      }
+
+      if (req.query.raw) {
+        return res.sendFile(logName, {
+          root: LOG_PATH
+        })
       }
 
       const result = sh.exec(`tail -25 ${path.join(LOG_PATH, logName)}`,

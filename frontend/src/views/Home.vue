@@ -119,6 +119,7 @@ export default {
       const url = `${item.cmd}/${item.config}`
 
       this.$bvModal.msgBoxConfirm(url, {
+        autoFocusButton: 'ok',
         title: `确定要开始构建: ${item.title}`,
       }).then(async value => {
         if (!value) {

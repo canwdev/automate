@@ -36,5 +36,6 @@ const startBuild = (config = {}) => {
 }
 
 module.exports = {
-  startBuild
+  startBuild,
+  tasks
 }

@@ -17,6 +17,6 @@ export function listLogs() {
   return service.get('/logs')
 }
 
-export function logDetail(logName) {
-  return service.get(`/log/${logName}`)
+export function logDetail(logName, params) {
+  return service.get(`/log/${logName}`, {params})
 }

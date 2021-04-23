@@ -1,7 +1,7 @@
 <template>
   <b-container class="logs">
     <h2>状态</h2>
-    <p class="task-tip">任务队列中的任务个数：<abbr style="font-size: 20px;" title="该数字不会自动刷新，请手动刷新页面">0</abbr>
+    <p class="task-tip">任务队列中的任务个数：<abbr style="font-size: 20px;" title="该数字不会自动刷新，请手动刷新页面">{{ tasks.length }}</abbr>
     </p>
 
     <h2>日志列表</h2>
@@ -43,7 +43,8 @@ export default {
   name: 'Logs',
   data() {
     return {
-      logs: []
+      logs: [],
+      tasks: []
     }
   },
   created() {
@@ -54,9 +55,10 @@ export default {
       return moment(time).format('YYYY-MM-DD HH:mm:ss A')
     },
     async getLogList() {
-      const list = await listLogs()
+      const {list, tasks} = await listLogs()
       console.log('list',list)
       this.logs = list
+      this.tasks = tasks
     }
   }
 }
