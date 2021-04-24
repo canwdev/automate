@@ -13,7 +13,7 @@ async function run() {
   const startTime = +new Date()
   console.log(`>>> ${startTime}, ${projectName} 开始部署 VueCLI3`)
 
-  automate.detectEnvironmentCommands(['git', 'yarn'])
+  automate.checkEnv(['git', 'yarn'])
 
   automate.initProjectIfNotExist(projectName, projectGit)
 

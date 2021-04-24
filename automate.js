@@ -18,7 +18,7 @@ module.exports = {
     }
   },
   // 检测部署环境必要命令
-  detectEnvironmentCommands(commands = ['git']) {
+  checkEnv(commands = ['git']) {
     let cmdNotFound = null
     commands.forEach(command => {
       if (!sh.which(command)) cmdNotFound = command

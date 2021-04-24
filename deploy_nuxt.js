@@ -17,7 +17,7 @@ async function run() {
   const startTime = +new Date()
   console.log(`>>> ${startTime}, ${projectDir} ${branch} 开始部署 Nuxt`)
 
-  automate.detectEnvironmentCommands(['git', 'npm', '7z'])
+  automate.checkEnv(['git', 'npm', '7z'])
 
   automate.cdProjectDir(projectDir)
 

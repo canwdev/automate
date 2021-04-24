@@ -5,7 +5,7 @@ console.log('开始更新 Automate...')
 const args = process.argv.slice(2)
 console.log('参数:', args)
 
-automate.detectEnvironmentCommands(['git', 'yarn'])
+automate.checkEnv(['git', 'yarn'])
 automate.cd(__dirname, 'cd')
 automate.execCommands([
   `git pull`,

@@ -13,7 +13,7 @@ async function run() {
   const startTime = +new Date()
   console.log(`>>> ${startTime}, ${projectName} 开始部署 VuePress`)
 
-  automate.detectEnvironmentCommands(['git', 'yarn'])
+  automate.checkEnv(['git', 'yarn'])
 
   automate.cdProjectDir(projectName)
 
@@ -28,7 +28,7 @@ async function run() {
       const {url, desc} = item
 
       automate.gitForcePush(projectName, distDir, url, true)
-      
+
       desc && console.log(`>>> ❇️ ` + desc)
     })
   } else {

@@ -9,7 +9,7 @@ list:
     config: 'frontend'
   - title: Deploy Automate.js
     cmd: deploy_self.js
-    config: null
+    config: ''
   - title: Deploy VuePress:example.json
     cmd: deploy_vuepress.js
     config: example.json
