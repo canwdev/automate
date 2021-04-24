@@ -9,9 +9,7 @@ automate.detectEnvironmentCommands(['git', 'yarn'])
 automate.cd(__dirname, 'cd')
 automate.execCommands([
   `git pull`,
-  `yarn`,
-  `yarn --cwd=frontend`,
-  `yarn --cwd=frontend build`
+  `yarn`
 ])
 
 if (args[0] === 'frontend') {

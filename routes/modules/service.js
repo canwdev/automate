@@ -16,10 +16,10 @@ module.exports = {
   },
   async restart(req, res, next) {
     try {
-      sh.exec('node restart-service.js')
       res.sendData({
         message: 'Service may be restarted, please refresh page.'
       })
+      sh.exec('node restart-service.js')
     } catch (e) {
       next(e)
     }

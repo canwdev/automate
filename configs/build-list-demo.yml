@@ -4,9 +4,12 @@ list:
   - title: Deploy Demo
     cmd: deploy_demo.js
     config: 'example_param'
-  - title: Deploy Self
+  - title: Deploy Self+frontend
     cmd: deploy_self.js
     config: 'frontend'
+  - title: Deploy Self
+    cmd: deploy_self.js
+    config: ''
   - title: Deploy VuePress:example.json
     cmd: deploy_vuepress.js
     config: example.json

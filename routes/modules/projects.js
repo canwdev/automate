@@ -52,7 +52,7 @@ module.exports = {
 
       // 开始构建
       startBuild({
-        command: `${command} ${param}`,
+        command: `${command}` + (param ? ` ${param}` : ''),
         logName,
         timestamp: now.getTime(),
       })
@@ -126,7 +126,7 @@ module.exports = {
 
       // 开始构建
       startBuild({
-        command: `${command} ${param}`,
+        command: `${command}` + (param ? ` ${param}` : ''),
         logName,
         timestamp: now.getTime(),
         message: JSON.stringify(req.body),
