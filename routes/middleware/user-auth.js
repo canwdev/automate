@@ -27,8 +27,8 @@ module.exports = async function authLogin(req, res, next) {
 
       const hasUser = authUsers[id]
 
-      if (!hasUser) return res.status(CODE_CLIENT_FORBIDDEN).send({
-        message: 'Token expired'
+      if (!hasUser) return res.status(CODE_TOKEN_EXPIRE).send({
+        message: 'Token expired (1)'
       })
 
       // 向下一级传值
@@ -45,7 +45,7 @@ module.exports = async function authLogin(req, res, next) {
     if (e.message === 'jwt expired') {
       return res.json({
         code: CODE_TOKEN_EXPIRE,
-        message: 'Token expired'
+        message: 'Token expired (2)'
       })
     }
 
