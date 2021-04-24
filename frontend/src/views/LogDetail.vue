@@ -138,7 +138,7 @@ export default {
 <style lang="scss" scoped>
 .log-content {
   width: 100%;
-  height: 560px;
+  height: 460px;
   position: relative;
   margin: 0 0 10px;
 

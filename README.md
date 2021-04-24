@@ -56,14 +56,31 @@ yarn build
 
 ### 🕹 使用 POST 方法触发部署
 
-> ```
-> POST /api/build/:command/:param
-> ```
+#### 参数说明
+
+```
+POST /api/build/
+
+query: {
+    cmd, // Node.js 命令
+    args, // 参数
+    username, // 用户名
+    password, // 密码
+    br_limit // 限定分支
+}
+
+body: {
+    ref: 'refs/heads/master'
+    ... // WebHook 推送数据
+}
+```
 
 #### 简单运行
 
 ```
-POST http://localhost:8100/api/build/deploy_demo.js/0?username=admin&password=admin
+POST http://localhost:8100/api/build
+	?cmd=deploy_demo.js&args=demo_arg
+	&username=admin&password=admin
 ```
 
 相当于在终端运行 `node deploy_demo.js`
@@ -71,18 +88,23 @@ POST http://localhost:8100/api/build/deploy_demo.js/0?username=admin&password=ad
 #### 带配置运行
 
 ```
-POST http://localhost:8100/api/build/deploy_nuxt.js/example.json?username=admin&password=admin
+POST http://localhost:8100/api/build
+	?cmd=deploy_nuxt.js&args=example.json
+	&username=admin&password=admin
 ```
 相当于在终端执行 `node deploy_nuxt.js example.json`
 
 #### 限定构建分支
 
 ```
-POST http://localhost:8100/api/build/deploy_nuxt.js/example-__branch__.json?branchesLimit=prod,stage&username=admin&password=admin
+POST http://localhost:8100/api/build
+	?cmd=deploy_nuxt.js&args=example-__branch__.json
+    &br_limit=prod,stage
+    &username=admin&password=admin
 ```
 
 其中，`__branch__` 将被替换成 WebHook POST 消息体中 `ref` 指定的分支名。
 
 例如当推送 `stage` 分支时，POST 消息中含有`"ref":"refs/heads/stage"`，替换后的结果为：`example-stage.json`
 
-`branchesLimit` 包含了你想限定构建的几个分支，用半角逗号隔开。这些分支必须有对应的 json 配置文件，如果POST消息里的分支不是其中的某个分支，则不会执行构建。
+`br_limit` 包含了你想限定构建的几个分支，用半角逗号隔开。这些分支必须有对应的 json 配置文件，如果POST消息里的分支不是其中的某个分支，则不会执行构建。

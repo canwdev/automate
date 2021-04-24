@@ -39,11 +39,11 @@ module.exports = {
   async buildByGET(req, res, next) {
     try {
       const {
-        command,
-        param
-      } = req.params
+        cmd,
+        args
+      } = req.query
 
-      if (!command) {
+      if (!cmd) {
         return res.sendError({message: '必须指定command'})
       }
 
@@ -52,7 +52,7 @@ module.exports = {
 
       // 开始构建
       startBuild({
-        command: `${command}` + (param ? ` ${param}` : ''),
+        command: `${cmd}` + (args ? ` ${args}` : ''),
         logName,
         timestamp: now.getTime(),
       })
@@ -66,15 +66,13 @@ module.exports = {
   },
   async buildByPOST(req, res, next) {
     try {
-      let {
-        command,
-        param,
-      } = req.params
       const {
-        username,
-        password,
-        branchesLimit
+        cmd, // 命令
+        username, // 用户名
+        password, // 密码
+        br_limit // 限定分支
       } = req.query
+      let {args} = req.query
 
       if (enableAuth) {
         if (!username || !password) {
@@ -93,12 +91,12 @@ module.exports = {
         }
       }
 
-      if (!command) {
+      if (!cmd) {
         return res.sendError({message: '必须指定command'})
       }
 
       let targetBranch = null
-      if (branchesLimit) {
+      if (br_limit) {
         // WebHook 推送数据
         // https://gitee.com/help/articles/4186#article-header0
         const {
@@ -110,13 +108,13 @@ module.exports = {
         console.log('targetBranch', targetBranch)
 
         // 检测是否在需要构建的分支列表中，如果不在就忽略这次构建
-        // 示例：POST http://xxx.top:8100/build/deploy_nuxt.js/remo-website-branch.json?branchesLimit=prod,stage
-        const branchArr = branchesLimit.split(',')
+        // 示例：POST http://xxx.top:8100/build/deploy_nuxt.js/remo-website-branch.json?br_limit=prod,stage
+        const branchArr = br_limit.split(',')
         if (branchArr.find(item => item === targetBranch)) {
-          param = param.replace('__branch__', `${targetBranch}`)
-          console.log('param', param)
+          args = args.replace('__branch__', `${targetBranch}`)
+          console.log('args', args)
         } else {
-          let message = `${targetBranch} 不在目标分支列表中(${branchesLimit})，停止构建`
+          let message = `${targetBranch} 不在目标分支列表中(${br_limit})，停止构建`
           return res.sendError({message})
         }
       }
@@ -126,7 +124,7 @@ module.exports = {
 
       // 开始构建
       startBuild({
-        command: `${command}` + (param ? ` ${param}` : ''),
+        command: `${cmd}` + (args ? ` ${args}` : ''),
         logName,
         timestamp: now.getTime(),
         message: JSON.stringify(req.body),

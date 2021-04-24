@@ -10,7 +10,12 @@ export function getBuildList() {
 }
 
 export function buildProject(item) {
-  return service.get(`/build/${item.cmd}/${item.config}`)
+  return service.get(`/build`, {
+    params: {
+      cmd: item.cmd,
+      args: item.args
+    }
+  })
 }
 
 export function listLogs() {

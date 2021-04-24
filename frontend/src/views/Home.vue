@@ -117,9 +117,9 @@ export default {
       }).catch(err => {})
     },
     handleBuild(item) {
-      const url = `${item.cmd}/${item.config}`
+      const message = `cmd: ${item.cmd}<br> args: ${item.args}`
 
-      this.$bvModal.msgBoxConfirm(url, {
+      this.$bvModal.msgBoxConfirm(message, {
         autoFocusButton: 'ok',
         title: `确定要开始构建: ${item.title}`,
       }).then(async value => {
