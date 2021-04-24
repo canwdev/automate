@@ -10,10 +10,10 @@ let it = setInterval(() => {
 
     let success = Math.random() > 0.5
     if (!success) {
-      console.log('>>> Error! Deploy failed')
+      console.log('>>> Demo Build Failed!')
       process.exit(1)
     }
 
-    console.log('>>> Success! Deploy complete')
+    console.log('>>> Demo Build Success!')
   }
 }, 1000);

@@ -4,20 +4,27 @@
 
     <ul>
       <li>
-        <router-link to="/logs">
-          <b-button size="sm">返回日志列表</b-button>
-        </router-link>
-      </li>
-      <li v-if="isRaw">
-        <b-button size="sm" @click.prevent="viewRaw(false)" class="mr-2">
-          <b-icon icon="arrow90deg-left"></b-icon>
-        </b-button>
+        <b-button-group size="sm">
+          <router-link class="btn btn-secondary" to="/logs">
+            返回日志列表
+          </router-link>
 
-        <abbr title="源文件不会自动刷新">日志源文件</abbr>: {{ logName }}
+          <template v-if="isRaw">
+            <b-button variant="info" @click.prevent="viewRaw(false)" class="mr-2">
+              <b-icon icon="arrow90deg-left"></b-icon>
+            </b-button>
+          </template>
+          <template v-else>
+            <b-button variant="info" @click.prevent="viewRaw()">查看日志源文件</b-button>
+          </template>
+        </b-button-group>
+
+        <span v-if="isRaw">
+          <abbr title="源文件不会自动刷新">日志源文件</abbr>: {{ logName }}
+        </span>
+
       </li>
-      <li v-else>
-        <b-button size="sm" @click.prevent="viewRaw()">查看日志源文件</b-button>
-      </li>
+
       <li>
         <b-button-group size="sm">
           <b-button variant="success" @click="getLogDetail" title="刷新日志">
@@ -26,7 +33,7 @@
           <b-button variant="danger" v-if="itAutoRefresh" @click="stopAutoRefresh" title="停止自动刷新">
             <b-icon icon="stop-circle"></b-icon>
           </b-button>
-          <b-button variant="info" v-else @click="startAutoRefresh" title="开启自动刷新">
+          <b-button variant="warning" v-else @click="startAutoRefresh" title="开启自动刷新">
             <b-icon icon="play-circle"></b-icon>
           </b-button>
         </b-button-group>
@@ -131,7 +138,7 @@ export default {
 <style lang="scss" scoped>
 .log-content {
   width: 100%;
-  height: 500px;
+  height: 560px;
   position: relative;
   margin: 0 0 10px;
 
@@ -143,11 +150,12 @@ export default {
   }
 
   textarea {
+    font-family: monospace;
+    font-size: 12px;
     width: 100%;
     height: 100%;
     display: block;
     padding: 9.5px;
-    font-size: 13px;
     line-height: 1.42857143;
     color: #333;
     word-break: break-all;
@@ -160,5 +168,9 @@ export default {
 
 li {
   margin-bottom: 5px;
+}
+
+.logs {
+  margin-bottom: 10px;
 }
 </style>

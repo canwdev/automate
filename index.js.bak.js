@@ -180,8 +180,8 @@ app.post('/build/:command/:param', (req, res) => {
   // 检测是否在需要构建的分支列表中，如果不在就忽略这次构建
   // POST http://xxx.top:8100/build/deploy_nuxt.js/remo-website-branch.json?branches=prod,stage
   if (req.query.branches) {
-    const branches = req.query.branches.split(',')
-    if (branches.find(v => v === branch)) {
+    const bArr = req.query.branches.split(',')
+    if (bArr.find(v => v === branch)) {
       param = param.replace('branch.json', `${branch}.json`)
       console.log(param)
     } else {

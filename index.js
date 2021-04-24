@@ -12,7 +12,7 @@ const {
 
 // 解决 req.body undefined
 // parse application/x-www-form-urlencoded
-// app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
 app.use(bodyParser.json())
@@ -38,6 +38,6 @@ app.use(function(err, req, res, next) {
 
 const port = normalizePort(process.env.PORT || '8100')
 app.listen(port, () => {
-  console.log(`Automate service running at: http://127.0.0.1:8100`);
+  console.log(`Automate service running at: http://localhost:8100`);
 });
 
