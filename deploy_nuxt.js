@@ -50,6 +50,7 @@ async function run() {
   automate.archiveProductClean(projectDir, 'dist.tar.7z', branch + '-' + endTime)
 
   console.log('>>> 执行结束！')
+  automate.pushServerChan(`${process.argv.slice(2)} 部署成功！`, JSON.stringify(config, null, 2))
 }
 
 run()

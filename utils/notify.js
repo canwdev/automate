@@ -9,18 +9,18 @@ module.exports = {
    * @param content 消息内容，最长64K，选填，支持MarkDown
    * @returns {*}
    */
-  pushServerChan(title, content) {
-    title = encodeURIComponent(title)
-    content = encodeURIComponent(content)
+  pushServerChan(title = 'pushServerChan', content = '') {
+    content = encodeURIComponent(new Date().getTime() + '\n\n' + content)
     const {
       serverChannSCKEY
     } = require('../configs')
 
     if (!serverChannSCKEY) {
-      console.log('推送 SCKEY 未指定')
+      console.log(title)
+      console.log('ServerChan 推送 SCKEY 未指定')
       return
     }
     console.log('Push ServerChan!')
-    return exec(`curl -s "http://sc.ftqq.com/${serverChannSCKEY}.send?text=${title}" -d "&desp=${content}"`)
+    return exec(`curl -s "http://sc.ftqq.com/${serverChannSCKEY}.send?text=${encodeURIComponent(title)}" -d "&desp=${content}"`)
   }
 }
