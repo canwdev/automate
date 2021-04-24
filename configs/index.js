@@ -15,10 +15,12 @@ let config = {
 const configPath = path.join(__dirname, 'config.json')
 if (fs.existsSync(configPath)) {
   const userConfig = require(configPath)
-  index = {
+  config = {
     ...config,
     ...userConfig
   }
 }
+
+console.log(config)
 
 module.exports = config
