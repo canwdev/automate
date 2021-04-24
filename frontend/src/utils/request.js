@@ -43,9 +43,9 @@ function Service(config = {}) {
       }
       main.$bvToast.toast(message, {
         variant: 'danger',
-        title: 'Request Error'
+        title: 'Request Error',
+        toaster: 'b-toaster-top-center',
       })
-      console.log(message)
       return Promise.reject(error)
     }
   )

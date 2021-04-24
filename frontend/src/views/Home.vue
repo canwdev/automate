@@ -17,8 +17,8 @@
 
       <ul v-if="buildList.length">
         <li v-for="(item,index) in buildList" :key="index">
-          <a class="btn btn-info"
-             @click.prevent="handleBuild(item)">{{ item.title }}</a>
+          <button class="btn btn-info"
+             @click.prevent="handleBuild(item)">{{ item.title }}</button>
         </li>
       </ul>
 
@@ -108,12 +108,14 @@ export default {
 
         this.$bvToast.toast(message, {
           variant: 'info',
-          title: 'Service Restart'
+          toaster: 'b-toaster-top-center',
+          title: '服务重启，页面即将刷新...'
         })
-        console.log('value', value)
-      }).catch(err => {
-        // An error occurred
-      })
+
+        setTimeout(() => {
+          location.reload()
+        }, 1500)
+      }).catch(err => {})
     },
     handleBuild(item) {
       const url = `${item.cmd}/${item.config}`
