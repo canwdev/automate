@@ -2,6 +2,7 @@ const sh = require('shelljs')
 const fs = require('fs')
 const path = require('path')
 const utils = require('./utils')
+const {pushServerChan} = require('./utils/notify')
 const cd = utils.cd
 const exec = utils.exec
 const getTimeStr = utils.getDateTimeString
@@ -203,5 +204,6 @@ module.exports = {
     sh.mv(distFileName, `../${archives_folder_name}/${archive_name}`)
 
     console.log('>>> 归档成品', `${path.join(projectName, '../', archives_folder_name, archive_name)}`)
-  }
+  },
+  pushServerChan
 }

@@ -9,7 +9,8 @@ let config = {
   PROJECT_PATH: dataPath,
   LOG_PATH: logPath,
   enableAuth: true,
-  authUsers: {'admin': 'admin'}
+  authUsers: {'admin': 'admin'},
+  serverChannSCKEY: null // Server酱推送API
 }
 
 const configPath = path.join(__dirname, 'config.json')
