@@ -63,10 +63,10 @@ yarn build
 #### 简单运行
 
 ```
-POST http://localhost:8100/api/build/deploy_null.js/0?username=admin&password=admin
+POST http://localhost:8100/api/build/deploy_demo.js/0?username=admin&password=admin
 ```
 
-相当于在终端运行 `node deploy_null.js`
+相当于在终端运行 `node deploy_demo.js`
 
 #### 带配置运行
 

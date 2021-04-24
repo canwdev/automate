@@ -1,21 +1,24 @@
 # Copy this file to build-list.yml
 # https://www.json2yaml.com/
 list:
-  - title: 部署 No Code
-    cmd: deploy_null.js
-    config: '0'
-  - title: 部署 VuePress:example.json
+  - title: Deploy Demo
+    cmd: deploy_demo.js
+    config: 'example_param'
+  - title: Deploy Self
+    cmd: deploy_self.js
+    config: 'frontend'
+  - title: Deploy VuePress:example.json
     cmd: deploy_vuepress.js
     config: example.json
-  - title: 部署 Nuxt.js:example.json
+  - title: Deploy Nuxt.js:example.json
     cmd: deploy_nuxt.js
     config: example.json
-  - title: 部署 Nuxt.js:example-prod.json
+  - title: Deploy Nuxt.js:example-prod.json
     cmd: deploy_nuxt.js
     config: example-prod.json
-  - title: 部署 VueCLI3:example.json
+  - title: Deploy VueCLI3:example.json
     cmd: deploy_vuecli3.js
     config: example.json
-  - title: 部署 git 项目:example.json
+  - title: Deploy git Project:example.json
     cmd: deploy_git.js
     config: example.json

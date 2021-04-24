@@ -30,13 +30,13 @@ SimpleTask.prototype.getList = function() {
 }
 
 // SimpleTask 示例：
-/* 
+/*
 var t = new Tasks()
 for (let i = 0; i < 3; i++) {
-  
+
   t.add(function () {
     return new Promise(resolve => {
-      asyncShell('node ./deploy_null.js').finally(()=>{
+      asyncShell('node ./deploy_demo.js').finally(()=>{
         resolve()
       })
     })

@@ -5,10 +5,18 @@ const utils = require('./utils')
 const cd = utils.cd
 const exec = utils.exec
 const getTimeStr = utils.getDateTimeString
+const {
+  PROJECT_PATH
+} = require('./configs')
 
 module.exports = {
   cd,
   exec,
+  execCommands(commands) {
+    for (let key in commands) {
+      exec(commands[key])
+    }
+  },
   // 检测部署环境必要命令
   detectEnvironmentCommands(commands = ['git']) {
     let cmdNotFound = null
@@ -49,7 +57,7 @@ module.exports = {
   },
   // 检测项目文件夹是否存在
   isProjectDirExist(projectName) {
-    if (!fs.existsSync(path.join(__dirname, 'projects', projectName))) {
+    if (!fs.existsSync(path.join(PROJECT_PATH, projectName))) {
       console.log('>>> 项目不存在')
       return false
     }
@@ -58,14 +66,14 @@ module.exports = {
   // 项目文件夹如果不存在则克隆项目
   initProjectIfNotExist(projectName, projectGit) {
     if (!this.isProjectDirExist(projectName)) {
-      const projectDir = path.join(__dirname, 'projects', projectName)
+      const projectDir = path.join(PROJECT_PATH, projectName)
       exec(`git clone ${projectGit} ${projectDir}`)
     }
   },
 
   // 跳转到项目目录
   cdProjectDir(projectName) {
-    cd(path.join(__dirname, 'projects', projectName), '>>> ProjectDir')
+    cd(path.join(PROJECT_PATH, projectName), '>>> ProjectDir')
   },
   // 强制拉取最新代码
   gitForcePull(branch = 'master') {
@@ -171,7 +179,7 @@ module.exports = {
         console.log(result.stdout)
         if (result.stderr) {
           // 有时会输出警告
-          console.error('>>> 卧槽：', result.stderr)
+          console.error('>>> 警告：', result.stderr)
           if (stopWhenStderr) {
             process.exit(1)
           }

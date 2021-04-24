@@ -23,8 +23,7 @@
       </ul>
 
       <ul v-else>
-        <li>暂无配置</li>
-        <li>注意：示例文件都是无效的，即使尝试运行也会报错，具体请参考 README.md。</li>
+        <li>暂无配置(./configs/build-list.yml)</li>
       </ul>
     </div>
   </b-container>

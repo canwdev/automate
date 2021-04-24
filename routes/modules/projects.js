@@ -20,11 +20,15 @@ const {enableAuth, authUsers} = require('../../configs')
 module.exports = {
   async getBuildList(req, res, next) {
     try {
-      const docPath = path.join(__dirname, '../../configs/build-list.yml')
+      const docDir = path.join(__dirname, '../../configs')
+      const docPath = path.join(docDir, 'build-list.yml')
 
       let doc = {}
       if (fs.existsSync(docPath)) {
         doc = yaml.load(fs.readFileSync(docPath, 'utf8'));
+      } else {
+        const docPathDemo = path.join(docDir, 'build-list-demo.yml')
+        doc = yaml.load(fs.readFileSync(docPathDemo, 'utf8'));
       }
 
       res.sendData(doc)

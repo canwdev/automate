@@ -6,7 +6,7 @@ const logPath = path.join(__dirname, '../logs')
 
 // default config
 let config = {
-  DATA_PATH: dataPath,
+  PROJECT_PATH: dataPath,
   LOG_PATH: logPath,
   enableAuth: true,
   authUsers: {'admin': 'admin'}

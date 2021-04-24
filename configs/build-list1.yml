@@ -1,0 +1,29 @@
+# https://www.json2yaml.com/
+list:
+  - title: "[VuePress] 离线笔记"
+    cmd: deploy_vuepress.js
+    config: notes-vuepress.json
+  - title: "[Nuxt.js] TankCMS Frontend"
+    cmd: deploy_nuxt.js
+    config: node-blog-frontend.json
+  - title: "[Nuxt.js] REMO 官网:prod"
+    cmd: deploy_nuxt.js
+    config: remo-website-prod.json
+  - title: "[Nuxt.js] REMO 官网:stage"
+    cmd: deploy_nuxt.js
+    config: remo-website-stage.json
+  - title: "[VueCLI3] TankCMS Admin"
+    cmd: deploy_vuecli3.js
+    config: tank-admin.json
+  - title: "[VueCLI3] XYH 毕业设计"
+    cmd: deploy_vuecli3.js
+    config: xyh-project.json
+  - title: "[Git] TankCMS"
+    cmd: deploy_git.js
+    config: tankcms.json
+  - title: "[Git] WarThunderWeb"
+    cmd: deploy_git.js
+    config: warthunder_web.json
+  - title: "[Git] Resume"
+    cmd: deploy_git.js
+    config: resume.json
