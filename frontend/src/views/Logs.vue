@@ -23,7 +23,7 @@
         <td><router-link :to="`/log/${item.logName}`">{{ item.logName }}</router-link></td>
         <td>{{ formatTime(item.timestamp) }}</td>
         <td>
-          <a v-if="item.message" :href="`/logs/${item.message}`">点击查看</a>
+          <b-link v-if="item.message" @click.prevent="viewMessage(item)">点击查看</b-link>
           <span v-else>-</span>
         </td>
         <td>{{ item.branch || '-' }}</td>
@@ -56,9 +56,23 @@ export default {
     },
     async getLogList() {
       const {list, tasks} = await listLogs()
-      console.log('list',list)
+      // console.log('list',list)
       this.logs = list
       this.tasks = tasks
+    },
+    viewMessage(item) {
+      // console.log(item)
+      const h = this.$createElement
+      const messageVNode = h('div', {
+        domProps: {
+          innerHTML: `<center><textarea cols="40" rows="5" readonly>${item.message}</textarea></center>`
+        }
+      })
+
+      this.$bvModal.msgBoxOk(messageVNode, {
+        autoFocusButton: 'ok',
+        title: `Message`,
+      })
     }
   }
 }

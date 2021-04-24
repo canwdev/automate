@@ -5,7 +5,9 @@
       <h2>管理服务</h2>
       <ul>
         <li><abbr :title="'启动时刻：' +initTimeFormatted">服务运行了</abbr>：<span class="badge">{{ runningTime }}</span></li>
-        <li><router-link class="btn btn-primary" to="/logs">日志列表 · Logs</router-link></li>
+        <li>
+          <router-link class="btn btn-primary" to="/logs">日志列表 · Logs</router-link>
+        </li>
         <li>
           <button class="btn btn-danger" @click="handleRestart()" title="重启 Automate 服务！用于解决一些构建执行时卡住的问题">重启服务</button>
         </li>
@@ -18,7 +20,8 @@
       <ul v-if="buildList.length">
         <li v-for="(item,index) in buildList" :key="index">
           <button class="btn btn-info"
-             @click.prevent="handleBuild(item)">{{ item.title }}</button>
+                  @click.prevent="handleBuild(item)">{{ item.title }}
+          </button>
         </li>
       </ul>
 
@@ -114,12 +117,18 @@ export default {
         setTimeout(() => {
           location.reload()
         }, 1500)
-      }).catch(err => {})
+      }).catch(err => {
+      })
     },
     handleBuild(item) {
-      const message = `cmd: ${item.cmd}<br> args: ${item.args}`
+      const h = this.$createElement
+      const messageVNode = h('div', {
+        domProps: {
+          innerHTML: `cmd: ${item.cmd}<br> args: ${item.args || ''}`
+        }
+      })
 
-      this.$bvModal.msgBoxConfirm(message, {
+      this.$bvModal.msgBoxConfirm(messageVNode, {
         autoFocusButton: 'ok',
         title: `确定要开始构建: ${item.title}`,
       }).then(async value => {
@@ -128,7 +137,7 @@ export default {
         }
 
         const res = await buildProject(item)
-        console.log('res',res)
+        console.log('res', res)
         // axios.get(url).then(res => {
         //   console.log(res.data)
         //   location.href = '/logs/' + res.data.buildLogName
