@@ -140,14 +140,34 @@ module.exports = {
   },
   async listLogs(req, res, next) {
     try {
+      let {
+        offset = 0,
+        limit = 10,
+        order = 'desc',
+      } = req.query
+
+      offset = Number(offset)
+      limit = Number(limit)
+
+      // console.log({
+      //   offset,
+      //   limit,
+      //   order
+      // })
+
       const list = logDB.get('logs')
-        .orderBy('timestamp', ['desc'])
-        .take(20)
+        .orderBy('timestamp', [order])
+        // .take(limit)
+        .slice(offset, offset + limit)
         .value()
+      const length = logDB.get('logs').value().length
 
       res.sendData({
         list,
-        tasks: tasks.getList()
+        tasks: tasks.getList(),
+        offset,
+        limit,
+        length
       })
     } catch (e) {
       next(e)

@@ -5,6 +5,7 @@
     </p>
 
     <h2>日志列表</h2>
+
     <table class="table table-hover">
       <thead>
       <tr>
@@ -20,7 +21,9 @@
       <tr v-for="(item, index) in logs" :key="item.timestamp">
         <th scope="row">{{ index + 1 }}</th>
         <td>{{ item.command }}</td>
-        <td><router-link :to="`/log/${item.logName}`">{{ item.logName }}</router-link></td>
+        <td>
+          <router-link :to="`/log/${item.logName}`">{{ item.logName }}</router-link>
+        </td>
         <td>{{ formatTime(item.timestamp) }}</td>
         <td>
           <b-link v-if="item.message" @click.prevent="viewMessage(item)">点击查看</b-link>
@@ -30,6 +33,16 @@
       </tr>
       </tbody>
     </table>
+
+    <b-pagination-nav
+        class="mx-auto"
+        first-number
+        last-number
+        :link-gen="linkGen"
+        :number-of-pages="pages"
+        use-router
+    ></b-pagination-nav>
+
   </b-container>
 </template>
 
@@ -44,21 +57,49 @@ export default {
   data() {
     return {
       logs: [],
-      tasks: []
+      tasks: [],
+      limit: 10,
+      pages: 1,
+    }
+  },
+  computed: {
+    offset() {
+      let page = Number(this.$route.query.page) || 0
+      if (page > 1) {
+        page = page - 1
+      }
+      return page * this.limit
+    }
+  },
+  watch: {
+    offset() {
+      this.getLogList()
     }
   },
   created() {
     this.getLogList()
   },
   methods: {
+    linkGen(pageNum) {
+      return pageNum === 1 ? '?' : `?page=${pageNum}`
+    },
     formatTime(time) {
       return moment(time).format('YYYY-MM-DD HH:mm:ss A')
     },
     async getLogList() {
-      const {list, tasks} = await listLogs()
+      const {
+        list,
+        tasks,
+        limit,
+        length
+      } = await listLogs({
+        offset: this.offset,
+        limit: this.limit
+      })
       // console.log('list',list)
       this.logs = list
       this.tasks = tasks
+      this.pages = Math.ceil(length / limit)
     },
     viewMessage(item) {
       // console.log(item)

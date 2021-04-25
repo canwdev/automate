@@ -18,8 +18,10 @@ export function buildProject(item) {
   })
 }
 
-export function listLogs() {
-  return service.get('/logs')
+export function listLogs(params) {
+  return service.get('/logs', {
+    params
+  })
 }
 
 export function logDetail(logName, params) {
