@@ -60,9 +60,9 @@ module.exports = {
       try {
         sh.exec(command, { async: true, silent: false }, (code, stdout, stderr) => {
           if (stderr) {
-            reject(stderr)
+            return reject(stderr)
           }
-          resolve({ code, stdout, stderr })
+          return resolve({ code, stdout, stderr })
         })
       } catch (e) {
         reject(e)

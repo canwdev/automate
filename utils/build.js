@@ -3,6 +3,9 @@ const {
   asyncExec
 } = require('./index')
 const logDB = require('./log-db')
+const {
+  LOG_PATH
+} = require('../configs')
 
 // 构建任务队列（自动执行）
 const tasks = new SimpleTask()
@@ -29,9 +32,11 @@ const startBuild = (config = {}) => {
     branch,
   }).write()
 
-  tasks.add(async function () {
+  tasks.addTask(async function () {
+    console.log('=== task start ===')
     // 2>&1 | tee 的意思是在控制台输出日志的同时保存到文件
-    await asyncExec(`node ${command} 2>&1 | tee logs/${logName}`)
+    await asyncExec(`node ${command} 2>&1 | tee ${LOG_PATH}/${logName}`)
+    console.log('=== task end ===')
   })
 }
 
