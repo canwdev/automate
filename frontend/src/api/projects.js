@@ -27,3 +27,7 @@ export function listLogs(params) {
 export function logDetail(logName, params) {
   return service.get(`/log/${logName}`, {params})
 }
+
+export function deleteAllLogs() {
+  return service.post(`/delete-logs`)
+}

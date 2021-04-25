@@ -4,7 +4,17 @@
     <p class="task-tip">任务队列中的任务个数：<abbr style="font-size: 20px;" title="该数字不会自动刷新，请手动刷新页面">{{ tasks.length }}</abbr>
     </p>
 
-    <h2>日志列表</h2>
+    <b-row align-h="between">
+      <b-col cols="auto"><h2>日志列表</h2></b-col>
+      <b-col cols="auto">
+        <b-button-group size="sm">
+          <b-button variant="success" @click="getLogList">Refresh</b-button>
+          <b-button :disabled="this.tasks.length > 0" variant="danger" @click="handleDeleteAllLogs">Delete all
+            logs
+          </b-button>
+        </b-button-group>
+      </b-col>
+    </b-row>
 
     <table class="table table-hover">
       <thead>
@@ -49,7 +59,8 @@
 <script>
 import moment from 'moment'
 import {
-  listLogs
+  listLogs,
+  deleteAllLogs
 } from '@/api/projects'
 
 export default {
@@ -99,7 +110,7 @@ export default {
       // console.log('list',list)
       this.logs = list
       this.tasks = tasks
-      this.pages = Math.ceil(length / limit)
+      this.pages = Math.max(1, Math.ceil(length / limit))
     },
     viewMessage(item) {
       // console.log(item)
@@ -114,6 +125,20 @@ export default {
         autoFocusButton: 'ok',
         title: `Message`,
       })
+    },
+    async handleDeleteAllLogs() {
+
+      this.$bvModal.msgBoxConfirm('确定要删除所有日志吗？', {
+        title: 'Please Confirm',
+      }).then(async value => {
+        if (!value) {
+          return
+        }
+
+        await deleteAllLogs()
+        await this.getLogList()
+      })
+
     }
   }
 }

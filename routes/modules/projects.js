@@ -16,6 +16,7 @@ const {
 const {LOG_PATH} = require('../../configs')
 const sh = require('shelljs')
 const {enableAuth, authUsers} = require('../../configs')
+const automate = require('../../automate')
 
 module.exports = {
   async getBuildList(req, res, next) {
@@ -198,6 +199,24 @@ module.exports = {
       }
 
       res.sendData(logTail)
+    } catch (e) {
+      next(e)
+    }
+  },
+  async deleteAllLogs(req, res, next) {
+    try {
+      // backup log files
+      automate.cd(LOG_PATH)
+      const folderName = `log_backup_${Date.now()}`
+      automate.execCommands([
+        `mkdir ${folderName}`,
+        `cp *.json ${folderName}`,
+        `mv *.log ${folderName}`
+      ])
+
+      logDB.get('logs').remove().write()
+
+      res.sendData()
     } catch (e) {
       next(e)
     }

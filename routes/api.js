@@ -12,4 +12,5 @@ router.get('/build', userAuth, projects.buildByGET)
 router.post('/build', projects.buildByPOST)
 router.get('/logs', userAuth, projects.listLogs)
 router.get('/log/:logName', userAuth, projects.getLogDetail)
+router.post('/delete-logs', userAuth, projects.deleteAllLogs)
 module.exports = router

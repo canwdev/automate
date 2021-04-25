@@ -4,7 +4,7 @@
   "installCommand": "yarn install",
   "productionDir": "/usr/www/example-vue-project",
   "sshConfig": {
-    "host": "example.com",
+    "host": "localhost",
     "username": "root",
     "privateKey": null
   }

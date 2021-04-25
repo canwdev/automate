@@ -4,7 +4,7 @@
   "installCommand": "yarn install",
   "productionFiles": ".nuxt node_modules assets server deploy_prod.sh ecosystem.config.js nuxt.config.js package.json package-lock.json",
   "sshConfig": {
-    "host": "example.com",
+    "host": "localhost",
     "username": "root"
   }
 }
