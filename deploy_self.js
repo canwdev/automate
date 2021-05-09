@@ -7,6 +7,9 @@ console.log('参数:', args)
 
 automate.checkEnv(['git', 'yarn'])
 automate.cd(__dirname, 'cd')
+
+automate.exec(`whoami`)
+
 automate.execCommands([
   `git pull`,
   `yarn`
