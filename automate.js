@@ -13,7 +13,9 @@ const {
 module.exports = {
   cd,
   exec,
-  execCommands(commands) {
+  execCommands(commands, description) {
+    description && console.log(`>>> ✴ ${description}`)
+
     for (let key in commands) {
       exec(commands[key])
     }
