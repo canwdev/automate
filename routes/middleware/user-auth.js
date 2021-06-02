@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken')
 const {
   JWT_TOKEN,
-  CODE_TOKEN_EXPIRE,
   CODE_CLIENT_FORBIDDEN
 } = require('../../enum')
 const {enableAuth, authUsers} = require('../../configs')
@@ -29,7 +28,7 @@ module.exports = async function authLogin(req, res, next) {
 
       if (!hasUser) return res.sendError({
         code: CODE_CLIENT_FORBIDDEN,
-        message: 'Token expired'
+        message: 'Token expired (1)'
       })
 
       // 向下一级传值
@@ -47,7 +46,7 @@ module.exports = async function authLogin(req, res, next) {
     if (e.message === 'jwt expired') {
       return res.sendError({
         code: CODE_CLIENT_FORBIDDEN,
-        message: 'Token expired'
+        message: 'Token expired (2)'
       })
     }
 
