@@ -10,19 +10,19 @@ module.exports = {
     try {
       const data = req.body
       if (!data.username || !data.password) {
-        return res.sendError({message: 'Username or password is required'})
+        return res.sendError({message: '需要用户名或密码'})
       }
 
       const {username, password} = data
       const user = authUsers[username]
 
       if (!user) {
-        return res.sendError({message: 'Login Failed (1)'})
+        return res.sendError({message: '登录失败 (1)'})
       }
 
       const isPasswordValid = password === user
       if (!isPasswordValid) {
-        return res.sendError({message: 'Username or password is invalid'})
+        return res.sendError({message: '用户名或密码错误！'})
       }
 
       // Generate token
@@ -32,7 +32,7 @@ module.exports = {
       })
 
       return res.sendData({
-        message: 'Login success',
+        message: '登录成功！',
         token,
         username
       })

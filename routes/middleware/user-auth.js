@@ -28,7 +28,7 @@ module.exports = async function authLogin(req, res, next) {
 
       if (!hasUser) return res.sendError({
         code: CODE_CLIENT_FORBIDDEN,
-        message: 'Token expired (1)'
+        message: '令牌过期 (1)'
       })
 
       // 向下一级传值
@@ -37,7 +37,7 @@ module.exports = async function authLogin(req, res, next) {
     } else {
       return res.sendError({
         code: CODE_CLIENT_FORBIDDEN,
-        message: 'This action needs login'
+        message: '需要登录才能操作'
       })
     }
   } catch (e) {
@@ -46,7 +46,7 @@ module.exports = async function authLogin(req, res, next) {
     if (e.message === 'jwt expired') {
       return res.sendError({
         code: CODE_CLIENT_FORBIDDEN,
-        message: 'Token expired (2)'
+        message: '令牌过期 (2)'
       })
     }
 

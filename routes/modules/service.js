@@ -17,7 +17,7 @@ module.exports = {
   async restart(req, res, next) {
     try {
       res.sendData({
-        message: 'Service may be restarted, please refresh page.'
+        message: '服务可能已经重启，请刷新页面。'
       })
       sh.exec('node restart-service.js')
     } catch (e) {

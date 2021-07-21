@@ -178,7 +178,7 @@ module.exports = {
       const logName = req.params.logName
 
       if (!logName) {
-        return res.sendError({message: 'logName can not be empty'})
+        return res.sendError({message: 'logName 不能为空'})
       }
 
       if (req.query.raw) {
