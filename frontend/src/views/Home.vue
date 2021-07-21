@@ -131,13 +131,13 @@ export default {
       const h = this.$createElement
       const messageVNode = h('div', {
         domProps: {
-          innerHTML: `cmd: ${item.cmd}<br> args: ${item.args || ''}`
+          innerHTML: `命令：${item.cmd}<br> 参数：${item.args || ''}`
         }
       })
 
       this.$bvModal.msgBoxConfirm(messageVNode, {
         autoFocusButton: 'ok',
-        title: `确定要开始构建: ${item.title}`,
+        title: `请确认开始部署: ${item.title}`,
       }).then(async value => {
         if (!value) {
           return
