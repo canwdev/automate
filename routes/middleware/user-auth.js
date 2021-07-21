@@ -41,7 +41,7 @@ module.exports = async function authLogin(req, res, next) {
       })
     }
   } catch (e) {
-    console.log(e)
+    console.error(e)
 
     if (e.message === 'jwt expired') {
       return res.sendError({

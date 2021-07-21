@@ -1,5 +1,5 @@
 module.exports = {
-  outputDir: '../app_dist',
+  outputDir: './dist',
   publicPath: './',
   pages: {
     index: {
