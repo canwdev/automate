@@ -2,11 +2,13 @@
   <b-container>
 
     <div class="management">
-      <h2>管理服务</h2>
+      <h3>管理服务</h3>
       <ul>
+
+        <li><span v-if="serverInfo">{{ serverInfo.name }}: v{{ serverInfo.version }}</span> (前端版本：v{{frontendVer}})</li>
         <li><abbr :title="'启动时刻：' +initTimeFormatted">服务运行了</abbr>：<span class="badge">{{ runningTime }}</span></li>
         <li>
-          <router-link class="btn btn-primary" to="/logs">日志列表 · Logs</router-link>
+          <router-link class="btn btn-primary" to="/logs">任务/日志列表</router-link>
         </li>
         <li>
           <button class="btn btn-danger" @click="handleRestart()" title="重启 Automate 服务！用于解决一些构建执行时卡住的问题">重启服务</button>
@@ -15,7 +17,7 @@
     </div>
 
     <div class="builder">
-      <h2>构建</h2>
+      <h3>构建</h3>
 
       <ul v-if="buildList.length">
         <li v-for="(item,index) in buildList" :key="index">
@@ -42,6 +44,7 @@ import {
   getBuildList,
   buildProject
 } from '@/api/projects'
+import pkg from '../../package.json'
 
 function formatRunningTime(initTime) {
   const diff = new Date(Date.now() - initTime.getTime()).getTime()
@@ -67,7 +70,9 @@ export default {
     return {
       buildList: [],
       initTime: null,
-      runningTime: '-'
+      runningTime: '-',
+      serverInfo: null,
+      frontendVer: pkg.version
     }
   },
   computed: {
@@ -84,7 +89,9 @@ export default {
   },
   methods: {
     async getInfo() {
-      const {initTime} = await getServiceInfo()
+      const data = await getServiceInfo()
+      const {initTime} = data
+      this.serverInfo = data
       this.initTime = new Date(initTime)
       this.startTimeTick()
     },
@@ -100,7 +107,7 @@ export default {
     },
     handleRestart() {
       this.$bvModal.msgBoxConfirm('确定要重启服务吗？', {
-        title: 'Please Confirm',
+        title: '确认',
       }).then(async value => {
         if (!value) {
           return

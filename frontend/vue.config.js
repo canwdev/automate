@@ -5,7 +5,7 @@ module.exports = {
     index: {
       entry: 'src/main.js',
       template: 'public/index.html',
-      title: 'Automate.js',
+      title: 'Automate CI',
       chunks: ['chunk-vendors', 'chunk-common', 'index']
     }
   }

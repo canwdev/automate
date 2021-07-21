@@ -3,7 +3,7 @@
     <b-container>
 
       <b-navbar-brand id="tooltip-target-1">
-        <router-link to="/" target="_top" class="site-title">Automate.js</router-link>
+        <router-link to="/" target="_top" class="site-title">Automate CI</router-link>
       </b-navbar-brand>
       <b-tooltip target="tooltip-target-1" triggers="hover">
         <small>🔮 Node.js 自动化编译部署工具!</small>
@@ -25,8 +25,8 @@
               <b-icon v-else icon="circle"></b-icon>
 
             </template>
-            <b-dropdown-item v-if="!token" @click="isShowLogin = true">Login</b-dropdown-item>
-            <b-dropdown-item v-else @click="clearAuth">Sign Out</b-dropdown-item>
+            <b-dropdown-item v-if="!token" @click="isShowLogin = true">登录</b-dropdown-item>
+            <b-dropdown-item v-else @click="clearAuth">注销</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -35,15 +35,15 @@
     <b-modal
         v-model="isShowLogin"
         ref="modal"
-        title="Login"
+        title="登录"
         @ok="handleOk"
         hide-footer
     >
       <form ref="form" @submit.stop.prevent="submitLogin">
         <b-form-group
-            label="Username"
+            label="用户名"
             label-for="name-input"
-            invalid-feedback="Name is required"
+            invalid-feedback="用户名必填"
         >
           <b-form-input
               id="name-input"
@@ -53,9 +53,9 @@
         </b-form-group>
 
         <b-form-group
-            label="Password"
+            label="密码"
             label-for="password-input"
-            invalid-feedback="Password is required"
+            invalid-feedback="密码必填"
         >
           <b-form-input
               id="password-input"
@@ -65,7 +65,7 @@
           ></b-form-input>
         </b-form-group>
         <div class="row no-gutters">
-          <button type="submit" class="btn btn-primary ml-auto">Submit</button>
+          <button type="submit" class="btn btn-primary ml-auto">提交</button>
         </div>
       </form>
     </b-modal>

@@ -43,7 +43,7 @@ function Service(config = {}) {
       }
       main.$bvToast.toast(message, {
         variant: 'danger',
-        title: 'Request Error',
+        title: '请求错误',
         toaster: 'b-toaster-top-center',
       })
       return Promise.reject(error)

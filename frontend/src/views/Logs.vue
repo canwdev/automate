@@ -5,12 +5,11 @@
     </p>
 
     <b-row align-h="between">
-      <b-col cols="auto"><h2>日志列表</h2></b-col>
+      <b-col cols="auto"><h2>任务/日志列表</h2></b-col>
       <b-col cols="auto">
         <b-button-group size="sm">
-          <b-button variant="success" @click="getLogList">Refresh</b-button>
-          <b-button :disabled="this.tasks.length > 0" variant="danger" @click="handleDeleteAllLogs">Delete all
-            logs
+          <b-button variant="success" @click="getLogList">刷新</b-button>
+          <b-button :disabled="this.tasks.length > 0" variant="danger" @click="handleDeleteAllLogs">删除所有日志
           </b-button>
         </b-button-group>
       </b-col>
@@ -23,7 +22,7 @@
         <th>命令</th>
         <th>日志文件</th>
         <th>创建时间</th>
-        <th>Message</th>
+        <th>消息</th>
         <th>部署分支</th>
       </tr>
       </thead>
