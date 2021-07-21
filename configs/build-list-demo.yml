@@ -2,26 +2,26 @@
 # https://www.json2yaml.com/
 ---
 list:
-  - title: Deploy Demo
+  - title: 示例项目
     cmd: deploy_demo.js
     args: 'example_param'
-  - title: Deploy Automate.js + frontend
+  - title: Automate CI + 前端
     cmd: deploy_self.js
     args: 'frontend'
-  - title: Deploy Automate.js
+  - title: Automate CI
     cmd: deploy_self.js
-  - title: Deploy VuePress:example.json
+  - title: VuePress:example.json
     cmd: deploy_vuepress.js
     args: example.json
-  - title: Deploy Nuxt.js:example.json
+  - title: Nuxt.js:example.json
     cmd: deploy_nuxt.js
     args: example.json
-  - title: Deploy Nuxt.js:example-prod.json
+  - title: Nuxt.js:example-prod.json
     cmd: deploy_nuxt.js
     args: example-prod.json
-  - title: Deploy VueCLI3:example.json
+  - title: VueCLI3:example.json
     cmd: deploy_vuecli3.js
     args: example.json
-  - title: Deploy git Project:example.json
+  - title: git Project:example.json
     cmd: deploy_git.js
     args: example.json

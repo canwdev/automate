@@ -17,7 +17,7 @@
     </div>
 
     <div class="builder">
-      <h3>构建</h3>
+      <h3>部署</h3>
 
       <ul v-if="buildList.length">
         <li v-for="(item,index) in buildList" :key="index">
