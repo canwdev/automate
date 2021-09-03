@@ -8,8 +8,8 @@ const {
 const logDB = require('../../utils/log-db')
 const {
   startBuild,
-  tasks
-} = require('../../utils/build')
+  buildTaskQueue
+} = require('../../utils/builder')
 const {
   CODE_CLIENT_FORBIDDEN
 } = require('../../enum')
@@ -162,9 +162,16 @@ module.exports = {
         .value()
       const length = logDB.get('logs').value().length
 
+      const taskData = {
+        tasks: buildTaskQueue.tasks.length,
+        executing: buildTaskQueue.executing.length
+      }
+
+      // console.log(taskData)
+
       res.sendData({
         list,
-        tasks: tasks.getList(),
+        taskData,
         offset,
         limit,
         length

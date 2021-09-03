@@ -1,15 +1,15 @@
 <template>
   <b-container class="logs">
     <h2>状态</h2>
-    <p class="task-tip">任务队列中的任务个数：<abbr style="font-size: 20px;" title="该数字不会自动刷新，请手动刷新页面">{{ tasks.length }}</abbr>
+    <p class="task-tip">任务队列中的任务个数：<abbr style="font-size: 20px;" title="该数字不会自动刷新，请手动刷新页面">{{ taskData.tasks }}</abbr>
     </p>
 
     <b-row align-h="between">
       <b-col cols="auto"><h2>任务/日志列表</h2></b-col>
       <b-col cols="auto">
         <b-button-group size="sm">
-          <b-button variant="success" @click="getLogList">刷新</b-button>
-          <b-button :disabled="this.tasks.length > 0" variant="danger" @click="handleDeleteAllLogs">删除所有日志
+          <b-button variant="success" @click="getLogList"><b-icon icon="arrow-repeat"></b-icon> 刷新</b-button>
+          <b-button :disabled="this.taskData.tasks > 0" variant="danger" @click="handleDeleteAllLogs"><b-icon icon="trash"></b-icon> 删除所有日志
           </b-button>
         </b-button-group>
       </b-col>
@@ -63,11 +63,13 @@ import {
 } from '@/api/projects'
 
 export default {
-  name: 'Logs',
+  name: 'LogList',
   data() {
     return {
       logs: [],
-      tasks: [],
+      taskData: {
+        tasks: []
+      },
       limit: 10,
       pages: 1,
     }
@@ -99,7 +101,7 @@ export default {
     async getLogList() {
       const {
         list,
-        tasks,
+        taskData,
         limit,
         length
       } = await listLogs({
@@ -108,7 +110,7 @@ export default {
       })
       // console.log('list',list)
       this.logs = list
-      this.tasks = tasks
+      this.taskData = taskData
       this.pages = Math.max(1, Math.ceil(length / limit))
     },
     viewMessage(item) {

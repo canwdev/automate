@@ -6,7 +6,7 @@
       <li>
         <b-button-group size="sm">
           <router-link class="btn btn-secondary" to="/logs">
-            返回日志列表
+            <b-icon icon="arrow-left"></b-icon> 返回日志列表
           </router-link>
 
           <template v-if="isRaw">
@@ -27,14 +27,14 @@
 
       <li>
         <b-button-group size="sm">
-          <b-button variant="success" @click="getLogDetail" title="刷新日志">
-            <b-icon icon="arrow-repeat"></b-icon>
+          <b-button @click="refreshNow">
+            <b-icon icon="arrow-repeat"></b-icon> 立即刷新
           </b-button>
-          <b-button variant="danger" v-if="itAutoRefresh" @click="stopAutoRefresh" title="停止自动刷新">
-            <b-icon icon="stop-circle"></b-icon>
+          <b-button variant="info" v-if="itAutoRefresh" @click="stopAutoRefresh">
+            <b-icon icon="pause-fill"></b-icon> 暂停自动刷新
           </b-button>
-          <b-button variant="warning" v-else @click="startAutoRefresh" title="开启自动刷新">
-            <b-icon icon="play-circle"></b-icon>
+          <b-button variant="warning" v-else @click="startAutoRefresh">
+            <b-icon icon="play-fill"></b-icon> 开启自动刷新
           </b-button>
         </b-button-group>
       </li>
@@ -45,9 +45,10 @@
       <textarea readonly placeholder="Empty" :value="content"></textarea>
     </div>
 
-    <b-progress v-if="itAutoRefresh" :max="100" variant="info" show-progress animated>
+    <b-progress :max="100" :variant="itAutoRefresh ? 'info':'warning'" show-progress :animated="Boolean(itAutoRefresh)">
       <b-progress-bar :value="100">
-        <div>日志 <span id='sec'>5</span>s 刷新一次</div>
+        <div v-if="itAutoRefresh">日志 <span id='sec'>5</span>s 刷新一次</div>
+        <div v-else>刷新已暂停</div>
       </b-progress-bar>
 
     </b-progress>
@@ -92,10 +93,12 @@ export default {
     this.isLoading = true
     setTimeout(() => {
       this.getLogDetail()
-    }, 200)
+    }, 500)
+    document.addEventListener("visibilitychange", this.handleVisibilitychange);
   },
   beforeDestroy() {
     this.stopAutoRefresh()
+    document.removeEventListener("visibilitychange", this.handleVisibilitychange);
   },
   methods: {
     async getLogDetail() {
@@ -117,6 +120,11 @@ export default {
       clearInterval(this.itAutoRefresh)
       this.itAutoRefresh = null
     },
+    refreshNow() {
+      this.stopAutoRefresh()
+      this.getLogDetail()
+      this.startAutoRefresh()
+    },
     viewRaw(isRaw = true) {
       const query = {...this.$route.query}
       if (isRaw) {
@@ -130,6 +138,14 @@ export default {
         params: this.$route.params,
         query
       })
+    },
+    handleVisibilitychange(evt) {
+      // console.log(evt, document.hidden)
+      if (document.hidden) {
+        this.stopAutoRefresh()
+      } else {
+        this.startAutoRefresh()
+      }
     }
   }
 }

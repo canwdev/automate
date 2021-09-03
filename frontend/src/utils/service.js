@@ -37,7 +37,7 @@ function Service(config = {}) {
       try {
         if (data.ie) {
           data = JSON.parse(decrypt(data.main))
-          console.log('dd', data)
+          // console.log('dd', data)
         }
       } catch (e) {
         notifyError({message: e.message})
