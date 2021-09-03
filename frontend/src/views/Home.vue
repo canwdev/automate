@@ -45,6 +45,7 @@ import {
   buildProject
 } from '@/api/projects'
 import pkg from '../../package.json'
+import {notifyError} from "@/utils/notify"
 
 function formatRunningTime(initTime) {
   const diff = new Date(Date.now() - initTime.getTime()).getTime()
@@ -115,9 +116,8 @@ export default {
 
         const {message} = await restartService()
 
-        this.$bvToast.toast(message, {
-          variant: 'info',
-          toaster: 'b-toaster-top-center',
+        notifyError({
+          message,
           title: '服务重启，页面即将刷新...'
         })
 

@@ -10,7 +10,10 @@ let config = {
   LOG_PATH: logPath,
   enableAuth: true,
   authUsers: {'admin': 'admin'},
-  serverChannSCKEY: null // Server酱推送API
+  serverChannSCKEY: null, // Server酱推送API
+  enableEncryption: true,
+  // openssl rand -hex 16
+  ENCRYPTION_KEY: '357c9d491b1b18c57829f7e53d5e0c94' // Must be 256 bits (32 characters)
 }
 
 const configPath = path.join(__dirname, 'config.json')

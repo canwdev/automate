@@ -20,4 +20,6 @@ const main = new Vue({
   render: h => h(App)
 }).$mount('#app')
 
+window.$bvToast = main.$bvToast
+
 export default main

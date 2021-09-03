@@ -1,6 +1,8 @@
 import axios from 'axios'
 import {getToken} from './auth'
-import main from '../main'
+import {decrypt} from '../../../utils/crypt'
+import {notifyError} from "./notify"
+
 function Service(config = {}) {
   const {
     baseURL,
@@ -30,7 +32,18 @@ function Service(config = {}) {
   )
   service.interceptors.response.use(
     response => {
-      return response.data
+      let {data} = response
+
+      try {
+        if (data.ie) {
+          data = JSON.parse(decrypt(data.main))
+          console.log('dd', data)
+        }
+      } catch (e) {
+        notifyError({message: e.message})
+        return Promise.reject(e)
+      }
+      return data
     },
     error => {
       let message = error.message
@@ -41,10 +54,9 @@ function Service(config = {}) {
           message = msg
         }
       }
-      main.$bvToast.toast(message, {
-        variant: 'danger',
+      notifyError({
         title: '请求错误',
-        toaster: 'b-toaster-top-center',
+        message
       })
       return Promise.reject(error)
     }

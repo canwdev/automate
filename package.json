@@ -5,6 +5,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
+    "ist": "yarn && yarn --cwd ./frontend install",
     "start": "PORT=8100 node index.js",
     "dev": "nodemon index.js"
   },
@@ -12,13 +13,15 @@
     "ignore": [
       "projects/*",
       "logs/*",
-      "public/*"
+      "public/*",
+      "frontend/*"
     ]
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "crypto": "^1.0.1",
     "express": "^4.17.1",
     "inquirer": "^7.0.0",
     "js-yaml": "^4.1.0",
