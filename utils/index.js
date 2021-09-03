@@ -1,5 +1,4 @@
 const sh = require('shelljs')
-const SimpleTask = require('./simple-task')
 
 function padNum(num, len = 2) {
   return num.toString().padStart(len, '0')
@@ -25,7 +24,6 @@ function normalizePort(val) {
 }
 
 module.exports = {
-  SimpleTask,
   normalizePort,
   cd(dir, tip) {
     const result = sh.cd(dir)
