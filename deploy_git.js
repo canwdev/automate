@@ -2,7 +2,7 @@ const automate = require('./automate')
 
 // 部署任何用git部署的项目
 async function run() {
-  const config = await automate.loadConfigFile('./configs/git')
+  const config = await automate.loadConfigFile('./config/git')
 
   const projectName = config.projectName
   const productionDir = config.productionDir
@@ -19,7 +19,7 @@ async function run() {
       command: v
     })
   })
-  
+
   const startTime = +new Date()
   console.log(`>>> ${startTime}, ${projectName} 开始部署 git 项目`)
 

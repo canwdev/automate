@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const isNodejs = (typeof window === 'undefined')
 let ENCRYPTION_KEY // Must be 256 bits (32 characters)
 if (isNodejs) {
-  const {ENCRYPTION_KEY: KEY} = require('../configs');
+  const {ENCRYPTION_KEY: KEY} = require('../config');
   ENCRYPTION_KEY = KEY
 } else {
   ENCRYPTION_KEY = process.env.VUE_APP_ENCRYPTION_KEY;

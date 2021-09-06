@@ -1,5 +1,16 @@
 const sh = require('shelljs')
 
+/**
+ * JS生成全局唯一标识符
+ */
+const guid = () => {
+  function S4() {
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+  }
+
+  return (S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4())
+}
+
 function padNum(num, len = 2) {
   return num.toString().padStart(len, '0')
 }
@@ -24,6 +35,7 @@ function normalizePort(val) {
 }
 
 module.exports = {
+  guid,
   normalizePort,
   cd(dir, tip) {
     const result = sh.cd(dir)

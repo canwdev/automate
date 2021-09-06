@@ -35,8 +35,8 @@ yarn install
 yarn build
 ```
 
-- 将 `./configs/build-list-demo.yml` 复制为 `build-list.yml`，该文件为项目配置目录
-- 若要自定义配置，创建 `./configs/config.json`，内容参考 `./configs/index.js`
+- 将 `./config/project-list-demo.yml` 复制为 `project-list.yml`，该文件为项目配置目录
+- 若要自定义配置，创建 `./config/config.json`，内容参考 `./config/index.js`
 - 默认用户名密码均为 `admin`
 
 ## 🖥️ 支持构建的项目

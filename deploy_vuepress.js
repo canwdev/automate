@@ -1,7 +1,7 @@
 const automate = require('./automate')
 
 async function run() {
-  const config = await automate.loadConfigFile('./configs/vuepress')
+  const config = await automate.loadConfigFile('./config/vuepress')
 
   const {
     projectName,

@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const path = require('path')
-
+const {PORT} = require('./config')
 const {
   getDateTimeString: getTimeStr,
   normalizePort,
@@ -12,7 +12,7 @@ const {
 
 // 解决 req.body undefined
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({extended: false}))
 
 // parse application/json
 app.use(bodyParser.json())
@@ -24,7 +24,7 @@ app.use('/', express.static(path.join(__dirname, 'frontend/dist')));
 app.use('/', require('./routes/index'));
 
 // 全局错误处理
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -36,7 +36,7 @@ app.use(function(err, req, res, next) {
   res.send(err.message);
 });
 
-const port = normalizePort(process.env.PORT || '8100')
+const port = normalizePort(process.env.PORT || PORT)
 app.listen(port, () => {
   console.log(`Automate service running at: http://localhost:8100`);
 });

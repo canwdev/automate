@@ -1,6 +1,6 @@
 <template>
   <b-container class="logs">
-    <h2>日志详情</h2>
+    <h4>📜 日志详情</h4>
 
     <ul>
       <li>

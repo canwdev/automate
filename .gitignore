@@ -2,6 +2,7 @@
 /node_modules/
 projects
 logs
+data
 
 app_dist
 password.json

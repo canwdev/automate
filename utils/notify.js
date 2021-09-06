@@ -13,7 +13,7 @@ module.exports = {
     content = encodeURIComponent(new Date().getTime() + '\n\n' + content)
     const {
       serverChannSCKEY
-    } = require('../configs')
+    } = require('../config')
 
     if (!serverChannSCKEY) {
       console.log(title)

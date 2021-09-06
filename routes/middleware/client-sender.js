@@ -1,5 +1,5 @@
 const {encrypt} = require('../../utils/crypt')
-const {enableEncryption} = require('../../configs')
+const {enableEncryption} = require('../../config')
 
 /**
  * 统一处理客户端返回

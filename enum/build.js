@@ -1,11 +1,21 @@
+// 处理状态
+const BuildStatus = {
+  WAITING: 1, // 排队等待
+  RUNNING: 2, // 正在运行
+  FINISH: 3, // 成功
+  ERRORED: 4// 错误
+}
+
 // 默认item属性
 class DefaultItemData {
   constructor() {
+    this.id = null // database id
     this.command = ''
     this.logName = ''
     this.timestamp = new Date().getTime()
     this.message = null
     this.branch = null
+    this.buildStatus = BuildStatus.WAITING
   }
 }
 
@@ -24,12 +34,13 @@ const mergeItemData = (data) => {
   return res
 }
 
-class BuildItem {
+class BuildViewItem {
   constructor(props = {}) {
     Object.assign(this, mergeItemData(props))
   }
 }
 
 module.exports = {
-  BuildItem
+  BuildStatus,
+  BuildViewItem
 }

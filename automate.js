@@ -8,7 +8,7 @@ const exec = utils.exec
 const getTimeStr = utils.getDateTimeString
 const {
   PROJECT_PATH
-} = require('./configs')
+} = require('./config')
 
 module.exports = {
   cd,

@@ -1,5 +1,5 @@
 const automate = require('./automate')
-const {LOG_PATH} = require('./configs')
+const {LOG_PATH} = require('./config')
 
 automate.cd(LOG_PATH)
 const folderName = `log_backup/${Date.now()}/`

@@ -2,7 +2,7 @@
   <b-container>
 
     <div class="management">
-      <h3>管理服务</h3>
+      <h4>🕹️ 管理服务</h4>
       <ul>
 
         <li><span v-if="serverInfo">{{ serverInfo.name }}: v{{ serverInfo.version }}</span> (前端版本：v{{frontendVer}})</li>
@@ -17,7 +17,7 @@
     </div>
 
     <div class="builder">
-      <h3>部署</h3>
+      <h4>🔮 部署</h4>
 
       <ul v-if="buildList.length">
         <li v-for="(item,index) in buildList" :key="index">
@@ -28,7 +28,7 @@
       </ul>
 
       <ul v-else>
-        <li>暂无配置(./configs/build-list.yml)</li>
+        <li>暂无配置(./config/project-list.yml)</li>
       </ul>
     </div>
   </b-container>
@@ -41,7 +41,7 @@ import {
   restartService
 } from '@/api/server'
 import {
-  getBuildList,
+  getProjectList,
   buildProject
 } from '@/api/projects'
 import pkg from '../../package.json'
@@ -97,7 +97,7 @@ export default {
       this.startTimeTick()
     },
     async getList() {
-      const {list} = await getBuildList()
+      const {list} = await getProjectList()
       this.buildList = list
     },
     startTimeTick() {

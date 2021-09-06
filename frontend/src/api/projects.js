@@ -5,8 +5,8 @@ const service = new Service({
   baseURL: HOST_URL + '/api'
 })
 
-export function getBuildList() {
-  return service.get('/build-list')
+export function getProjectList() {
+  return service.get('/project-list')
 }
 
 export function buildProject(item) {
@@ -18,7 +18,7 @@ export function buildProject(item) {
   })
 }
 
-export function listLogs(params) {
+export function getBuildLogs(params) {
   return service.get('/logs', {
     params
   })

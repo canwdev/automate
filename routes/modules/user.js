@@ -1,4 +1,4 @@
-const {enableAuth, authUsers} = require('../../configs')
+const {enableAuth, authUsers} = require('../../config')
 const jwt = require('jsonwebtoken')
 const {
   JWT_TOKEN,

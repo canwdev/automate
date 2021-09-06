@@ -1,11 +1,13 @@
 <template>
   <b-container class="logs">
-    <h2>状态</h2>
-    <p class="task-tip">任务队列中的任务个数：<abbr style="font-size: 20px;" title="该数字不会自动刷新，请手动刷新页面">{{ taskData.tasks }}</abbr>
-    </p>
+    <h4>🤖 状态汇总</h4>
+    <ul class="mb-5">
+      <li>正在构建个数：{{ taskData.tasks }} / {{ builderConcurrent }}</li>
+    </ul>
+
 
     <b-row align-h="between">
-      <b-col cols="auto"><h2>任务/日志列表</h2></b-col>
+      <b-col cols="auto"><h4>📜 任务/日志列表</h4></b-col>
       <b-col cols="auto">
         <b-button-group size="sm">
           <b-button variant="success" @click="getLogList"><b-icon icon="arrow-repeat"></b-icon> 刷新</b-button>
@@ -18,28 +20,20 @@
     <table class="table table-hover">
       <thead>
       <tr>
-        <th>#</th>
         <th>命令</th>
         <th>日志文件</th>
         <th>创建时间</th>
         <th>消息</th>
         <th>部署分支</th>
+        <th>操作</th>
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(item, index) in logs" :key="item.timestamp">
-        <th scope="row">{{ index + 1 }}</th>
-        <td>{{ item.command }}</td>
-        <td>
-          <router-link :to="`/log/${item.logName}`">{{ item.logName }}</router-link>
-        </td>
-        <td>{{ formatTime(item.timestamp) }}</td>
-        <td>
-          <b-link v-if="item.message" @click.prevent="viewMessage(item)">点击查看</b-link>
-          <span v-else>-</span>
-        </td>
-        <td>{{ item.branch || '-' }}</td>
-      </tr>
+
+      <TaskRowItem
+        v-for="(item, index) in logs" :key="item.timestamp"
+        :item="item"
+      />
       </tbody>
     </table>
 
@@ -56,14 +50,21 @@
 </template>
 
 <script>
-import moment from 'moment'
+import TaskRowItem from "@/components/TaskRowItem"
 import {
-  listLogs,
+  getBuildLogs,
   deleteAllLogs
 } from '@/api/projects'
+import {
+  BuildViewItem,
+  BuildStatus
+} from '@/enum'
 
 export default {
   name: 'LogList',
+  components: {
+    TaskRowItem
+  },
   data() {
     return {
       logs: [],
@@ -72,6 +73,8 @@ export default {
       },
       limit: 10,
       pages: 1,
+      builderConcurrent: null,
+      BuildViewItem
     }
   },
   computed: {
@@ -95,23 +98,23 @@ export default {
     linkGen(pageNum) {
       return pageNum === 1 ? '?' : `?page=${pageNum}`
     },
-    formatTime(time) {
-      return moment(time).format('YYYY-MM-DD HH:mm:ss A')
-    },
     async getLogList() {
-      const {
-        list,
-        taskData,
-        limit,
-        length
-      } = await listLogs({
+      const res = await getBuildLogs({
         offset: this.offset,
         limit: this.limit
       })
-      // console.log('list',list)
+      console.log('res', res)
+      const {
+        list,
+        taskData,
+        builderConcurrent,
+        limit,
+        count
+      } = res
       this.logs = list
       this.taskData = taskData
-      this.pages = Math.max(1, Math.ceil(length / limit))
+      this.builderConcurrent = builderConcurrent
+      this.pages = Math.max(1, Math.ceil(count / limit))
     },
     viewMessage(item) {
       // console.log(item)

@@ -3,7 +3,7 @@ const {parseSSHConfig} = require('./utils')
 
 async function run() {
 
-  const config = await automate.loadConfigFile('./configs/vuecli3')
+  const config = await automate.loadConfigFile('./config/vuecli3')
 
   const projectName = config.projectName
   const projectGit = config.projectGit

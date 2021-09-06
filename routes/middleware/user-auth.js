@@ -3,7 +3,7 @@ const {
   JWT_TOKEN,
   CODE_CLIENT_FORBIDDEN
 } = require('../../enum')
-const {enableAuth, authUsers} = require('../../configs')
+const {enableAuth, authUsers} = require('../../config')
 
 /**
  * 验证登录中间件

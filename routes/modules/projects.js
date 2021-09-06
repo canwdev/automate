@@ -5,7 +5,6 @@ const {
   getDateTimeString,
   genRandomString
 } = require('../../utils')
-const logDB = require('../../utils/log-db')
 const {
   startBuild,
   buildTaskQueue
@@ -13,21 +12,25 @@ const {
 const {
   CODE_CLIENT_FORBIDDEN
 } = require('../../enum')
-const {LOG_PATH} = require('../../configs')
+const {
+  LOG_PATH,
+  builderConcurrent
+} = require('../../config')
 const sh = require('shelljs')
-const {enableAuth, authUsers} = require('../../configs')
+const {enableAuth, authUsers} = require('../../config')
+const BuildItem = require('../../database/models/BuildItem')
 
 module.exports = {
-  async getBuildList(req, res, next) {
+  async getProjectList(req, res, next) {
     try {
-      const docDir = path.join(__dirname, '../../configs')
-      const docPath = path.join(docDir, 'build-list.yml')
+      const docDir = path.join(__dirname, '../../config')
+      const docPath = path.join(docDir, 'project-list.yml')
 
       let doc = {}
       if (fs.existsSync(docPath)) {
         doc = yaml.load(fs.readFileSync(docPath, 'utf8'));
       } else {
-        const docPathDemo = path.join(docDir, 'build-list-demo.yml')
+        const docPathDemo = path.join(docDir, 'project-list-demo.yml')
         doc = yaml.load(fs.readFileSync(docPathDemo, 'utf8'));
       }
 
@@ -51,7 +54,7 @@ module.exports = {
       const logName = 'build_' + getDateTimeString(now) + '_' + genRandomString() + '.log'
 
       // 开始构建
-      startBuild({
+      await startBuild({
         command: `${cmd}` + (args ? ` ${args}` : ''),
         logName,
         timestamp: now.getTime(),
@@ -123,7 +126,7 @@ module.exports = {
       const logName = 'build_' + getDateTimeString(now) + '_' + genRandomString() + '.log'
 
       // 开始构建
-      startBuild({
+      await startBuild({
         command: `${cmd}` + (args ? ` ${args}` : ''),
         logName,
         timestamp: now.getTime(),
@@ -138,29 +141,30 @@ module.exports = {
       next(e)
     }
   },
-  async listLogs(req, res, next) {
+  async getBuildLogs(req, res, next) {
     try {
       let {
         offset = 0,
         limit = 10,
-        order = 'desc',
+        order = 'DESC',
       } = req.query
 
       offset = Number(offset)
       limit = Number(limit)
 
-      // console.log({
-      //   offset,
-      //   limit,
-      //   order
-      // })
+      let paginationQuery = limit ? {
+        offset: parseInt(offset) || 0,
+        limit: parseInt(limit),
+      } : {}
 
-      const list = logDB.get('logs')
-        .orderBy('timestamp', [order])
-        // .take(limit)
-        .slice(offset, offset + limit)
-        .value()
-      const length = logDB.get('logs').value().length
+      let list = await BuildItem.findAndCountAll({
+        ...paginationQuery,
+        // where,
+        order: [
+          // ['sort', 'ASC'],
+          ['timestamp', order],
+        ]
+      })
 
       const taskData = {
         tasks: buildTaskQueue.tasks.length,
@@ -170,11 +174,12 @@ module.exports = {
       // console.log(taskData)
 
       res.sendData({
-        list,
+        list: list.rows,
+        count: list.count,
         taskData,
-        offset,
         limit,
-        length
+        offset,
+        builderConcurrent,
       })
     } catch (e) {
       next(e)
