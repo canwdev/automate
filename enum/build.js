@@ -1,10 +1,11 @@
-// 处理状态
-const BuildStatus = {
-  WAITING: 1, // 排队等待
-  RUNNING: 2, // 正在运行
-  FINISH: 3, // 成功
-  ERRORED: 4// 错误
-}
+const EventEmitter = require('../utils/task-queue/event-emitter')
+const {BuildStatus} = require('./common')
+const sh = require('shelljs')
+const {
+  LOG_PATH
+} = require('../config')
+const path = require('path')
+const fs = require('fs')
 
 // 默认item属性
 class DefaultItemData {
@@ -34,13 +35,55 @@ const mergeItemData = (data) => {
   return res
 }
 
-class BuildViewItem {
+class BuildInstance extends EventEmitter {
   constructor(props = {}) {
+    super()
     Object.assign(this, mergeItemData(props))
+  }
+
+  async start(command = this.command) {
+    console.log(`[build][id=${this.id}] 任务已启动`)
+    const logPath = path.join(LOG_PATH, this.logName)
+
+    const writeStream = fs.createWriteStream(logPath)
+
+    const ps = sh.exec(command, {
+      async: true,
+      silent: true,
+    }, (code, stdout, stderr) => {
+      writeStream.end()
+      console.log(`[build][id=${this.id}] 任务已结束, code=${code}`)
+      if (code !== 0) {
+        this.emit('error', {code, stdout, stderr})
+        return
+      }
+      this.emit('finish', {code, stdout, stderr})
+    })
+    this.ps = ps
+
+    ps.stdout.pipe(writeStream);
+    ps.stderr.pipe(writeStream);
+
+
+    // ps.stdout.on('data', async (data) => {
+    //   // this.emit('stdout', data)
+    // })
+    //
+    // ps.stderr.on('data', async (data) => {
+    //   // this.emit('stderr', data)
+    // })
+  }
+
+  abort() {
+    if (this.ps) {
+      console.log(`[build][id=${this.id}] SIGINT 结束进程`)
+      this.ps.kill('SIGINT')
+      this.ps = null
+    }
   }
 }
 
 module.exports = {
   BuildStatus,
-  BuildViewItem
+  BuildInstance
 }

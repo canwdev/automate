@@ -97,7 +97,6 @@ class TaskQueue extends EventEmitter {
           this.emit('done', task)
           return tsk
         }).catch(e => {
-          errReport(e)
           this.errorEmptyTask && this.removeAllTask()
           this.emit('error', e, task)
         }).finally(() => {

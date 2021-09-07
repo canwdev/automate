@@ -16,7 +16,7 @@ module.exports = {
     } = require('../config')
 
     if (!serverChannSCKEY) {
-      console.log(title)
+      // console.log(title)
       console.log('ServerChan 推送 SCKEY 未指定')
       return
     }

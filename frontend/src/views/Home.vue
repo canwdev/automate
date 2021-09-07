@@ -11,7 +11,7 @@
           <router-link class="btn btn-primary" to="/logs">任务/日志列表</router-link>
         </li>
         <li>
-          <button class="btn btn-danger" @click="handleRestart()" title="重启 Automate 服务！用于解决一些构建执行时卡住的问题">重启服务</button>
+          <button class="btn btn-danger" @click="handleRestart()" title="强制重启服务，需要 PM2 支持">重启服务(PM2)</button>
         </li>
       </ul>
     </div>

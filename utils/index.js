@@ -44,7 +44,7 @@ module.exports = {
     return result
   },
   exec(command, description) {
-    console.log(`>>> ${description ? '✴️' : '🚀' } ${description || command}`)
+    console.log(`>>> ${description ? '✴️' : '🚀'} ${description || command}`)
     const result = sh.exec(command)
     if (result.code === 1) sh.exit(1)
 
@@ -65,14 +65,15 @@ module.exports = {
   /**
    * 异步执行命令，使用 Promise 封装
    */
-  asyncExec(command) {
+  asyncExec(command, options) {
+    options = options || {async: true, silent: false}
     return new Promise((resolve, reject) => {
       try {
-        sh.exec(command, { async: true, silent: false }, (code, stdout, stderr) => {
+        sh.exec(command, options, (code, stdout, stderr) => {
           if (stderr) {
             return reject(stderr)
           }
-          return resolve({ code, stdout, stderr })
+          return resolve({code, stdout, stderr})
         })
       } catch (e) {
         reject(e)

@@ -1,12 +1,12 @@
 {
   "name": "automate",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "自动化部署工具",
   "private": true,
   "main": "index.js",
   "scripts": {
     "ist": "yarn && yarn --cwd ./frontend install",
-    "start": "PORT=8100 node index.js",
+    "start": "NODE_ENV=production PORT=8100 node index.js",
     "dev": "nodemon index.js"
   },
   "nodemonConfig": {
@@ -30,6 +30,7 @@
     "lowdb": "^1.0.0",
     "node-localstorage": "^2.1.4",
     "node-ssh": "^6.0.0",
+    "rimraf": "^3.0.2",
     "sequelize": "^6.6.5",
     "shelljs": "^0.8.3",
     "sqlite3": "^5.0.2"

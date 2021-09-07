@@ -18,7 +18,12 @@ export function buildProject(item) {
   })
 }
 
-export function getBuildLogs(params) {
+export function abortBuild(data) {
+  return service.post(`/abort-build`, data)
+}
+
+
+export function getBuildList(params) {
   return service.get('/logs', {
     params
   })
@@ -29,5 +34,9 @@ export function logDetail(logName, params) {
 }
 
 export function deleteAllLogs() {
-  return service.post(`/delete-logs`)
+  return service.post(`/delete-all-log`)
+}
+
+export function deleteLog(data) {
+  return service.post(`/delete-log`, data)
 }

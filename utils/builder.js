@@ -8,9 +8,30 @@ const {
   builderConcurrent
 } = require('../config')
 const {
-  BuildViewItem,
+  BuildInstance,
   BuildStatus
 } = require('../enum/build')
+
+const handleFinish = async (item) => {
+  await BuildItem.update({
+    buildStatus: BuildStatus.FINISH
+  }, {
+    where: {
+      id: item.id
+    }
+  })
+}
+
+const handleError = async (item, e) => {
+  console.error('[taskHandler] error', e)
+  await BuildItem.update({
+    buildStatus: BuildStatus.ERRORED
+  }, {
+    where: {
+      id: item.id
+    }
+  })
+}
 
 const taskHandler = async (task) => {
   return new Promise(async (resolve, reject) => {
@@ -29,31 +50,22 @@ const taskHandler = async (task) => {
         }
       })
 
-      console.log('=== task start ===')
       // 2>&1 | tee 的意思是在控制台输出日志的同时保存到文件
-      await asyncExec(`node ${command} 2>&1 | tee ${LOG_PATH}/${logName}`)
-      console.log('=== task end ===')
+      // const runCommand = `node ${command} 2>&1 | tee ${LOG_PATH}/${logName}`
+      item.start(`node ${command}`)
 
-      await BuildItem.update({
-        buildStatus: BuildStatus.FINISH
-      }, {
-        where: {
-          id: item.id
-        }
+      item.once('finish', async () => {
+        await handleFinish(item)
+        resolve()
+      })
+      item.once('error', async (e) => {
+        await handleError(item, e.code)
+        reject(e)
       })
 
-      resolve()
+
     } catch (e) {
-      console.error('[taskHandler]', e)
-
-      await BuildItem.update({
-        buildStatus: BuildStatus.ERRORED
-      }, {
-        where: {
-          id: item.id
-        }
-      })
-
+      await handleError(item, e)
       reject(e)
     }
   })
@@ -61,7 +73,11 @@ const taskHandler = async (task) => {
 
 const buildTaskQueue = new TaskQueue({
   concurrent: builderConcurrent,
-  taskHandler
+  taskHandler,
+  getTaskMapKey: (task) => {
+    const {data: item} = task
+    return item.id
+  }
 })
 
 /**
@@ -72,7 +88,7 @@ const startBuild = async (config = {}) => {
   // 保存日志索引
   const res = await BuildItem.create(config)
 
-  const item = new BuildViewItem({
+  const item = new BuildInstance({
     ...config,
     id: res.id,
   })

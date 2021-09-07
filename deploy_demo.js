@@ -6,20 +6,23 @@ console.log('Params:', process.argv.slice(2))
 
 let i = 0
 let it = setInterval(() => {
-  i += 10
+  i += 1
   console.log(`Current percent: ${i}%`)
   if (i >= 100) {
     clearInterval(it)
 
     let isSuccess = Math.random() > 0.5
-    let message = `Demo Build ${isSuccess ? 'Success' : 'Failed'}!`
 
-    console.log(message)
+    if (isSuccess) {
+      console.log('Demo Build Success! ✔✔✔')
+    } else {
+      console.error('Demo Build Failed! ❌❌❌')
+    }
 
-    automate.pushServerChan('Deploy Demo', message)
+    automate.pushServerChan('Deploy Demo', `isSuccess: ${isSuccess}`)
     if (!isSuccess) {
       process.exit(1)
     }
   }
-}, 1000);
+}, 500);
 
