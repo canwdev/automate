@@ -2,6 +2,9 @@
 const automate = require('./automate')
 console.log('Start deploy demo...')
 
+automate.exec(`whoami`)
+automate.exec(`pwd`)
+
 console.log('Params:', process.argv.slice(2))
 
 let i = 0
