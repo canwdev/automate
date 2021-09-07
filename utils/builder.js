@@ -23,7 +23,6 @@ const handleFinish = async (item) => {
 }
 
 const handleError = async (item, e) => {
-  console.error('[taskHandler] error', e)
   await BuildItem.update({
     buildStatus: BuildStatus.ERRORED
   }, {
@@ -65,6 +64,7 @@ const taskHandler = async (task) => {
 
 
     } catch (e) {
+      console.error('[taskHandler] error', e)
       await handleError(item, e)
       reject(e)
     }
