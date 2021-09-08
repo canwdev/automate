@@ -1,3 +1,3 @@
-const sh = require('shelljs')
+const cp = require('child_process')
 
-sh.exec('pm2 restart ./ecosystem.config.js')
+cp.exec('pm2 restart ./ecosystem.config.js')
