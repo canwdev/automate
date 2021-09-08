@@ -46,7 +46,6 @@
         <th>消息</th>
         <th>分支</th>
         <th>状态</th>
-        <th>日志</th>
         <th>操作</th>
       </tr>
       </thead>

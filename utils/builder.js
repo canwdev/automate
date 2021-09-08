@@ -86,14 +86,19 @@ const buildTaskQueue = new TaskQueue({
 const startBuild = async (config = {}) => {
 
   // 保存日志索引
-  const res = await BuildItem.create(config)
+  const item = await BuildItem.create(config)
 
-  const item = new BuildInstance({
+  const instance = new BuildInstance({
     ...config,
-    id: res.id,
+    id: item.id,
   })
   // 启动任务
-  buildTaskQueue.addTask(item)
+  buildTaskQueue.addTask(instance)
+
+  return {
+    item,
+    instance
+  }
 }
 
 module.exports = {

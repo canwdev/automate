@@ -56,14 +56,14 @@ const buildByGET = async (req, res, next) => {
     const logName = 'build_' + getDateTimeString(now) + '_' + genRandomString() + '.log'
 
     // 开始构建
-    await startBuild({
+    const {item} = await startBuild({
       command: `${cmd}` + (args ? ` ${args}` : ''),
       logName,
       timestamp: now.getTime(),
     })
 
     res.sendData({
-      logName
+      id: item.id
     })
   } catch (e) {
     next(e)

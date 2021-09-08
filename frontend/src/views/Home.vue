@@ -154,9 +154,9 @@ export default {
 
         setTimeout(() => {
           this.$router.push({
-            name: 'LogDetail',
+            name: 'BuildDetail',
             params: {
-              logName: res.logName
+              id: res.id
             }
           })
         }, 800)

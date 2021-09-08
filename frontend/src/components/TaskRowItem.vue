@@ -13,10 +13,12 @@
       >{{ BuildStatusText[item.buildStatus] || '-' }}</span>
     </td>
     <td>
-      <b-link :to="`/log/${item.id}`" :title="item.logName">点击查看</b-link>
-    </td>
-    <td>
       <b-button-group size="sm">
+        <b-button
+            variant="info"
+            :to="`/log/${item.id}`"
+        >详情
+        </b-button>
         <b-button
           v-if="item.buildStatus === BuildStatus.RUNNING"
           variant="danger"
@@ -35,7 +37,6 @@
           @click="$emit('delete', item)"
         >删除
         </b-button>
-        <span v-if="item.buildStatus === BuildStatus.WAITING">排队中...</span>
       </b-button-group>
     </td>
   </tr>
