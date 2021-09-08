@@ -3,7 +3,6 @@ const fs = require('fs-extra')
 
 const projectPath = path.join(__dirname, '../projects')
 const defaultDataPath = path.join(__dirname, '../data')
-const isProduction = process.env.NODE_ENV === 'production';
 
 // default config
 let config = {
@@ -14,7 +13,7 @@ let config = {
   enableAuth: true,
   authUsers: {'admin': 'admin'},
   serverChannSCKEY: null, // Server酱推送API
-  enableEncryption: isProduction, // 是否启用加密
+  enableEncryption: false, // 是否启用加密
   // openssl rand -hex 16
   ENCRYPTION_KEY: '357c9d491b1b18c57829f7e53d5e0c94', // Must be 256 bits (32 characters)
   builderConcurrent: 3,

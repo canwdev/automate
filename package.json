@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "ist": "yarn && yarn --cwd ./frontend install",
-    "start": "NODE_ENV=production PORT=8100 node index.js",
+    "start": "PORT=8100 node index.js",
     "dev": "nodemon index.js"
   },
   "nodemonConfig": {

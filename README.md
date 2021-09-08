@@ -48,6 +48,8 @@ yarn build
 - ⚠ 可以通过自行编写 JS 脚本进行扩展
 - ⚠ 项目需要手动 clone 至 `./projects` 目录
 - ⚠ 注意：`./projects` 中是项目的原始文件，请勿修改。若在未提交代码之前执行部署操作，修改将丢失
+- ⚠ 注意：请确保本项目下的所有文件与执行用户的权限一致（`chown -R root:root automate`），否则在构建时可能会出现各种问题
+- ⚠ 注意：请勿设置环境变量：`NODE_ENV=production`，否则在构建时执行 `npm install` 命令会出问题
 
 ---
 
