@@ -14,4 +14,13 @@ const Model = sequelize.define('buildItems', {
 
 sequelize.sync()
 
+// 启动时失败正在运行的项目
+Model.update({
+  buildStatus: BuildStatus.ERRORED
+},{
+  where: {
+    buildStatus: [BuildStatus.WAITING, BuildStatus.RUNNING]
+  }
+})
+
 module.exports = Model

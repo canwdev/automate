@@ -21,12 +21,14 @@
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown right>
             <template v-slot:button-content>
-              <b-icon v-if="token" icon="check-circle-fill"></b-icon>
+              <b-icon v-if="token" icon="check-circle-fill" class="text-success"></b-icon>
               <b-icon v-else icon="circle"></b-icon>
-
             </template>
+<!--            <b-dropdown-item href="https://github.com/canwdev/automate" target="_blank">-->
+<!--              Github-->
+<!--            </b-dropdown-item>-->
             <b-dropdown-item v-if="!token" @click="isShowLogin = true">登录</b-dropdown-item>
-            <b-dropdown-item v-else @click="clearAuth">注销</b-dropdown-item>
+            <b-dropdown-item v-else @click="clearAuth"><span class="text-danger">注销</span></b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>

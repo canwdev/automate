@@ -226,7 +226,9 @@ const getLogDetail = async (req, res, next) => {
       })
     }
 
-    const result = sh.exec(`tail -25 ${path.join(LOG_PATH, logName)}`,
+    const lines = Number(req.query.lines) || 25
+
+    const result = sh.exec(`tail -${lines} ${path.join(LOG_PATH, logName)}`,
       {silent: true})
     const logTail = result.toString()
 

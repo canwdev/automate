@@ -32,11 +32,11 @@
             <b-icon icon="arrow-repeat"></b-icon>
             刷新
           </b-button>
-          <b-button variant="info" v-if="itAutoRefresh" @click="stopAutoRefresh">
+          <b-button variant="info" v-if="itAutoRefresh" @click="disableAutoRefresh">
             <b-icon icon="pause-fill"></b-icon>
-            暂停自动刷新
+            停止自动刷新
           </b-button>
-          <b-button variant="warning" v-else @click="refreshNow">
+          <b-button variant="warning" v-else @click="enableAutoRefresh">
             <b-icon icon="play-fill"></b-icon>
             开启自动刷新
           </b-button>
@@ -44,18 +44,27 @@
       </li>
     </ul>
 
-    <div class="log-content">
-      <img v-show="isLoading" class="loading-img" src="~@/assets/images/loading.gif" alt="">
-      <textarea readonly placeholder="日志为空，可能是任务还没有开始执行" :value="content"></textarea>
-    </div>
-
     <b-progress :max="100" :variant="itAutoRefresh ? 'info':'warning'" show-progress :animated="Boolean(itAutoRefresh)">
       <b-progress-bar :value="100">
         <div v-if="itAutoRefresh">日志 <span id='sec'>{{ refreshMs / 1000 }}</span>s 刷新一次</div>
-        <div v-else>刷新已暂停</div>
+        <div v-else>刷新已停止</div>
       </b-progress-bar>
 
     </b-progress>
+
+    <div class="log-content">
+      <transition name="fade">
+        <b-spinner class="loading-img" small v-show="isLoading" variant="primary"></b-spinner>
+      </transition>
+      <b-form-textarea
+        rows="3"
+        max-rows="9999"
+        :value="content"
+        placeholder="日志为空，可能是任务还没有开始执行"
+        readonly
+      ></b-form-textarea>
+
+    </div>
 
   </b-container>
 </template>
@@ -79,10 +88,10 @@ export default {
     isRaw: {
       handler(val) {
         if (val) {
-          this.stopAutoRefresh()
+          this.pauseAutoRefresh()
           this.getLogDetail()
         } else {
-          this.startAutoRefresh()
+          this.refreshNow()
         }
       },
       immediate: true
@@ -103,12 +112,14 @@ export default {
       this.isLoading = true
       try {
         this.content = await logDetail(this.logName, {raw: this.isRaw})
+        this.erroredTimes = 0
       } catch (e) {
         console.error(e)
+        this.erroredTimes++
       } finally {
         setTimeout(() => {
           this.isLoading = false
-        }, 300)
+        }, 500)
       }
     },
     fnRefresh() {
@@ -135,9 +146,8 @@ export default {
 <style lang="scss" scoped>
 .log-content {
   width: 100%;
-  height: 460px;
   position: relative;
-  margin: 0 0 10px;
+  margin: 10px 0 10px;
 
   .loading-img {
     position: absolute;
@@ -149,17 +159,17 @@ export default {
   textarea {
     font-family: monospace;
     font-size: 12px;
-    width: 100%;
-    height: 100%;
+    //width: 100%;
+    //height: 100%;
     display: block;
-    padding: 9.5px;
-    line-height: 1.42857143;
+    //padding: 9.5px;
+    //line-height: 1.42857143;
     color: #333;
-    word-break: break-all;
-    word-wrap: break-word;
-    background-color: #f5f5f5;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    background-color: #fbfbfb;
+    //word-break: break-all;
+    //word-wrap: break-word;
+    //border: 1px solid #ccc;
+    //border-radius: 4px;
   }
 }
 

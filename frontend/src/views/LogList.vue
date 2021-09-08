@@ -2,7 +2,11 @@
   <b-container class="logs">
     <b-row align-h="between">
       <b-col cols="auto"><h4>🤖 状态汇总</h4></b-col>
-      <b-col cols="auto"><span v-show="isLoading">刷新中...</span></b-col>
+      <b-col cols="auto">
+        <transition name="fade">
+          <b-spinner small v-show="isLoading" variant="primary"></b-spinner>
+        </transition>
+      </b-col>
     </b-row>
     <ul class="mb-5">
       <li>正在构建个数：{{ taskData.executing || 0 }}/{{ taskData.tasks || 0 }}</li>
@@ -18,11 +22,11 @@
             <b-icon icon="arrow-repeat"></b-icon>
             刷新
           </b-button>
-          <b-button variant="info" v-if="itAutoRefresh" @click="stopAutoRefresh">
+          <b-button variant="info" v-if="itAutoRefresh" @click="disableAutoRefresh">
             <b-icon icon="pause-fill"></b-icon>
-            暂停自动刷新
+            停止自动刷新
           </b-button>
-          <b-button variant="warning" v-else @click="refreshNow">
+          <b-button variant="warning" v-else @click="enableAutoRefresh">
             <b-icon icon="play-fill"></b-icon>
             开启自动刷新
           </b-button>
@@ -83,7 +87,6 @@ import {
   BuildInstance,
   BuildStatus
 } from '@/enum'
-import {notifyError} from "@/utils/notify"
 import autoRefreshMixin from '@/mixins/auto-refresh-mixin'
 
 export default {
@@ -96,12 +99,12 @@ export default {
     return {
       logs: [],
       taskData: {
-        tasks: []
       },
       limit: 10,
       pages: 1,
       isLoading: false,
-      BuildInstance
+      BuildInstance,
+
     }
   },
   computed: {
@@ -118,8 +121,9 @@ export default {
       this.refreshNow()
     }
   },
-  created() {
+  mounted() {
     // this.getLogList()
+    this.refreshNow()
   },
   methods: {
     linkGen(pageNum) {
@@ -145,9 +149,11 @@ export default {
         this.logs = list
         this.taskData = taskData
         this.pages = Math.max(1, Math.ceil(count / limit))
+
+        this.erroredTimes = 0
       } catch (e) {
         console.error(e)
-        notifyError(e)
+        this.erroredTimes++
       } finally {
         setTimeout(() => {
           this.isLoading = false

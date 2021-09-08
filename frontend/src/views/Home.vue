@@ -152,12 +152,16 @@ export default {
         //   console.error(e)
         // })
 
-        this.$router.push({
-          name: 'LogDetail',
-          params: {
-            logName: res.logName
-          }
-        })
+        setTimeout(() => {
+          this.$router.push({
+            name: 'LogDetail',
+            params: {
+              logName: res.logName
+            }
+          })
+        }, 800)
+
+
       }).catch(() => {
       })
     }

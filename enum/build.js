@@ -72,6 +72,8 @@ class BuildInstance extends EventEmitter {
     // ps.stderr.on('data', async (data) => {
     //   // this.emit('stderr', data)
     // })
+
+    return ps
   }
 
   abort() {
