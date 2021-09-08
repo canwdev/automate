@@ -4,15 +4,19 @@ const {enableEncryption} = require('../../config')
 /**
  * 统一处理客户端返回
  */
-module.exports = async function clientSender(req, res, next) {
-  res.sendData = data => {
+module.exports = async function(req, res, next) {
+  res.sendData = (data) => {
     if (enableEncryption) {
-      const ret = {
-        main: encrypt(JSON.stringify(data)),
-        ie: true
+      const str = JSON.stringify(data)
+
+      if (str) {
+        return res.json({
+          main: encrypt(str),
+          ie: true
+        })
       }
 
-      return res.json(ret)
+      return res.send()
     }
     return res.json(data)
   }
