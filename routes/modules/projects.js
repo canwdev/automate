@@ -201,7 +201,7 @@ const abortBuild = async (req, res, next) => {
     }
 
     const task = buildTaskQueue.taskMap[id]
-    if (!task) {
+    if (!task || !task.data) {
       return res.sendError({message: '任务不存在！'})
     }
     task.data.abort()
