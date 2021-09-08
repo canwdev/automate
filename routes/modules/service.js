@@ -1,6 +1,6 @@
 const {serviceInitTime} = require('../../enum')
 const pkg = require('../../package.json')
-const sh = require('shelljs')
+const cp = require('child_process')
 
 module.exports = {
   async info(req, res, next) {
@@ -19,7 +19,7 @@ module.exports = {
       res.sendData({
         message: '服务可能已经重启，请刷新页面。'
       })
-      sh.exec('node restart-service.js')
+      cp.exec('node restart-service.js')
     } catch (e) {
       next(e)
     }
