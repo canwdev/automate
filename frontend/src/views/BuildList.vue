@@ -89,8 +89,10 @@ import {
 } from '@/enum'
 import autoRefreshMixin from '@/mixins/auto-refresh-mixin'
 
+const requestDelay = 500
+
 export default {
-  name: 'LogList',
+  name: 'BuildList',
   mixins: [autoRefreshMixin],
   components: {
     TaskRowItem
@@ -170,7 +172,9 @@ export default {
         }
 
         await deleteAllLogs()
-        await this.refreshNow()
+        setTimeout(() => {
+          this.refreshNow()
+        }, requestDelay)
       })
 
     },
@@ -184,7 +188,9 @@ export default {
         await deleteLog({
           id: item.id
         })
-        await this.refreshNow()
+        setTimeout(() => {
+          this.refreshNow()
+        }, requestDelay)
       })
     },
     handleRestart(item) {
@@ -199,7 +205,9 @@ export default {
         await buildProject({
           cmd: item.command
         })
-        await this.refreshNow()
+        setTimeout(() => {
+          this.refreshNow()
+        }, requestDelay)
       })
     },
     handleAbort(item) {
@@ -212,7 +220,9 @@ export default {
         await abortBuild({
           id: item.id
         })
-        await this.refreshNow()
+        setTimeout(() => {
+          this.refreshNow()
+        }, requestDelay)
       })
     }
   }

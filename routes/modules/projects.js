@@ -214,31 +214,43 @@ const abortBuild = async (req, res, next) => {
 
 const getLogDetail = async (req, res, next) => {
   try {
-    const logName = req.params.logName
+    let {
+      id,
+      raw,
+      lines
+    } = req.body
 
-    if (!logName) {
-      return res.sendError({message: 'logName 不能为空'})
+    if (!id) {
+      return res.sendError({message: 'id is required'})
     }
 
-    if (req.query.raw) {
-      return res.sendFile(logName, {
-        root: LOG_PATH
-      })
+    const item = await BuildItem.findOne({
+      where: {id},
+    })
+
+    const {logName} = item
+
+    let logTxt = ''
+
+    if (raw) {
+      const result = await fs.readFile(path.join(LOG_PATH, logName))
+      logTxt = result.toString()
+    } else {
+      lines = Number(req.query.lines) || 25
+      const result = sh.exec(`tail -${lines} ${path.join(LOG_PATH, logName)}`, {silent: true})
+      logTxt = result.toString()
+
+      if (result.code !== 0) {
+        return res.sendError({
+          message: logName + '\n日志文件读取失败！可能是任务还没有开始执行'
+        })
+      }
     }
 
-    const lines = Number(req.query.lines) || 25
-
-    const result = sh.exec(`tail -${lines} ${path.join(LOG_PATH, logName)}`,
-      {silent: true})
-    const logTail = result.toString()
-
-    if (result.code !== 0) {
-      return res.sendError({
-        message: logName + '\n日志文件读取失败！可能是任务还没有开始执行'
-      })
-    }
-
-    res.sendData(logTail)
+    res.sendData({
+      item,
+      logTxt
+    })
   } catch (e) {
     next(e)
   }

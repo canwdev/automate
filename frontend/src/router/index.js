@@ -13,12 +13,12 @@ const routes = [
   {
     path: '/logs',
     name: 'Logs',
-    component: () => import('@/views/LogList.vue')
+    component: () => import('@/views/BuildList.vue')
   },
   {
-    path: '/log/:logName',
-    name: 'LogDetail',
-    component: () => import('@/views/LogDetail.vue')
+    path: '/log/:id',
+    name: 'BuildDetail',
+    component: () => import('@/views/BuildDetail.vue')
   }
 ]
 

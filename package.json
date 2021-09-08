@@ -1,6 +1,6 @@
 {
   "name": "automate",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "自动化部署工具",
   "private": true,
   "main": "index.js",

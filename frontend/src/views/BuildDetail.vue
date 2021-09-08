@@ -1,9 +1,8 @@
 <template>
   <b-container class="logs">
-    <h4>📜 日志详情</h4>
 
-    <ul>
-      <li>
+    <b-row align-h="between">
+      <b-col cols="auto">
         <b-button-group size="sm">
           <router-link class="btn btn-secondary" to="/logs">
             <b-icon icon="arrow-left"></b-icon>
@@ -16,17 +15,12 @@
             </b-button>
           </template>
           <template v-else>
-            <b-button variant="info" @click.prevent="viewRaw()">查看日志源文件</b-button>
+            <b-button variant="info" @click.prevent="viewRaw()">源文件</b-button>
           </template>
         </b-button-group>
-
-        <span v-if="isRaw">
-          <abbr title="源文件不会自动刷新">日志源文件</abbr>: {{ logName }}
-        </span>
-
-      </li>
-
-      <li>
+      </b-col>
+      <b-col cols="auto"><h4>📜 日志详情</h4></b-col>
+      <b-col cols="auto">
         <b-button-group size="sm">
           <b-button @click="refreshNow">
             <b-icon icon="arrow-repeat"></b-icon>
@@ -41,10 +35,26 @@
             开启自动刷新
           </b-button>
         </b-button-group>
-      </li>
-    </ul>
+      </b-col>
+    </b-row>
 
-    <b-progress :max="100" :variant="itAutoRefresh ? 'info':'warning'" show-progress :animated="Boolean(itAutoRefresh)">
+    <b-container class="mt-3 mb-2">
+      <b-row>
+        <b-col>构建状态：{{ BuildStatusText[buildItem.buildStatus] }}</b-col>
+        <b-col>id：{{ buildItem.id }}</b-col>
+        <b-col>创建时间：{{ formatTime(buildItem.timestamp) }}</b-col>
+      </b-row>
+      <b-row>
+        <b-col>命令：{{ buildItem.command }}</b-col>
+        <b-col>分支：{{ buildItem.branch || '-' }}</b-col>
+        <b-col>消息：{{ buildItem.message || '-' }}</b-col>
+      </b-row>
+      <b-row>
+        <b-col>日志名称：{{ buildItem.logName }}</b-col>
+      </b-row>
+    </b-container>
+
+    <b-progress v-if="itAutoRefresh" :max="100" :variant="itAutoRefresh ? 'info':'warning'" show-progress :animated="Boolean(itAutoRefresh)">
       <b-progress-bar :value="100">
         <div v-if="itAutoRefresh">日志 <span id='sec'>{{ refreshMs / 1000 }}</span>s 刷新一次</div>
         <div v-else>刷新已停止</div>
@@ -59,7 +69,7 @@
       <b-form-textarea
         rows="3"
         max-rows="9999"
-        :value="content"
+        :value="logTxt"
         placeholder="日志为空，可能是任务还没有开始执行"
         readonly
       ></b-form-textarea>
@@ -70,15 +80,28 @@
 </template>
 
 <script>
-import {logDetail} from '@/api/projects'
+import {getBuildDetail} from '@/api/projects'
 import autoRefreshMixin from '@/mixins/auto-refresh-mixin'
+import moment from "moment"
+import {
+  BuildStatusText,
+  isItemDone
+} from '@/enum'
 
 export default {
-  name: "LogDetail",
+  name: "BuildDetail",
   mixins: [autoRefreshMixin],
+  data() {
+    return {
+      logTxt: null,
+      buildItem: {},
+      isLoading: false,
+      BuildStatusText
+    }
+  },
   computed: {
-    logName() {
-      return this.$route.params.logName
+    id() {
+      return this.$route.params.id
     },
     isRaw() {
       return this.$route.query.isRaw
@@ -89,7 +112,7 @@ export default {
       handler(val) {
         if (val) {
           this.pauseAutoRefresh()
-          this.getLogDetail()
+          this.getBuildDetail()
         } else {
           this.refreshNow()
         }
@@ -97,22 +120,29 @@ export default {
       immediate: true
     }
   },
-  data() {
-    return {
-      content: null,
-      isLoading: false
-    }
-  },
   mounted() {
   },
   beforeDestroy() {
   },
   methods: {
-    async getLogDetail() {
+    formatTime(time) {
+      return moment(time).format('YYYY-MM-DD HH:mm:ss')
+    },
+    async getBuildDetail() {
       this.isLoading = true
       try {
-        this.content = await logDetail(this.logName, {raw: this.isRaw})
+        const res = await getBuildDetail({
+          id: this.id,
+          raw: this.isRaw
+        })
+        const {item, logTxt} = res
+        this.buildItem = item
+        this.logTxt = logTxt
         this.erroredTimes = 0
+
+        if (isItemDone(item)) {
+          this.disableAutoRefresh()
+        }
       } catch (e) {
         console.error(e)
         this.erroredTimes++
@@ -123,7 +153,7 @@ export default {
       }
     },
     fnRefresh() {
-      this.getLogDetail()
+      this.getBuildDetail()
     },
     viewRaw(isRaw = true) {
       const query = {...this.$route.query}

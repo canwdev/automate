@@ -5,6 +5,7 @@ const BuildStatus = {
   RUNNING: 2, // 正在运行
   FINISH: 3, // 成功
   ERRORED: 4, // 错误
+  ABORTED: 5 // 终止
 }
 
 module.exports = {

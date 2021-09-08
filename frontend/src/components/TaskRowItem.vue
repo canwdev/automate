@@ -13,7 +13,7 @@
       >{{ BuildStatusText[item.buildStatus] || '-' }}</span>
     </td>
     <td>
-      <b-link :to="`/log/${item.logName}`" :title="item.logName">点击查看</b-link>
+      <b-link :to="`/log/${item.id}`" :title="item.logName">点击查看</b-link>
     </td>
     <td>
       <b-button-group size="sm">
@@ -45,7 +45,8 @@
 import moment from "moment"
 import {
   BuildStatus,
-  BuildStatusText
+  BuildStatusText,
+  isItemDone
 } from '@/enum'
 
 export default {
@@ -64,8 +65,7 @@ export default {
   },
   computed: {
     isItemDone() {
-      return this.item.buildStatus === BuildStatus.FINISH ||
-        this.item.buildStatus === BuildStatus.ERRORED
+      return isItemDone(this.item)
     },
     colorClass() {
       if (this.item.buildStatus === BuildStatus.ERRORED) {

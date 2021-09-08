@@ -22,9 +22,9 @@ const handleFinish = async (item) => {
   })
 }
 
-const handleError = async (item, e) => {
+const handleError = async (item, code) => {
   await BuildItem.update({
-    buildStatus: BuildStatus.ERRORED
+    buildStatus: code ? BuildStatus.ERRORED : BuildStatus.ABORTED
   }, {
     where: {
       id: item.id
@@ -65,7 +65,7 @@ const taskHandler = async (task) => {
 
     } catch (e) {
       console.error('[taskHandler] error', e)
-      await handleError(item, e)
+      await handleError(item, {code: -1})
       reject(e)
     }
   })
