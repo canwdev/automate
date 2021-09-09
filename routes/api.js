@@ -12,7 +12,7 @@ router.get('/build', userAuth, projects.buildByGET)
 router.post('/build', projects.buildByPOST)
 router.post('/abort-build', projects.abortBuild)
 router.get('/logs', userAuth, projects.getBuildList)
-router.post('/build-detail', userAuth, projects.getLogDetail)
+router.post('/build-detail', userAuth, projects.getBuildDetail)
 router.post('/delete-all-log', userAuth, projects.deleteAllLogs)
 router.post('/delete-log', userAuth, projects.deleteLog)
 module.exports = router

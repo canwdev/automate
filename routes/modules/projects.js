@@ -167,7 +167,8 @@ const getBuildList = async (req, res, next) => {
       order: [
         // ['sort', 'ASC'],
         ['timestamp', order],
-      ]
+      ],
+      attributes: ['id', 'command', 'timestamp', 'branch', 'buildStatus']
     })
 
     const taskData = {
@@ -212,7 +213,7 @@ const abortBuild = async (req, res, next) => {
   }
 }
 
-const getLogDetail = async (req, res, next) => {
+const getBuildDetail = async (req, res, next) => {
   try {
     let {
       id,
@@ -305,7 +306,7 @@ module.exports = {
   buildByPOST,
   abortBuild,
   getBuildList,
-  getLogDetail,
+  getBuildDetail,
   deleteAllLogs,
   deleteLog,
 }

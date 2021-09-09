@@ -47,7 +47,9 @@
       <b-row>
         <b-col>命令：{{ buildItem.command }}</b-col>
         <b-col>分支：{{ buildItem.branch || '-' }}</b-col>
-        <b-col>消息：{{ buildItem.message || '-' }}</b-col>
+        <b-col>消息：<b-link v-if="item.message" @click.prevent="viewMessage(item)">点击查看</b-link>
+          <span v-else>-</span>
+        </b-col>
       </b-row>
       <b-row>
         <b-col>日志名称：{{ buildItem.logName }}</b-col>
@@ -168,7 +170,21 @@ export default {
         params: this.$route.params,
         query
       })
-    }
+    },
+    viewMessage(item) {
+      // console.log(item)
+      const h = this.$createElement
+      const messageVNode = h('div', {
+        domProps: {
+          innerHTML: `<center><textarea cols="40" rows="5" readonly>${item.message}</textarea></center>`
+        }
+      })
+
+      this.$bvModal.msgBoxOk(messageVNode, {
+        autoFocusButton: 'ok',
+        title: `Message`,
+      })
+    },
   }
 }
 </script>
