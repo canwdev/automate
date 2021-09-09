@@ -3,6 +3,7 @@ const service = require('./modules/service')
 const user = require('./modules/user')
 const projects = require('./modules/projects')
 const userAuth = require('./middleware/user-auth')
+const clientReceiver = require('./middleware/client-receiver')
 
 router.get('/', service.info)
 router.post('/restart', userAuth, service.restart)

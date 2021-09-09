@@ -82,7 +82,6 @@ import {
   abortBuild
 } from '@/api/projects'
 import {
-  BuildInstance,
   BuildStatus
 } from '@/enum'
 import autoRefreshMixin from '@/mixins/auto-refresh-mixin'
@@ -103,8 +102,6 @@ export default {
       limit: 10,
       pages: 1,
       isLoading: false,
-      BuildInstance,
-
     }
   },
   computed: {

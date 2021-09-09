@@ -4,9 +4,12 @@ const {enableEncryption} = require('../../config')
 /**
  * 统一处理客户端返回
  */
-module.exports = async function(req, res, next) {
+module.exports = async function (req, res, next) {
   res.sendData = (data) => {
+    // console.log('sendData')
     if (enableEncryption) {
+      // 加密报文
+
       const str = JSON.stringify(data)
 
       if (str) {

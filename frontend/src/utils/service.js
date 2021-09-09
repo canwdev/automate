@@ -1,7 +1,8 @@
 import axios from 'axios'
 import {getToken} from './auth'
-import {decrypt} from '../../../utils/crypt'
+import {encrypt, decrypt} from '../../../utils/crypt'
 import {notifyError} from "./notify"
+const enableEncryption = process.env.VUE_APP_ENABLE_ENCRYPTION
 
 function Service(config = {}) {
   const {
@@ -24,6 +25,25 @@ function Service(config = {}) {
       if (Authorization) {
         config.headers.Authorization = Authorization
       }
+
+      if (enableEncryption) {
+        // 加密请求
+        // console.log('config1',config)
+        if (/post/ig.test(config.method) && config.data) {
+          config.data = {
+            ie: true,
+            main: encrypt(JSON.stringify(config.data))
+          }
+        }
+        if (/get/ig.test(config.method) && config.params) {
+          // console.log(config.params)
+          config.params = {
+            ie: true,
+            main: encrypt(JSON.stringify(config.params))
+          }
+        }
+      }
+
       return config
     },
     error => {
@@ -35,6 +55,7 @@ function Service(config = {}) {
       let {data} = response
 
       try {
+        // 解密请求
         if (data.ie) {
           data = JSON.parse(decrypt(data.main))
           // console.log('dd', data)

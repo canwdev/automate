@@ -47,7 +47,7 @@
       <b-row>
         <b-col>命令：{{ buildItem.command }}</b-col>
         <b-col>分支：{{ buildItem.branch || '-' }}</b-col>
-        <b-col>消息：<b-link v-if="item.message" @click.prevent="viewMessage(item)">点击查看</b-link>
+        <b-col>消息：<b-link v-if="buildItem.message" @click.prevent="viewMessage(buildItem)">点击查看</b-link>
           <span v-else>-</span>
         </b-col>
       </b-row>
@@ -138,7 +138,7 @@ export default {
           raw: this.isRaw
         })
         const {item, logTxt} = res
-        this.buildItem = item
+        this.buildItem = item || {}
         this.logTxt = logTxt
         this.erroredTimes = 0
 

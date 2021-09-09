@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const clientSender = require('./middleware/client-sender')
+const clientReceiver = require('./middleware/client-receiver')
 
 // 允许跨域访问
 router.use("*", function (req, res, next) {
@@ -8,6 +9,6 @@ router.use("*", function (req, res, next) {
   next()
 })
 
-router.use('/api', clientSender, require('./api'));
+router.use('/api', clientReceiver, clientSender, require('./api'));
 
 module.exports = router;
