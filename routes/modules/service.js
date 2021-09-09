@@ -19,7 +19,7 @@ module.exports = {
       res.sendData({
         message: '服务可能已经重启，请刷新页面。'
       })
-      cp.exec('node restart-service.js')
+      cp.exec('node scripts/restart-service.js')
     } catch (e) {
       next(e)
     }

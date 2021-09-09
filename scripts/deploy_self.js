@@ -1,5 +1,5 @@
 // 更新自身
-const automate = require('./automate')
+const automate = require('../automate')
 const cp = require('child_process')
 
 console.log('开始更新 Automate...')
@@ -23,6 +23,6 @@ if (args[0] === 'frontend') {
 
 console.log('服务即将重启，请刷新页面。')
 
-cp.exec(`node restart-service.js`)
+cp.exec(`node scripts/restart-service.js`)
 
 process.exit(0)

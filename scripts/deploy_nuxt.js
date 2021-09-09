@@ -1,7 +1,8 @@
-const automate = require('./automate')
+const automate = require('../automate')
+const path = require('path')
 
 async function run() {
-  const config = await automate.loadConfigFile('./config/nuxt')
+  const config = await automate.loadConfigFile(path.join(__dirname,'./config/nuxt'))
 
   const projectDir = config.projectName
   const branch = config.branch || 'master'

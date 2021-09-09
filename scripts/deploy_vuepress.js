@@ -1,7 +1,8 @@
-const automate = require('./automate')
+const automate = require('../automate')
+const path = require('path')
 
 async function run() {
-  const config = await automate.loadConfigFile('./config/vuepress')
+  const config = await automate.loadConfigFile(path.join(__dirname,'./config/vuepress'))
 
   const {
     projectName,

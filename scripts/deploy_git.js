@@ -1,8 +1,9 @@
-const automate = require('./automate')
+const automate = require('../automate')
+const path = require('path')
 
 // 部署任何用git部署的项目
 async function run() {
-  const config = await automate.loadConfigFile('./config/git')
+  const config = await automate.loadConfigFile(path.join(__dirname,'./config/git'))
 
   const projectName = config.projectName
   const productionDir = config.productionDir

@@ -3,25 +3,25 @@
 ---
 list:
   - title: 示例项目
-    cmd: deploy_demo.js
+    cmd: scripts/deploy_demo.js
     args: 'example_param'
   - title: Automate CI + 前端
-    cmd: deploy_self.js
+    cmd: scripts/deploy_self.js
     args: 'frontend'
   - title: Automate CI
-    cmd: deploy_self.js
+    cmd: scripts/deploy_self.js
   - title: VuePress:example.json
-    cmd: deploy_vuepress.js
+    cmd: scripts/deploy_vuepress.js
     args: example.json
   - title: Nuxt.js:example.json
-    cmd: deploy_nuxt.js
+    cmd: scripts/deploy_nuxt.js
     args: example.json
   - title: Nuxt.js:example-prod.json
-    cmd: deploy_nuxt.js
+    cmd: scripts/deploy_nuxt.js
     args: example-prod.json
   - title: VueCLI3:example.json
-    cmd: deploy_vuecli3.js
+    cmd: scripts/deploy_vuecli3.js
     args: example.json
   - title: git Project:example.json
-    cmd: deploy_git.js
+    cmd: scripts/deploy_git.js
     args: example.json

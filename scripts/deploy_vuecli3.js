@@ -1,9 +1,10 @@
-const automate = require('./automate')
-const {parseSSHConfig} = require('./utils')
+const automate = require('../automate')
+const {parseSSHConfig} = require('../utils')
+const path = require('path')
 
 async function run() {
 
-  const config = await automate.loadConfigFile('./config/vuecli3')
+  const config = await automate.loadConfigFile(path.join(__dirname, './config/vuecli3'))
 
   const projectName = config.projectName
   const projectGit = config.projectGit

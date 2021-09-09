@@ -1,5 +1,5 @@
 // 本文件仅用于测试构建，并无实际效果
-const automate = require('./automate')
+const automate = require('../automate')
 console.log('Start deploy demo...')
 
 automate.exec(`whoami`)
