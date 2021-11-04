@@ -1,42 +1,42 @@
 <template>
-  <tr>
-    <td>{{ item.command }}</td>
-    <td>{{ formatTime(item.timestamp) }}</td>
+  <div class="table-row">
+    <div class="t-col _cmd">{{ item.command }}</div>
+    <div class="t-col _time">{{ formatTime(item.timestamp) }}</div>
 
-    <td>{{ item.branch || '-' }}</td>
-    <td>
+    <div class="t-col _branch">{{ item.branch || '-' }}</div>
+    <div class="t-col _state">
       <span
         :class="colorClass"
       >{{ BuildStatusText[item.buildStatus] || '-' }}</span>
-    </td>
-    <td>
-      <b-button-group size="sm">
-        <b-button
-            variant="info"
-            :to="`/log/${item.id}`"
+    </div>
+    <div class="t-col _action">
+      <div class="button-group">
+        <TkButton
+            theme="info"
+            @click="$router.push(`/log/${item.id}`)"
         >详情
-        </b-button>
-        <b-button
+        </TkButton>
+        <TkButton
           v-if="item.buildStatus === BuildStatus.RUNNING"
-          variant="danger"
+          theme="error"
           @click="$emit('abort', item)"
         >终止
-        </b-button>
-        <b-button
+        </TkButton>
+        <TkButton
           v-if="isItemDone"
-          variant="success"
+          theme="success"
           @click="$emit('restart', item)"
         >重启
-        </b-button>
-        <b-button
+        </TkButton>
+        <TkButton
           v-if="isItemDone"
-          variant="warning"
+          theme="warning"
           @click="$emit('delete', item)"
         >删除
-        </b-button>
-      </b-button-group>
-    </td>
-  </tr>
+        </TkButton>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -67,7 +67,7 @@ export default {
     },
     colorClass() {
       if (this.item.buildStatus === BuildStatus.ERRORED) {
-        return 'text-danger'
+        return 'text-error'
       }
       if (this.item.buildStatus === BuildStatus.RUNNING) {
         return 'text-success'

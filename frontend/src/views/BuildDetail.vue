@@ -1,84 +1,89 @@
 <template>
-  <b-container class="logs">
+  <div class="page-content tk-container _with-padding ">
 
-    <b-row align-h="between">
-      <b-col cols="auto">
-        <b-button-group size="sm">
-          <router-link class="btn btn-secondary" to="/logs">
-            <b-icon icon="arrow-left"></b-icon>
-            返回日志列表
-          </router-link>
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="button-group">
+          <TkButton @click="$router.push(`/logs`)">
+            ⬅️ 返回日志列表
+          </TkButton>
 
           <template v-if="isRaw">
-            <b-button variant="info" @click.prevent="viewRaw(false)" class="mr-2">
-              <b-icon icon="arrow90deg-left"></b-icon>
-            </b-button>
+            <TkButton
+                theme="white"
+                @click.prevent="viewRaw(false)" class="mr-2">
+              ◀️
+            </TkButton>
           </template>
           <template v-else>
-            <b-button variant="info" @click.prevent="viewRaw()">源文件</b-button>
+            <TkButton
+                theme="white"
+                variant="info" @click.prevent="viewRaw()">📃 源文件
+            </TkButton>
           </template>
-        </b-button-group>
-      </b-col>
-      <b-col cols="auto"><h4>📜 日志详情</h4></b-col>
-      <b-col cols="auto">
-        <b-button-group size="sm">
-          <b-button @click="refreshNow">
-            <b-icon icon="arrow-repeat"></b-icon>
+        </div>
+      </div>
+      <div><h4>📜 日志详情</h4></div>
+      <div>
+        <div class="button-group">
+          <TkButton
+              theme="white"
+              @click="refreshNow">
+            🔁
             刷新
-          </b-button>
-          <b-button variant="info" v-if="itAutoRefresh" @click="disableAutoRefresh">
-            <b-icon icon="pause-fill"></b-icon>
+          </TkButton>
+          <TkButton
+              theme="info"
+              v-if="itAutoRefresh" @click="disableAutoRefresh">
+            ⏸️
             停止自动刷新
-          </b-button>
-          <b-button variant="warning" v-else @click="enableAutoRefresh">
-            <b-icon icon="play-fill"></b-icon>
+          </TkButton>
+          <TkButton
+              theme="warning"
+              v-else @click="enableAutoRefresh">
+            ▶️
             开启自动刷新
-          </b-button>
-        </b-button-group>
-      </b-col>
-    </b-row>
+          </TkButton>
+        </div>
+      </div>
+    </div>
 
-    <b-container class="mt-3 mb-2">
-      <b-row>
-        <b-col>构建状态：{{ BuildStatusText[buildItem.buildStatus] }}</b-col>
-        <b-col>id：{{ buildItem.id }}</b-col>
-        <b-col>创建时间：{{ formatTime(buildItem.timestamp) }}</b-col>
-      </b-row>
-      <b-row>
-        <b-col>命令：{{ buildItem.command }}</b-col>
-        <b-col>分支：{{ buildItem.branch || '-' }}</b-col>
-        <b-col>消息：<b-link v-if="buildItem.message" @click.prevent="viewMessage(buildItem)">点击查看</b-link>
+    <div class="flex justify-between">
+      <ul>
+        <li>构建状态：{{ BuildStatusText[buildItem.buildStatus] }}</li>
+        <li>id：{{ buildItem.id }}</li>
+        <li>创建时间：{{ formatTime(buildItem.timestamp) }}</li>
+      </ul>
+      <ul>
+        <li>命令：{{ buildItem.command }}</li>
+        <li>分支：{{ buildItem.branch || '-' }}</li>
+        <li>消息：
+          <b-link v-if="buildItem.message" @click.prevent="viewMessage(buildItem)">点击查看</b-link>
           <span v-else>-</span>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col>日志名称：{{ buildItem.logName }}</b-col>
-      </b-row>
-    </b-container>
+        </li>
+      </ul>
+      <ul>
+        <li>日志名称：{{ buildItem.logName }}</li>
+      </ul>
+    </div>
 
-    <b-progress v-if="itAutoRefresh" :max="100" :variant="itAutoRefresh ? 'info':'warning'" show-progress :animated="Boolean(itAutoRefresh)">
-      <b-progress-bar :value="100">
-        <div v-if="itAutoRefresh">日志 <span id='sec'>{{ refreshMs / 1000 }}</span>s 刷新一次</div>
-        <div v-else>刷新已停止</div>
-      </b-progress-bar>
-
-    </b-progress>
+    <div class="progress-bar" v-if="itAutoRefresh" :class="[itAutoRefresh ? 'info':'warning']">
+      <div v-if="itAutoRefresh">日志 <span id='sec'>{{ refreshMs / 1000 }}</span>s 刷新一次</div>
+      <div v-else>刷新已停止</div>
+    </div>
 
     <div class="log-content">
-      <transition name="fade">
-        <b-spinner class="loading-img" small v-show="isLoading" variant="primary"></b-spinner>
-      </transition>
-      <b-form-textarea
-        rows="3"
-        max-rows="9999"
-        :value="logTxt"
-        placeholder="日志为空，可能是任务还没有开始执行"
-        readonly
-      ></b-form-textarea>
+      <TkLoading class="loading-img" size="xs" :visible="isLoading"></TkLoading>
+      <TkInput
+          type="textarea"
+          :value="logTxt"
+          placeholder="日志为空，可能是任务还没有开始执行"
+          readonly
+      ></TkInput>
 
     </div>
 
-  </b-container>
+  </div>
 </template>
 
 <script>
@@ -180,9 +185,11 @@ export default {
         }
       })
 
-      this.$bvModal.msgBoxOk(messageVNode, {
-        autoFocusButton: 'ok',
-        title: `Message`,
+      this.$prompt.create({
+        propsData: {
+          title: 'Message',
+          content: messageVNode,
+        }
       })
     },
   }
@@ -199,31 +206,40 @@ export default {
     position: absolute;
     right: 10px;
     top: 10px;
-    display: block;
   }
 
   textarea {
     font-family: monospace;
     font-size: 12px;
-    //width: 100%;
-    //height: 100%;
+    width: 100%;
+    height: 300px;
     display: block;
-    //padding: 9.5px;
-    //line-height: 1.42857143;
     color: #333;
     background-color: #fbfbfb;
-    //word-break: break-all;
-    //word-wrap: break-word;
-    //border: 1px solid #ccc;
-    //border-radius: 4px;
+    word-break: break-all;
+    word-wrap: break-word;
+    border: 1px solid #ccc;
+    border-radius: 4px;
   }
-}
-
-li {
-  margin-bottom: 5px;
 }
 
 .logs {
   margin-bottom: 10px;
+}
+
+.progress-bar {
+  background: #ccc;
+  text-align: center;
+  padding: 2px;
+  border-radius: $border-radius;
+  font-size: 12px;
+
+  &.info {
+    background: $info;
+  }
+
+  &.warning {
+    background: $warning;
+  }
 }
 </style>

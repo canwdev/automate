@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {getToken} from './auth'
 import {encrypt, decrypt} from '../../../utils/crypt'
-import {notifyError} from "./notify"
+import main from '../main'
 const enableEncryption = process.env.VUE_APP_ENABLE_ENCRYPTION
 
 function Service(config = {}) {
@@ -61,7 +61,7 @@ function Service(config = {}) {
           // console.log('dd', data)
         }
       } catch (e) {
-        notifyError({message: e.message})
+        main.$toast.error({message: e.message})
         return Promise.reject(e)
       }
       return data
@@ -75,10 +75,7 @@ function Service(config = {}) {
           message = msg
         }
       }
-      notifyError({
-        title: '请求错误',
-        message
-      })
+      main.$toast.warning(`请求错误: ${message}`)
       return Promise.reject(error)
     }
   )

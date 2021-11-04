@@ -1,3 +1,84 @@
-// custom.scss
-@import 'node_modules/bootstrap/scss/bootstrap';
-@import 'node_modules/bootstrap-vue/src/index.scss';
+abbr, .cur-help {cursor: help;}
+
+abbr {
+  text-decoration: none;
+  color: royalblue;
+}
+
+body {
+  line-height: 1.3;
+}
+
+.button-group {
+  button + button {
+    margin-left: 5px;
+  }
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+h1, h2, h3, h4 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.page-content {
+  padding-top: 20px !important;
+}
+
+.custom-table {
+  .table-head {
+    padding: 0 10px;
+    height: 50px;
+    flex-wrap: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: $layout-border;
+  }
+
+  .table-body {
+
+    .table-row {
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 50px;
+      border-bottom: $layout-border;
+
+      &:hover {
+        background: $border-color;
+      }
+    }
+  }
+
+  .t-col {
+    &._cmd {
+      flex: 1;
+    }
+    &._time {
+      width: 190px;
+    }
+    &._branch {
+      width: 80px;
+      text-align: center;
+    }
+    &._state {
+      width: 80px;
+      text-align: center;
+    }
+    &._action {
+      width: 200px;
+      text-align: right;
+    }
+
+    @media screen and (max-width: $mq_tablet_width) {
+      &._time {
+        display: none;
+      }
+    }
+  }
+}

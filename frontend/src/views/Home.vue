@@ -1,17 +1,19 @@
 <template>
-  <b-container>
+  <div class="page-content tk-container _with-padding">
 
     <div class="management">
       <h4>🕹️ 管理服务</h4>
       <ul>
 
         <li><span v-if="serverInfo">{{ serverInfo.name }}: v{{ serverInfo.version }}</span> (前端版本：v{{frontendVer}})</li>
-        <li><abbr :title="'启动时刻：' +initTimeFormatted">服务运行了</abbr>：<span class="badge">{{ runningTime }}</span></li>
+        <li>🖥 <abbr :title="'启动时刻：' +initTimeFormatted">服务运行了</abbr>：<span class="badge">{{ runningTime }}</span></li>
         <li>
-          <router-link class="btn btn-primary" to="/logs">任务/日志列表</router-link>
+          <TkButton @click="$router.push(`/logs`)">
+            任务/日志列表
+          </TkButton>
         </li>
         <li>
-          <button class="btn btn-danger" @click="handleRestart()" title="强制重启服务，需要 PM2 支持">重启服务(PM2)</button>
+          <TkButton theme="error" @click="handleRestart()" title="强制重启服务，需要 PM2 支持">重启服务(PM2)</TkButton>
         </li>
       </ul>
     </div>
@@ -21,9 +23,8 @@
 
       <ul v-if="buildList.length">
         <li v-for="(item,index) in buildList" :key="index">
-          <button class="btn btn-info"
-                  @click.prevent="handleBuild(item)">{{ item.title }}
-          </button>
+          <TkButton theme="info" @click.prevent="handleBuild(item)">{{ item.title }}
+          </TkButton>
         </li>
       </ul>
 
@@ -31,7 +32,7 @@
         <li>暂无配置(./config/project-list.yml)</li>
       </ul>
     </div>
-  </b-container>
+  </div>
 </template>
 
 <script>
@@ -45,7 +46,6 @@ import {
   buildProject
 } from '@/api/projects'
 import pkg from '../../package.json'
-import {notifyError} from "@/utils/notify"
 
 function formatRunningTime(initTime) {
   const diff = new Date(Date.now() - initTime.getTime()).getTime()
@@ -107,24 +107,19 @@ export default {
       }, 1000)
     },
     handleRestart() {
-      this.$bvModal.msgBoxConfirm('确定要重启服务吗？', {
-        title: '确认',
-      }).then(async value => {
-        if (!value) {
-          return
+      this.$prompt.create({
+        propsData: {
+          title: '确定要重启服务吗？',
+          content: '',
         }
-
+      }).onConfirm(async (context) => {
         const {message} = await restartService()
 
-        notifyError({
-          message,
-          title: '服务重启，页面即将刷新...'
-        })
+        this.$toast.info(`${message}: 服务重启，页面即将刷新...`)
 
         setTimeout(() => {
           location.reload()
         }, 1500)
-      }).catch(err => {
       })
     },
     handleBuild(item) {
@@ -135,13 +130,12 @@ export default {
         }
       })
 
-      this.$bvModal.msgBoxConfirm(messageVNode, {
-        autoFocusButton: 'ok',
-        title: `请确认开始部署: ${item.title}`,
-      }).then(async value => {
-        if (!value) {
-          return
+      this.$prompt.create({
+        propsData: {
+          title: `请确认开始部署: ${item.title}`,
+          content: messageVNode,
         }
+      }).onConfirm(async (context) => {
 
         const res = await buildProject(item)
         console.log('res', res)
@@ -161,16 +155,14 @@ export default {
           })
         }, 800)
 
-
-      }).catch(() => {
       })
+
+
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-li {
-  margin-bottom: 5px;
-}
+
 </style>
