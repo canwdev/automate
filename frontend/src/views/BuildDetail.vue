@@ -212,7 +212,7 @@ export default {
     font-family: monospace;
     font-size: 12px;
     width: 100%;
-    height: 300px;
+    height: 500px;
     display: block;
     color: #333;
     background-color: #fbfbfb;

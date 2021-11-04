@@ -23,7 +23,7 @@
 
       <ul v-if="buildList.length">
         <li v-for="(item,index) in buildList" :key="index">
-          <TkButton theme="info" @click.prevent="handleBuild(item)">{{ item.title }}
+          <TkButton theme="info" @click.prevent="showBuildDialog(item)">{{ item.title }}
           </TkButton>
         </li>
       </ul>
@@ -32,6 +32,38 @@
         <li>暂无配置(./config/project-list.yml)</li>
       </ul>
     </div>
+
+    <TkModalDialog
+      v-model="isShowBuildDialog"
+      show-close
+    >
+      <TkCard v-if="curItem">
+        <h4>确认：{{curItem.title}}</h4>
+        <form @submit.prevent="handleBuild" class="form-wrap">
+          <div class="form-row">
+            <div class="form-title">命令：</div>
+            <TkInput
+                name="build_command"
+                type="text"
+                v-model="curItem.cmd"
+                required
+            ></TkInput>
+          </div>
+          <div class="form-row">
+            <div class="form-title">参数：</div>
+            <TkInput
+                name="build_args"
+                type="text"
+                v-model="curItem.args"
+            ></TkInput>
+          </div>
+
+          <div class="action-row">
+            <TkButton type="submit">开始部署</TkButton>
+          </div>
+        </form>
+      </TkCard>
+    </TkModalDialog>
   </div>
 </template>
 
@@ -73,7 +105,9 @@ export default {
       initTime: null,
       runningTime: '-',
       serverInfo: null,
-      frontendVer: pkg.version
+      frontendVer: pkg.version,
+      isShowBuildDialog: false,
+      curItem: null
     }
   },
   computed: {
@@ -122,40 +156,39 @@ export default {
         }, 1500)
       })
     },
-    handleBuild(item) {
-      const h = this.$createElement
-      const messageVNode = h('div', {
-        domProps: {
-          innerHTML: `命令：${item.cmd}<br> 参数：${item.args || ''}`
-        }
-      })
+    showBuildDialog(item) {
+      this.curItem = item
+      this.isShowBuildDialog = true
+    },
+    async handleBuild() {
+      const item = this.curItem
 
-      this.$prompt.create({
-        propsData: {
-          title: `请确认开始部署: ${item.title}`,
-          content: messageVNode,
-        }
-      }).onConfirm(async (context) => {
+      this.isShowBuildDialog = false
+      this.curItem = null
+      // const h = this.$createElement
+      // const messageVNode = h('div', {
+      //   domProps: {
+      //     innerHTML: `命令：${item.cmd}<br> 参数：${item.args || ''}`
+      //   }
+      // })
 
-        const res = await buildProject(item)
-        console.log('res', res)
-        // axios.get(url).then(res => {
-        //   console.log(res.data)
-        //   location.href = '/logs/' + res.data.buildLogName
-        // }).catch(e => {
-        //   console.error(e)
-        // })
+      const res = await buildProject(item)
+      console.log('res', res)
+      // axios.get(url).then(res => {
+      //   console.log(res.data)
+      //   location.href = '/logs/' + res.data.buildLogName
+      // }).catch(e => {
+      //   console.error(e)
+      // })
 
-        setTimeout(() => {
-          this.$router.push({
-            name: 'BuildDetail',
-            params: {
-              id: res.id
-            }
-          })
-        }, 800)
-
-      })
+      setTimeout(() => {
+        this.$router.push({
+          name: 'BuildDetail',
+          params: {
+            id: res.id
+          }
+        })
+      }, 800)
 
 
     }

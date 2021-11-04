@@ -28,6 +28,29 @@ h1, h2, h3, h4 {
   padding-top: 20px !important;
 }
 
+.form-wrap {
+  .form-row {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+
+    .form-title {
+      width: 70px;
+      font-size: 14px;
+    }
+
+    input {
+      flex: 1;
+    }
+  }
+
+  .action-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+
 .custom-table {
   .table-head {
     padding: 0 10px;

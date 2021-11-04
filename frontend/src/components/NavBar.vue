@@ -19,7 +19,7 @@
         show-close
     >
       <TkCard solid>
-        <form class="login-form" ref="form" @submit.stop.prevent="submitLogin">
+        <form class="form-wrap" ref="form" @submit.stop.prevent="submitLogin">
           <div
               class="form-row"
           >
@@ -39,7 +39,7 @@
                 required
             ></TkInput>
           </div>
-          <div align="right">
+          <div class="action-row">
             <TkButton type="submit">提交</TkButton>
           </div>
         </form>
@@ -128,17 +128,4 @@ export default {
   text-shadow: -4px 4px 0 #FFEB3B;
 }
 
-.login-form {
-  padding: 10px;
-
-  .form-row {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-
-    .form-title {
-      width: 70px;
-    }
-  }
-}
 </style>
