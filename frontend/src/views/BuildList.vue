@@ -176,7 +176,7 @@ export default {
       this.$prompt.create({
         propsData: {
           title: '⚠️ 警告',
-          content: `确定要删除 ${item.logName} 吗？`,
+          content: `确定要删除 ${item.command} 吗？`,
         }
       }).onConfirm(async (context) => {
         await deleteLog({
@@ -191,7 +191,7 @@ export default {
       this.$prompt.create({
         propsData: {
           title: '⚠️ 警告',
-          content: `确定要重新运行 ${item.logName} 吗？`,
+          content: `确定要重新运行 ${item.command} 吗？`,
         }
       }).onConfirm(async (context) => {
         await buildProject({
@@ -206,7 +206,7 @@ export default {
       this.$prompt.create({
         propsData: {
           title: '⚠️ 警告',
-          content: `确定要立即终止 ${item.logName} 吗？`,
+          content: `确定要立即终止 ${item.command} 吗？`,
         }
       }).onConfirm(async (context) => {
         await abortBuild({

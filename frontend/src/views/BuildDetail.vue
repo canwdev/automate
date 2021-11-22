@@ -75,6 +75,7 @@
     <div class="log-content">
       <TkLoading class="loading-img" size="xs" :visible="isLoading"></TkLoading>
       <TkInput
+          class="text-mono"
           type="textarea"
           :value="logTxt"
           placeholder="日志为空，可能是任务还没有开始执行"
@@ -209,13 +210,12 @@ export default {
   }
 
   textarea {
-    font-family: monospace;
     font-size: 12px;
     width: 100%;
     height: 500px;
     display: block;
-    color: #333;
-    background-color: #fbfbfb;
+    color: inherit;
+    background-color: inherit;
     word-break: break-all;
     word-wrap: break-word;
     border: 1px solid #ccc;

@@ -8,7 +8,7 @@
         <li><span v-if="serverInfo">{{ serverInfo.name }}: v{{ serverInfo.version }}</span> (前端版本：v{{frontendVer}})</li>
         <li>🖥 <abbr :title="'启动时刻：' +initTimeFormatted">服务运行了</abbr>：<span class="badge">{{ runningTime }}</span></li>
         <li>
-          <TkButton @click="$router.push(`/logs`)">
+          <TkButton autofocus @click="$router.push(`/logs`)">
             任务/日志列表
           </TkButton>
         </li>
@@ -43,6 +43,7 @@
           <div class="form-row">
             <div class="form-title">命令：</div>
             <TkInput
+                class="text-mono text-small"
                 name="build_command"
                 type="text"
                 v-model="curItem.cmd"
@@ -52,6 +53,7 @@
           <div class="form-row">
             <div class="form-title">参数：</div>
             <TkInput
+                class="text-mono text-small"
                 name="build_args"
                 type="text"
                 v-model="curItem.args"
@@ -59,7 +61,7 @@
           </div>
 
           <div class="action-row">
-            <TkButton type="submit">开始部署</TkButton>
+            <TkButton autofocus type="submit">开始部署</TkButton>
           </div>
         </form>
       </TkCard>

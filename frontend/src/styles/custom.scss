@@ -2,11 +2,10 @@ abbr, .cur-help {cursor: help;}
 
 abbr {
   text-decoration: none;
-  color: royalblue;
+  color: $info;
 }
 
 body {
-  font-family: monospace;
   line-height: 1.3;
 }
 
@@ -14,6 +13,13 @@ body {
   button + button {
     margin-left: 5px;
   }
+}
+
+.text-mono {
+  font-family: Consolas, monospace;
+}
+.text-small {
+  font-size: 12px;
 }
 
 li {

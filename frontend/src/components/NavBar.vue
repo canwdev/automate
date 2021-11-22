@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="nav-bar-wrap">
     <TkNavBar>
       <template slot="left">
         <router-link to="/" target="_top" class="site-title"
@@ -8,8 +8,12 @@
         </router-link>
       </template>
       <template slot="right">
-        <TkButton flat v-if="!token" @click="isShowLogin = true">登录</TkButton>
-        <TkButton flat v-else @click="clearAuth"><span class="text-error">注销</span></TkButton>
+        <div class="flex items-center">
+          <TkSwitch v-model="isDarkTheme" text-on="🌚" text-off="🌞"></TkSwitch>
+
+          <TkButton flat v-if="!token" @click="isShowLogin = true">登录</TkButton>
+          <TkButton flat v-else @click="clearAuth"><span class="text-error">注销</span></TkButton>
+        </div>
       </template>
 
     </TkNavBar>
@@ -63,6 +67,17 @@ export default {
     }
   },
   computed: {
+    isDarkTheme: {
+      get() {
+        return this.$store.getters.isDarkTheme
+      },
+      set(val) {
+        this.$store.commit('updateSettings', {
+          key: 'isDarkTheme',
+          value: val
+        })
+      }
+    },
     token: {
       get() {
         return this.$store.state.token
@@ -116,7 +131,7 @@ export default {
 .site-title {
   display: block;
   color: #F44336;
-  text-shadow: 4px 4px 0 #FFEB3B;
+  text-shadow: 4px 4px 0 rgb(255, 235, 59,33%);
   font-weight: 600;
   transition: all .3s;
   font-size: 18px;
