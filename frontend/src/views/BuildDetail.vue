@@ -74,13 +74,8 @@
 
     <div class="log-content">
       <TkLoading class="loading-img" size="xs" :visible="isLoading"></TkLoading>
-      <TkInput
-          class="text-mono"
-          type="textarea"
-          :value="logTxt"
-          placeholder="日志为空，可能是任务还没有开始执行"
-          readonly
-      ></TkInput>
+
+      <LogDisplay :value="logText"/> 
 
     </div>
 
@@ -90,6 +85,7 @@
 <script>
 import {getBuildDetail} from '@/api/projects'
 import autoRefreshMixin from '@/mixins/auto-refresh-mixin'
+import LogDisplay from '@/components/LogDisplay'
 import moment from "moment"
 import {
   BuildStatusText,
@@ -99,9 +95,12 @@ import {
 export default {
   name: "BuildDetail",
   mixins: [autoRefreshMixin],
+  components: {
+    LogDisplay
+  },
   data() {
     return {
-      logTxt: null,
+      logText: null,
       buildItem: {},
       isLoading: false,
       BuildStatusText
@@ -143,9 +142,9 @@ export default {
           id: this.id,
           raw: this.isRaw
         })
-        const {item, logTxt} = res
+        const {item, logTxt: logText} = res
         this.buildItem = item || {}
-        this.logTxt = logTxt
+        this.logText = logText
         this.erroredTimes = 0
 
         if (isItemDone(item)) {
@@ -207,19 +206,6 @@ export default {
     position: absolute;
     right: 10px;
     top: 10px;
-  }
-
-  textarea {
-    font-size: 12px;
-    width: 100%;
-    height: 500px;
-    display: block;
-    color: inherit;
-    background-color: inherit;
-    word-break: break-all;
-    word-wrap: break-word;
-    border: 1px solid #ccc;
-    border-radius: 4px;
   }
 }
 
