@@ -42,7 +42,7 @@ yarn build
 ## 🖥️ 支持构建的项目
 
 - [Nuxt.js](./deploy_nuxt.md)
-- [Vue CLI 3](./deploy_vuecli3.js)
+- [Vue CLI](./deploy_vuecli.js)
 - [VuePress](./deploy_vuepress.js)
 - [基于 git 部署的项目](./deploy_git.js)
 - ⚠ 可以通过自行编写 JS 脚本进行扩展

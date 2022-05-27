@@ -2,6 +2,8 @@
 # https://www.json2yaml.com/
 ---
 list:
+  - title: AutomateCI
+    split: true
   - title: 示例项目
     cmd: scripts/deploy_demo.js
     args: 'example_param'
@@ -10,6 +12,9 @@ list:
     args: 'frontend'
   - title: Automate CI
     cmd: scripts/deploy_self.js
+
+  - title: Demos
+    split: true
   - title: VuePress:example.json
     cmd: scripts/deploy_vuepress.js
     args: example.json
@@ -20,7 +25,7 @@ list:
     cmd: scripts/deploy_nuxt.js
     args: example-prod.json
   - title: VueCLI3:example.json
-    cmd: scripts/deploy_vuecli3.js
+    cmd: scripts/deploy_vuecli.js
     args: example.json
   - title: git Project:example.json
     cmd: scripts/deploy_git.js

@@ -5,8 +5,8 @@
       <h4>🕹️ 管理服务</h4>
       <ul>
 
-        <li><span v-if="serverInfo">{{ serverInfo.name }}: v{{ serverInfo.version }}</span> (前端版本：v{{frontendVer}})</li>
-        <li>🖥 <abbr :title="'启动时刻：' +initTimeFormatted">服务运行了</abbr>：<span class="badge">{{ runningTime }}</span></li>
+        <li><span v-if="serverInfo">{{ serverInfo.name }}: v{{ serverInfo.version }}</span> (前端版本：v{{ frontendVer }})</li>
+        <li>🖥 <abbr :title="'启动时刻：' + initTimeFormatted">服务运行了</abbr>：<span class="badge">{{ runningTime }}</span></li>
         <li>
           <TkButton autofocus @click="$router.push(`/logs`)">
             任务/日志列表
@@ -22,10 +22,17 @@
       <h4>🔮 部署</h4>
 
       <ul v-if="buildList.length">
-        <li v-for="(item,index) in buildList" :key="index">
-          <TkButton theme="info" @click.prevent="showBuildDialog(item)">{{ item.title }}
-          </TkButton>
-        </li>
+        <template v-for="(item, index) in buildList">
+
+          <div v-if="item.split" :key="index" class="split-line">
+            <div v-if="item.title">{{item.title}}</div>
+          </div>
+          <li v-else :key="index">
+            <TkButton theme="info" @click.prevent="showBuildDialog(item)">{{ item.title }}
+            </TkButton>
+          </li>
+        </template>
+
       </ul>
 
       <ul v-else>
@@ -33,31 +40,18 @@
       </ul>
     </div>
 
-    <TkModalDialog
-      v-model="isShowBuildDialog"
-      show-close
-    >
+    <TkModalDialog v-model="isShowBuildDialog" show-close>
       <TkCard v-if="curItem">
-        <h4>确认：{{curItem.title}}</h4>
+        <h4>确认：{{ curItem.title }}</h4>
         <form @submit.prevent="handleBuild" class="form-wrap">
           <div class="form-row">
             <div class="form-title">命令：</div>
-            <TkInput
-                class="text-mono text-small"
-                name="build_command"
-                type="text"
-                v-model="curItem.cmd"
-                required
-            ></TkInput>
+            <TkInput class="text-mono text-small" name="build_command" type="text" v-model="curItem.cmd" required>
+            </TkInput>
           </div>
           <div class="form-row">
             <div class="form-title">参数：</div>
-            <TkInput
-                class="text-mono text-small"
-                name="build_args"
-                type="text"
-                v-model="curItem.args"
-            ></TkInput>
+            <TkInput class="text-mono text-small" name="build_args" type="text" v-model="curItem.args"></TkInput>
           </div>
 
           <div class="action-row">
@@ -93,9 +87,9 @@ function formatRunningTime(initTime) {
   const seconds = duration.seconds()
 
   return (days > 0 ? (days + ' 天 ') : '') +
-      (hours > 0 ? (hours + ' 小时 ') : '') +
-      (minutes > 0 ? (minutes + ' 分 ') : '') +
-      seconds + ' 秒'
+    (hours > 0 ? (hours + ' 小时 ') : '') +
+    (minutes > 0 ? (minutes + ' 分 ') : '') +
+    seconds + ' 秒'
 }
 
 export default {
@@ -127,13 +121,13 @@ export default {
   methods: {
     async getInfo() {
       const data = await getServiceInfo()
-      const {initTime} = data
+      const { initTime } = data
       this.serverInfo = data
       this.initTime = new Date(initTime)
       this.startTimeTick()
     },
     async getList() {
-      const {list} = await getProjectList()
+      const { list } = await getProjectList()
       this.buildList = list
     },
     startTimeTick() {
@@ -149,7 +143,7 @@ export default {
           content: '',
         }
       }).onConfirm(async (context) => {
-        const {message} = await restartService()
+        const { message } = await restartService()
 
         this.$toast.info(`${message}: 服务重启，页面即将刷新...`)
 
@@ -199,5 +193,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.split-line {
+  margin-top: 40px;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(132, 132, 132, 0.7);
+  font-weight: bold;
+  font-size: 18px;
+  margin-left: -30px
+}
 </style>
