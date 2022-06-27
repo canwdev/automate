@@ -6,9 +6,14 @@ async function run() {
 
   const config = await automate.loadConfigFile(path.join(__dirname, './config/vuecli3'))
 
-  const projectName = config.projectName
-  const projectGit = config.projectGit
-  const productionDir = config.productionDir
+  const {
+    projectName,
+    projectGit,
+    productionDir,
+    installCommand,
+    buildCommand,
+  } = config
+
   const sshConfig = parseSSHConfig(config.sshConfig)
 
   const startTime = +new Date()
@@ -22,9 +27,9 @@ async function run() {
 
   automate.gitForcePull()
 
-  automate.exec((config.installCommand || 'npm install'), '安装依赖...')
+  automate.exec((installCommand || 'npm install'), '安装依赖...')
 
-  automate.exec((config.buildCommand || 'npm run build'), '构建中...')
+  automate.exec((buildCommand || 'npm run build'), '构建中...')
 
   // 只打包dist文件夹内部的文件，不包括dist文件夹本身
   const distFile = automate.compressTarGz('dist', '-C dist .')
