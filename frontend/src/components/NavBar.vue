@@ -133,14 +133,14 @@ export default {
   color: #F44336;
   text-shadow: 4px 4px 0 rgb(255, 235, 59,33%);
   font-weight: 600;
-  transition: all .3s;
+  //transition: all .3s;
   font-size: 18px;
   text-decoration: none;
 }
 
-.site-title:hover {
-  text-decoration: none;
-  text-shadow: -4px 4px 0 #FFEB3B;
-}
+//.site-title:hover {
+//  text-decoration: none;
+//  text-shadow: -4px 4px 0 #FFEB3B;
+//}
 
 </style>

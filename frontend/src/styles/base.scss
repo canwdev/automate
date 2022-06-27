@@ -1,3 +1,11 @@
 :root {
   --primary: #1976d2 !important;
 }
+
+* {
+  transition: all 0s !important;
+}
+
+.tk-modal-dialog-wrap .dialog-shadow {
+  background: transparent;
+}

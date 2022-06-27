@@ -18,7 +18,7 @@
       </ul>
     </div>
 
-    <div class="builder">
+    <div class="builder-wrap">
       <h4>🔮 部署</h4>
 
       <ul v-if="buildList.length">
@@ -88,8 +88,8 @@ function formatRunningTime(initTime) {
 
   return (days > 0 ? (days + ' 天 ') : '') +
     (hours > 0 ? (hours + ' 小时 ') : '') +
-    (minutes > 0 ? (minutes + ' 分 ') : '') +
-    seconds + ' 秒'
+    (minutes > 0 ? (minutes + ' 分 ') : '') // +
+    // seconds + ' 秒'
 }
 
 export default {
@@ -125,6 +125,7 @@ export default {
       this.serverInfo = data
       this.initTime = new Date(initTime)
       this.startTimeTick()
+      this.runningTime = formatRunningTime(this.initTime)
     },
     async getList() {
       const { list } = await getProjectList()
@@ -134,7 +135,7 @@ export default {
       clearInterval(this.timeTick)
       this.timeTick = setInterval(() => {
         this.runningTime = formatRunningTime(this.initTime)
-      }, 1000)
+      }, 60 * 1000)
     },
     handleRestart() {
       this.$prompt.create({
@@ -201,5 +202,10 @@ export default {
   font-weight: bold;
   font-size: 18px;
   margin-left: -30px
+}
+.builder-wrap {
+  &>ul {
+    margin: 0
+  }
 }
 </style>
