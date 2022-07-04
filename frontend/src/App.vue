@@ -1,7 +1,9 @@
 <template>
   <div id="app" class="tk-scroll">
     <NavBar/>
-    <router-view/>
+    <KeepAlive :include="['Home']">
+      <router-view/>
+    </KeepAlive>
   </div>
 </template>
 

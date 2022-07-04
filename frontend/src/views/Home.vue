@@ -195,7 +195,7 @@ export default {
 
 <style lang="scss" scoped>
 .split-line {
-  margin-top: 40px;
+  margin-top: 20px;
   padding-bottom: 5px;
   margin-bottom: 10px;
   border-bottom: 1px solid rgba(132, 132, 132, 0.7);
