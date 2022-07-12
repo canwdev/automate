@@ -67,15 +67,18 @@
       </ul>
     </div>
 
-    <div class="progress-bar" v-if="itAutoRefresh" :class="[itAutoRefresh ? 'info':'warning']">
-      <div v-if="itAutoRefresh">日志 <span id='sec'>{{ refreshMs / 1000 }}</span>s 刷新一次</div>
-      <div v-else>刷新已停止</div>
+    <div class="progress-bar" :class="progressBarClassName">
+      <div>{{ BuildStatusText[buildItem.buildStatus] }}
+        <template v-if="itAutoRefresh">
+          (日志 <span id='sec'>{{ refreshMs / 1000 }}</span>s 刷新一次)
+        </template>
+      </div>
     </div>
 
     <div class="log-content">
       <TkLoading class="loading-img" size="xs" :visible="isLoading"></TkLoading>
 
-      <LogDisplay :value="logText"/> 
+      <LogDisplay :value="logText"/>
 
     </div>
 
@@ -88,6 +91,7 @@ import autoRefreshMixin from '@/mixins/auto-refresh-mixin'
 import LogDisplay from '@/components/LogDisplay'
 import moment from "moment"
 import {
+  BuildStatus,
   BuildStatusText,
   isItemDone
 } from '@/enum'
@@ -112,6 +116,22 @@ export default {
     },
     isRaw() {
       return this.$route.query.isRaw
+    },
+    progressBarClassName() {
+      const  {buildItem} = this
+
+      switch (buildItem.buildStatus) {
+        case BuildStatus.RUNNING:
+          return 'info'
+        case BuildStatus.WAITING:
+          return 'warning'
+        case BuildStatus.ERRORED:
+        case BuildStatus.ABORTED:
+          return 'error'
+        case BuildStatus.FINISH:
+          return 'success'
+      }
+
     }
   },
   watch: {
@@ -226,6 +246,14 @@ export default {
 
   &.warning {
     background: $warning;
+  }
+
+  &.error {
+    background: $error;
+  }
+
+  &.success {
+    background: $success;
   }
 }
 </style>

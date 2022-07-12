@@ -12,11 +12,11 @@ module.exports = {
     }
   },
   configureWebpack: {
-    externals: isProd ? [] : [
-      {
-        '@canwdev/tank-ui': 'tankUI',
-      }
-    ]
+    // externals: isProd ? [] : [
+    //   {
+    //     '@canwdev/tank-ui': 'tankUI',
+    //   }
+    // ]
   },
   css: {
     // extract: false,
