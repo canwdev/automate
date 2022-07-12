@@ -28,6 +28,6 @@ async function run() {
   await automate.sendFileExecuteCommands(sshConfig, null, sshCommands, false)
 
   const endTime = +new Date()
-  console.log(`>>> ${endTime}, 部署成功，耗时 ${(endTime - startTime) / 1000} 秒`)
+  console.log(`>>> ✅ 部署成功，耗时 ${(endTime - startTime) / 1000} 秒 (${endTime})`)
 }
 run()

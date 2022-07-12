@@ -46,7 +46,7 @@ async function run() {
   ])
 
   const endTime = +new Date()
-  console.log(`>>> ${endTime}, 部署成功，耗时 ${(endTime - startTime) / 1000} 秒`)
+  console.log(`>>> ✅ 部署成功，耗时 ${(endTime - startTime) / 1000} 秒 (${endTime})`)
 
   automate.archiveProductClean(projectDir, 'dist.tar.7z', branch + '-' + endTime)
 
