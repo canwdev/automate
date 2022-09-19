@@ -7,6 +7,7 @@ async function run() {
   const config = await automate.loadConfigFile(path.join(__dirname, './config/vuecli3'))
 
   const {
+    branch,
     projectName,
     projectGit,
     productionDir,
@@ -25,7 +26,7 @@ async function run() {
 
   automate.cdProjectDir(projectName)
 
-  automate.gitForcePull()
+  automate.gitForcePull(branch)
 
   automate.exec((installCommand || 'npm install'), '安装依赖...')
 
