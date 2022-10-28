@@ -16,7 +16,8 @@ async function run() {
   const productionDir = config.productionDir
 
   const startTime = +new Date()
-  console.log(`>>> ${startTime}, ${projectDir} ${branch} 开始部署 Nuxt`)
+  console.log(`>>> 当前时间戳: ${startTime}`)
+  console.log(`>>> ${projectDir} ${branch} 开始部署 Nuxt`)
 
   automate.checkEnv(['git', 'npm', '7z'])
 
@@ -46,12 +47,13 @@ async function run() {
   ])
 
   const endTime = +new Date()
-  console.log(`>>> ✅ 部署成功，耗时 ${(endTime - startTime) / 1000} 秒 (${endTime})`)
+  console.log(`>>> 当前时间戳: ${endTime}`)
+  console.log(`>>> ✅ 部署成功！耗时 ${(endTime - startTime) / 1000} 秒 🎉`)
 
   automate.archiveProductClean(projectDir, 'dist.tar.7z', branch + '-' + endTime)
 
   console.log('>>> 执行结束！')
-  automate.pushServerChan(`${process.argv.slice(2)} 部署成功！`, JSON.stringify(config, null, 2))
+  automate.pushServerChan(`${process.argv.slice(2)} ✅ 部署成功！🎉`, JSON.stringify(config, null, 2))
 }
 
 run()

@@ -28,10 +28,10 @@ module.exports = {
     })
 
     if (cmdNotFound) {
-      sh.echo(`错误：运行此脚本需要命令：${commands}，但是 '${cmdNotFound}' 未找到。`)
+      sh.echo(`错误：运行此脚本需要的命令 '${cmdNotFound}' 未找到，请安装这些软件包，然后重试。`)
       sh.exit(1)
     } else {
-      sh.echo('>>> 环境检查通过✅')
+      sh.echo('>>> 环境检查通过 ✅')
     }
   },
 
@@ -82,8 +82,8 @@ module.exports = {
   gitForcePull(branch = 'master') {
     exec('git fetch && git reset --hard HEAD && git clean -f -d', `git 重置分支中...`)
     // TODO: 这里如果分支不存在可能会报错
-    exec(`git checkout ${branch} && git pull`, `git 拉取代码中 (branch:${branch})...`)
-    console.log('>>> git 拉取成功')
+    exec(`git checkout ${branch} && git pull`, `git 拉取代码中 (${branch})...`)
+    console.log('>>> git 拉取成功！')
   },
 
   /**
@@ -146,7 +146,7 @@ module.exports = {
 
     const ssh = new NodeSSH()
     await ssh.connect(sshConfig).then(res => {
-      console.log(`>>> ssh 连接成功`)
+      console.log(`>>> ssh 连接成功！`)
       // console.log(res)
     }).catch(e => {
       console.error('>>> ssh 连接失败！', e)
@@ -171,10 +171,10 @@ module.exports = {
     // 执行远程命令
     for (let i = 0; i < actions.length; i++) {
       const action = actions[i]
-      console.log('>>> ssh 执行命令：' + (action.tip || action.command))
+      console.log('>>> ssh 执行命令: ' + (action.tip || action.command))
 
       if (!action.dir) {
-        console.log('ssh 错误：必须指定远程目录')
+        console.log('>>> ssh 错误：必须指定远程目录')
         continue
       }
 
@@ -188,7 +188,7 @@ module.exports = {
           }
         }
       }).catch(e => {
-        console.error('ssh 命令执行失败', e)
+        console.error('>>> ssh 命令执行失败！', e)
         process.exit(1)
       })
 
