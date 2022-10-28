@@ -80,7 +80,7 @@ module.exports = {
   },
   // 强制拉取最新代码
   gitForcePull(branch = 'master') {
-    exec('git reset --hard HEAD && git clean -f -d', 'GIT 重置分支...')
+    exec('git fetch && git reset --hard HEAD && git clean -f -d', 'GIT 重置分支...')
     // TODO: 这里如果分支不存在可能会报错
     exec(`git checkout ${branch} && git pull`, `GIT 拉取 ${branch} 代码...`)
     console.log('>>> 拉取结束')
