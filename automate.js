@@ -28,10 +28,10 @@ module.exports = {
     })
 
     if (cmdNotFound) {
-      sh.echo(`Sorry, this script requires ${commands}; but '${cmdNotFound}' not found`)
+      sh.echo(`错误：运行此脚本需要命令：${commands}，但是 '${cmdNotFound}' 未找到。`)
       sh.exit(1)
     } else {
-      sh.echo('>>> Environment check OK')
+      sh.echo('>>> 环境检查通过✅')
     }
   },
 
@@ -76,14 +76,14 @@ module.exports = {
 
   // 跳转到项目目录
   cdProjectDir(projectName) {
-    cd(path.join(PROJECT_PATH, projectName), '>>> ProjectDir')
+    cd(path.join(PROJECT_PATH, projectName), '>>> 项目文件夹')
   },
   // 强制拉取最新代码
   gitForcePull(branch = 'master') {
-    exec('git fetch && git reset --hard HEAD && git clean -f -d', 'GIT 重置分支...')
+    exec('git fetch && git reset --hard HEAD && git clean -f -d', `git 重置分支中...`)
     // TODO: 这里如果分支不存在可能会报错
-    exec(`git checkout ${branch} && git pull`, `GIT 拉取 ${branch} 代码...`)
-    console.log('>>> 拉取结束')
+    exec(`git checkout ${branch} && git pull`, `git 拉取代码中 (branch:${branch})...`)
+    console.log('>>> git 拉取成功')
   },
 
   /**
@@ -142,28 +142,28 @@ module.exports = {
   async sendFileExecuteCommands(sshConfig, fileConfig, actions = [], stopWhenStderr = true) {
     const NodeSSH = require('node-ssh')
 
-    console.log(`>>> SSH 连接 ${sshConfig.host} ...`)
+    console.log(`>>> ssh 正在连接 ${sshConfig.host} ...`)
 
     const ssh = new NodeSSH()
     await ssh.connect(sshConfig).then(res => {
-      console.log(`>>> SSH 连接成功`)
+      console.log(`>>> ssh 连接成功`)
       // console.log(res)
     }).catch(e => {
-      console.error('SSH 连接失败', e)
+      console.error('>>> ssh 连接失败！', e)
       process.exit(1)
     })
 
     if (fileConfig) {
       const local = fileConfig.localFilePath
       const remote = fileConfig.prodFullDir + '/' + fileConfig.prodFileName
-      console.log(`>>> SSH 文件发送中：${local} -> ${remote}`)
+      console.log(`>>> ssh 文件发送中：${local} -> ${remote}`)
       await ssh.putFile(local, remote).then(function () {
-        console.log(">>> SSH 文件发送成功")
+        console.log(">>> ssh 文件发送成功")
       }, function (error) {
-        console.error('SSH 文件发送失败(1)', error)
+        console.error('>>> ssh 文件发送失败(1)', error)
         process.exit(1)
       }).catch(e => {
-        console.error('SSH 文件发送失败(2)', e)
+        console.error('>>> ssh 文件发送失败(2)', e)
         process.exit(1)
       })
     }
@@ -171,10 +171,10 @@ module.exports = {
     // 执行远程命令
     for (let i = 0; i < actions.length; i++) {
       const action = actions[i]
-      console.log('>>> SSH 执行命令：' + (action.tip || action.command))
+      console.log('>>> ssh 执行命令：' + (action.tip || action.command))
 
       if (!action.dir) {
-        console.log('SSH 错误：必须指定远程目录')
+        console.log('ssh 错误：必须指定远程目录')
         continue
       }
 
@@ -188,7 +188,7 @@ module.exports = {
           }
         }
       }).catch(e => {
-        console.error('SSH 命令执行失败', e)
+        console.error('ssh 命令执行失败', e)
         process.exit(1)
       })
 
