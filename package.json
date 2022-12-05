@@ -28,6 +28,7 @@
     "js-yaml": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
     "lowdb": "^1.0.0",
+    "moment": "^2.29.4",
     "node-localstorage": "^2.1.4",
     "node-ssh": "^6.0.0",
     "rimraf": "^3.0.2",

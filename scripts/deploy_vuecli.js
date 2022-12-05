@@ -17,8 +17,8 @@ async function run() {
 
   const sshConfig = parseSSHConfig(config.sshConfig)
 
-  const startTime = +new Date()
-  console.log(`>>> 当前时间戳: ${startTime}`)
+  const timeTracker = new automate.TimeTracker()
+
   console.log(`>>> ${projectName} 开始部署 VueCLI3`)
 
   automate.checkEnv(['git', 'yarn'])
@@ -51,8 +51,8 @@ async function run() {
     }
   ])
 
-  const endTime = +new Date()
-  console.log(`>>> 当前时间戳: ${endTime}`)
-  console.log(`>>> ✅ 部署成功！耗时 ${(endTime - startTime) / 1000} 秒 🎉`)
+  timeTracker.stop()
+
+  console.log(`>>> ✅ 部署成功！🎉`)
 }
 run()

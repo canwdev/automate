@@ -1,14 +1,15 @@
 const sh = require('shelljs')
-const fs = require('fs')
-const path = require('path')
+const Fs = require('fs')
+const Path = require('path')
 const utils = require('./utils')
-const {pushServerChan} = require('./utils/notify')
+const { pushServerChan } = require('./utils/notify')
 const cd = utils.cd
 const exec = utils.exec
 const getTimeStr = utils.getDateTimeString
 const {
   PROJECT_PATH
 } = require('./config')
+const TimeTracker = require('./utils/time-tracker')
 
 module.exports = {
   cd,
@@ -36,11 +37,19 @@ module.exports = {
   },
 
   // 加载配置文件
-  async loadConfigFile(configFolder) {
-    const configFiles = sh.ls(configFolder)
-    let configFile = process.argv.slice(2) || null
+  async loadConfigFile(configFolder, options = {}) {
+    let {
+      readConfigFromArg = true,
+      configFile = null
+    } = options
 
-    if (configFile.length === 0) {
+    const configFiles = sh.ls(configFolder)
+
+    if (readConfigFromArg) {
+      configFile = process.argv.slice(2) || null
+    }
+
+    if (!configFile) {
       const inquirer = require("inquirer")
       await inquirer.prompt([
         {
@@ -54,13 +63,13 @@ module.exports = {
       })
     }
 
-    const config = require(configFolder + '/' + configFile)
+    const config = require(Path.join(configFolder, configFile))
     console.log('>>> 配置文件 ' + configFile)
     return config
   },
   // 检测项目文件夹是否存在
   isProjectDirExist(projectName) {
-    if (!fs.existsSync(path.join(PROJECT_PATH, projectName))) {
+    if (!Fs.existsSync(Path.join(PROJECT_PATH, projectName))) {
       console.log('>>> 项目不存在')
       return false
     }
@@ -69,14 +78,14 @@ module.exports = {
   // 项目文件夹如果不存在则克隆项目
   initProjectIfNotExist(projectName, projectGit) {
     if (!this.isProjectDirExist(projectName)) {
-      const projectDir = path.join(PROJECT_PATH, projectName)
+      const projectDir = Path.join(PROJECT_PATH, projectName)
       exec(`git clone ${projectGit} ${projectDir}`)
     }
   },
 
   // 跳转到项目目录
   cdProjectDir(projectName) {
-    cd(path.join(PROJECT_PATH, projectName), '>>> 项目文件夹')
+    cd(Path.join(PROJECT_PATH, projectName), '>>> 项目文件夹')
   },
   // 强制拉取最新代码
   gitForcePull(branch = 'master') {
@@ -113,7 +122,7 @@ module.exports = {
     let pwd = sh.exec('pwd', { silent: true }).toString().split('\n')[0]
     let ret = {
       filename,
-      fullPath: path.join(pwd, filename),
+      fullPath: Path.join(pwd, filename),
       size
     }
     console.log('>>> 打包结束 ' + JSON.stringify(ret))
@@ -132,7 +141,7 @@ module.exports = {
     let pwd = sh.exec('pwd', { silent: true }).toString().split('\n')[0]
     let ret = {
       filename: _7zName,
-      fullPath: path.join(pwd, _7zName),
+      fullPath: Path.join(pwd, _7zName),
       size
     }
     console.log('>>> 打包结束 ' + JSON.stringify(ret))
@@ -205,7 +214,8 @@ module.exports = {
     sh.mkdir('-p', '../' + archives_folder_name)
     sh.mv(distFileName, `../${archives_folder_name}/${archive_name}`)
 
-    console.log('>>> 归档成品', `${path.join(projectName, '../', archives_folder_name, archive_name)}`)
+    console.log('>>> 归档成品', `${Path.join(projectName, '../', archives_folder_name, archive_name)}`)
   },
-  pushServerChan
+  pushServerChan,
+  TimeTracker,
 }
