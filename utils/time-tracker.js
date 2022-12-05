@@ -20,6 +20,7 @@ class TimeTracker {
   constructor(immediate = true) {
     this.startTime = null
     this.stopTime = null
+    this.TZ = 8
 
     if (immediate) {
       this.start()
@@ -28,12 +29,12 @@ class TimeTracker {
 
   start() {
     this.startTime = new Date()
-    console.log(`⏱ 开始时间: ${moment(this.startTime).format('YYYY-MM-DD HH:MM:ss')}  (${this.startTime.getTime()})`)
+    console.log(`⏱ 开始时间: ${moment(this.startTime).utcOffset(this.TZ).format('YYYY-MM-DD HH:MM:ss')}  (${this.startTime.getTime()})`)
   }
 
   stop() {
     this.stopTime = new Date()
-    console.log(`⏰ 结束时间: ${moment(this.startTime).format('YYYY-MM-DD HH:MM:ss')}  (${this.stopTime.getTime()})`)
+    console.log(`⏰ 结束时间: ${moment(this.startTime).utcOffset(this.TZ).format('YYYY-MM-DD HH:MM:ss')}  (${this.stopTime.getTime()})`)
 
     if (this.startTime) {
       const diff = this.stopTime - this.startTime
