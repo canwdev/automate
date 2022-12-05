@@ -46,7 +46,7 @@ module.exports = {
     const configFiles = sh.ls(configFolder)
 
     if (readConfigFromArg) {
-      configFile = process.argv.slice(2) || null
+      configFile = process.argv.slice(2).join('') || null
     }
 
     if (!configFile) {
