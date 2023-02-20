@@ -116,7 +116,8 @@ module.exports = {
   // 返回一个对象，包含：完整的压缩包名称、带完整路径的名称
   compressTarGz(outputName = 'dist', files = 'dist') {
     const filename = outputName + '.tgz'
-    exec(`tar czf ${filename} ${files}`, `${filename} 打包中...`)
+    // --touch 解决 tar time stamp ... is [some value] s in the future 问题
+    exec(`tar --touch -czf ${filename} ${files}`, `${filename} 打包中...`)
 
     let size = sh.exec(`du -h ${filename}`, { silent: true }).toString().split('\t')[0]
     let pwd = sh.exec('pwd', { silent: true }).toString().split('\n')[0]
