@@ -34,7 +34,7 @@ class TimeTracker {
 
   stop() {
     this.stopTime = new Date()
-    console.log(`⏰ 结束时间: ${moment(this.startTime).utcOffset(this.TZ).format('YYYY-MM-DD HH:MM:ss')}  (${this.stopTime.getTime()})`)
+    console.log(`⏰ 结束时间: ${moment(this.stopTime).utcOffset(this.TZ).format('YYYY-MM-DD HH:MM:ss')}  (${this.stopTime.getTime()})`)
 
     if (this.startTime) {
       const diff = this.stopTime - this.startTime
