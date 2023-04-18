@@ -27,14 +27,18 @@ class TimeTracker {
     }
   }
 
+  formatTime(date) {
+    return moment(date).utcOffset(this.TZ).format('YYYY-MM-DD HH:mm:ss')
+  }
+
   start() {
     this.startTime = new Date()
-    console.log(`⏱ 开始时间: ${moment(this.startTime).utcOffset(this.TZ).format('YYYY-MM-DD HH:MM:ss')}  (${this.startTime.getTime()})`)
+    console.log(`⏱ 开始时间: ${this.formatTime(this.startTime)}  (${this.startTime.getTime()})`)
   }
 
   stop() {
     this.stopTime = new Date()
-    console.log(`⏰ 结束时间: ${moment(this.stopTime).utcOffset(this.TZ).format('YYYY-MM-DD HH:MM:ss')}  (${this.stopTime.getTime()})`)
+    console.log(`⏰ 结束时间: ${this.formatTime(this.stopTime)}  (${this.stopTime.getTime()})`)
 
     if (this.startTime) {
       const diff = this.stopTime - this.startTime
